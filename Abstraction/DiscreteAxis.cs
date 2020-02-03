@@ -84,7 +84,7 @@ namespace WPFAnimation
         }
 
         /// <summary>
-        /// 
+        /// TODO 需要优化
         /// </summary>
         /// <param name="diff">差</param>
         /// <param name="start">起点</param>

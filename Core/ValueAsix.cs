@@ -181,6 +181,21 @@ namespace WPFAnimation
             VisualData.Items.Add(ContextDataItem.SortedSplitPoints, points);
             VisualData.Items.Add(ContextDataItem.Ratios, ratios);
         }
+
+
+        /// <summary>
+        /// todo 优化 
+        /// </summary>
+        /// <param name="diff"></param>
+        /// <param name="start"></param>
+        /// <param name="range"></param>
+        /// <param name="splitValues"></param>
+        /// <param name="splitRatios"></param>
+        /// <param name="splitRatiosNum"></param>
+        /// <param name="coordinateRatios"></param>
+        /// <param name="ratios"></param>
+        /// <param name="points"></param>
+        /// <returns></returns>
         public bool CalculateDrawingParams(Vector diff, Vector start, Range range, List<IVariable> splitValues, List<double> splitRatios,
             out List<double> splitRatiosNum, out List<double> coordinateRatios, out List<double> ratios, out List<Point> points)
         {

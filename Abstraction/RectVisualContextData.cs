@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace WPFAnimation
 {
-    public enum ContextDataItem
+    /// <summary>
+    /// 这样设计是否合理？
+    /// </summary>
+    public enum ContextDataItem : int
     {
         SortedSplitPoints,
         SortedSplitRatios,
@@ -25,7 +28,6 @@ namespace WPFAnimation
         Pointer,
         HitPointer,
         SeriesData,
-
     }
 
 

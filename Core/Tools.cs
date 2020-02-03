@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace WPFAnimation
@@ -181,6 +182,11 @@ namespace WPFAnimation
                 vData.IsBad = true;
             }
             return vData;
+        }
+        public static void AddChild(this DockPanel panel, UIElement element, Dock dock)
+        {
+            DockPanel.SetDock(element, dock);
+            panel.Children.Add(element);
         }
     }
     public class VisualData<T>

@@ -17,7 +17,7 @@ namespace WPFAnimation
         , IToolTipConfiguaration
         , IIntersectable
     {
-        public event IntersectChanged IntersectChangedHandler;
+        public event IntersectChangedHandler IntersectChanged;
 
         private Point LastHitPoint;
         public AxisInteractionVisual(RectDrawingVisual visual, ChartVisualCollection dataSource) : base(visual, dataSource)
@@ -197,7 +197,7 @@ namespace WPFAnimation
                     item.Render();
                 }
             }
-            IntersectChangedHandler?.Invoke(seriesDatas);
+            IntersectChanged?.Invoke(seriesDatas);
         }
 
     }

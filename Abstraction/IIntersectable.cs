@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace WPFAnimation
 {
-    public delegate void IntersectChanged(List<SeriesData> data);
+    public delegate void IntersectChangedHandler(List<SeriesData> data);
 
     public interface IIntersectable
     {
-        event IntersectChanged IntersectChangedHandler;
+        event IntersectChangedHandler IntersectChanged;
     }
 }

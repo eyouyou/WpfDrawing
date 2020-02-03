@@ -1,0 +1,14 @@
+﻿<Window x:Class="WPFAnimation.Test"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFAnimation"
+        mc:Ignorable="d"
+        Title="Test" Height="794.955" Width="1160.542">
+    <Path Stroke="Black" Fill="Red">
+        <Path.Data>
+            <PathGeometry Figures="M0,95.2794224001837L0,95.2794224001837L100,145.29255365268L200,220.895890482187L300,438.862404059089L400,86.0820778580764L500,79.9919956270568L600,188.82720833124L700,486.200553125795L800,151.218442316734L900,373.462355403911L1000,234.575631206192L1100,303.061210924322L1200,198.286124364606L1300,184.116836490164L1400,339.897400392172L1500,130.092616253576L1600,1.59195927045866L1700,28.8124298811017L1800,288.954162173417L1900,177.081407130268"></PathGeometry>
+        </Path.Data>
+    </Path>
+</Window>

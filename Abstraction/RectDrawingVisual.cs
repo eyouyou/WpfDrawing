@@ -117,7 +117,7 @@ namespace WPFAnimation
                 RePlot();
             }
         }
-        protected virtual void InternalSetVisualData(RectVisualContextData data)
+        public virtual void VisualDataSetupTidily(RectVisualContextData data)
         {
             visual_data = data;
         }

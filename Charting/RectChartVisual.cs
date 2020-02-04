@@ -165,7 +165,7 @@ namespace WPFAnimation
                 data.Value = Components.SeriesVisuals.MakeData();
                 Components.AxisXVisuals.MakeData(data.Value);
                 Components.AxisYVisuals.MakeData(data.Value);
-                InternalSetVisualData(data.Value);
+                VisualDataSetupTidily(data.Value);
             }
 
             var dc = RenderOpen();

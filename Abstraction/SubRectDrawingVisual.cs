@@ -25,7 +25,7 @@ namespace WPFAnimation
             }
         }
         private RectVisualContextData _visualData = null;
-        protected override void InternalSetVisualData(RectVisualContextData data)
+        public override void VisualDataSetupTidily(RectVisualContextData data)
         {
             _visualData = data;
         }

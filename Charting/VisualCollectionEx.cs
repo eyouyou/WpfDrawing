@@ -13,7 +13,7 @@ namespace WPFAnimation
         protected Dictionary<int, RectDrawingVisual> VisualMapping = new Dictionary<int, RectDrawingVisual>();
         public virtual void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
         {
-            InternalSetVisualData(data);
+            VisualDataSetupTidily(data);
 
             var visuals = new List<RectDrawingVisual>();
             foreach (RectDrawingVisual visual in Visuals)

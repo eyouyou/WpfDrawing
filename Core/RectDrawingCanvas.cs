@@ -77,7 +77,7 @@ namespace WPFAnimation
             //    return;
             //}
         }
-        public void Plot()
+        public void Reset()
         {
             PlotArea = new Rect(PlotArea.Location, new Size(this.ActualWidth, this.ActualHeight));
             foreach (Visual item in Visuals)
@@ -87,6 +87,30 @@ namespace WPFAnimation
                     rect.Reset();
                 }
             }
+        }
+
+        /// <summary>
+        /// 清理数据
+        /// </summary>
+        public void Replot()
+        {
+            Reset();
+            foreach (Visual item in Visuals)
+            {
+                if (item is RectDrawingVisual rect)
+                {
+                    rect.VisualDataSetupTidily(null);
+                    rect.Plot();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 沿用之前的数据
+        /// </summary>
+        public void Plot()
+        {
+            Reset();
             foreach (Visual item in Visuals)
             {
                 if (item is RectDrawingVisual rect)

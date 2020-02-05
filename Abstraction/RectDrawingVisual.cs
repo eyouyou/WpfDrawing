@@ -15,7 +15,7 @@ namespace WPFAnimation
     public interface IVisualControllable
     {
         bool IsVisualEnable { get; set; }
-        void ClearVisual();
+        void Clear();
     }
     public abstract class RectDrawingVisual : DrawingVisual, ILocatable, IVisualControllable
     {
@@ -162,7 +162,7 @@ namespace WPFAnimation
                 _isVisualEnable = value;
                 if (!value)
                 {
-                    ClearVisual();
+                    Clear();
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace WPFAnimation
         }
         public abstract void Plot();
 
-        public virtual void ClearVisual()
+        public virtual void Clear()
         {
             using (var dc = RenderOpen())
             {

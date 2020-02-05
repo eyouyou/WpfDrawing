@@ -95,6 +95,7 @@ namespace WPFAnimation
         public bool IsXShow { get => Cross.IsXShow; set => Cross.IsXShow = value; }
         public ToolTip Tip { get => DataToolTip.Tip; set => DataToolTip.Tip = value; }
 
+        List<ElementPosition> SeriesHitList;
         public override void Plot(Point point, EventMessage @event)
         {
             var vdata = VisualData.TransformVisualData<RectVisualContextData>();
@@ -103,7 +104,7 @@ namespace WPFAnimation
                 return;
             }
             //series上的悬浮控件 标记当前位置
-            var seriesHitList = new List<ElementPosition>();
+            SeriesHitList = new List<ElementPosition>();
             var seriesDatas = new List<SeriesData>();
 
             VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
@@ -154,11 +155,11 @@ namespace WPFAnimation
 
                         if (series_plot.Contains(new Point(x, y)))
                         {
-                            seriesHitList.Add(new ElementPosition(series_item.HitElement.Content, true, leftTop.X, leftTop.Y, series_item.HitElement.ZIndex));
+                            SeriesHitList.Add(new ElementPosition(series_item.HitElement.Content, true, leftTop.X, leftTop.Y, series_item.HitElement.ZIndex));
                         }
                         else
                         {
-                            seriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
+                            SeriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
                         }
 
                         if (IsYDataAttract)
@@ -168,7 +169,7 @@ namespace WPFAnimation
                     }
                     else
                     {
-                        seriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
+                        SeriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
                     }
 
                 }
@@ -177,7 +178,7 @@ namespace WPFAnimation
             {
                 foreach (SeriesVisual series_item in series.Visuals)
                 {
-                    seriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
+                    SeriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
                 }
             }
 
@@ -192,7 +193,7 @@ namespace WPFAnimation
 
             if (IsCrossShow)
             {
-                foreach (var item in seriesHitList)
+                foreach (var item in SeriesHitList)
                 {
                     item.Render();
                 }
@@ -200,5 +201,19 @@ namespace WPFAnimation
             IntersectChanged?.Invoke(seriesDatas);
         }
 
+        public override void Hide()
+        {
+            Cross.Hide();
+            DataToolTip.Hide();
+
+            if(SeriesHitList == null)
+            {
+                return;
+            }
+            foreach (var item in SeriesHitList)
+            {
+                item.Render(true);
+            }
+        }
     }
 }

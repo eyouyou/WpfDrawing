@@ -153,7 +153,8 @@ namespace WPFAnimation
 
         public override void Plot()
         {
-            if (PlotArea.Size == default)
+            var mainArea = PlotArea;
+            if (mainArea.Size.Height < 0 || mainArea.Size.Width < 0)
             {
                 ParentCanvas.Plot();
             }
@@ -185,7 +186,7 @@ namespace WPFAnimation
                     foreach (var point in points)
                     {
                         item.Freeze();
-                        dc.DrawLine(item.GridLinePen, new Point(PlotArea.Location.X, point.Y), new Point(PlotArea.Width + PlotArea.Location.X, point.Y));
+                        dc.DrawLine(item.GridLinePen, new Point(mainArea.Location.X, point.Y), new Point(mainArea.Width + mainArea.Location.X, point.Y));
                     }
                 }
             }

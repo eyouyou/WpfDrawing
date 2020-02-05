@@ -200,16 +200,19 @@ namespace WPFAnimation
             }
         }
 
-        public override void ClearVisual()
+        public override void Hide()
         {
             foreach (var item in CurrentAll)
             {
                 item.Value.AxisLabel.Visibility = Visibility.Collapsed;
             }
 
-            CurrentAll.Clear();
             X.Visibility = Visibility.Collapsed;
             Y.Visibility = Visibility.Collapsed;
+        }
+
+        public override void Clear()
+        {
         }
     }
 }

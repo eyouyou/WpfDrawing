@@ -127,13 +127,6 @@ namespace WPFAnimation
             ////Tip.Scheme = 
         }
 
-        public override void ClearVisual()
-        {
-            if (ParentCanvas.Children.Contains(Tip))
-            {
-                ParentCanvas.Children.Remove(Tip);
-            }
-        }
         Point LastPoint;
         public override void PlotToParent(Point point, EventMessage @event)
         {
@@ -186,6 +179,19 @@ namespace WPFAnimation
                     break;
                 default:
                     break;
+            }
+
+        }
+        public override void Hide()
+        {
+            Tip.Visibility = Visibility.Collapsed;
+        }
+
+        public override void Clear()
+        {
+            if (ParentCanvas.Children.Contains(Tip))
+            {
+                ParentCanvas.Children.Remove(Tip);
             }
 
         }

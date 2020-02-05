@@ -100,6 +100,7 @@ namespace WPFAnimation
                 if (item is RectDrawingVisual rect)
                 {
                     rect.VisualDataSetupTidily(null);
+                    rect.InteractionVisuals?.Hide();
                     rect.Plot();
                 }
             }

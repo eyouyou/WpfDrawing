@@ -49,6 +49,7 @@ namespace WPFAnimation
                 _visualData = value;
             }
         }
+        public abstract void Hide();
         public UIElement ParentElement { get; set; }
         public abstract void Plot(Point point, EventMessage @event);
     }
@@ -84,12 +85,13 @@ namespace WPFAnimation
                 _isVisualEnable = value;
                 if (!value)
                 {
-                    ClearVisual();
+                    Clear();
                 }
             }
         }
 
-        public abstract void ClearVisual();
+        public abstract void Clear();
+        public abstract void Hide();
         public abstract void PlotToParent(Point point, EventMessage @event);
     }
 

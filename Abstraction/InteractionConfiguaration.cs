@@ -22,4 +22,12 @@ namespace WPFAnimation
         bool IsToolTipShow { get; set; }
         ToolTip Tip { get; set; }
     }
+
+    public delegate void IntersectChangedHandler(List<SeriesData> data);
+
+    public interface IIntersectable
+    {
+        event IntersectChangedHandler IntersectChanged;
+    }
+
 }

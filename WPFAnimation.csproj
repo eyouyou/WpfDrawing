@@ -69,9 +69,8 @@
     </Compile>
     <Compile Include="Abstraction\AxisConfiguaration.cs" />
     <Compile Include="Abstraction\AxisVisual.cs" />
-    <Compile Include="Abstraction\CrossConfiguaration.cs" />
+    <Compile Include="Abstraction\InteractionConfiguaration.cs" />
     <Compile Include="Abstraction\DiscreteAxis.cs" />
-    <Compile Include="Abstraction\IIntersectable.cs" />
     <Compile Include="Abstraction\InteractionCanvas.cs" />
     <Compile Include="Abstraction\RectDrawingVisual.cs" />
     <Compile Include="Abstraction\RectVisualContextData.cs" />

@@ -64,7 +64,7 @@ namespace WPFAnimation
             {
                 dock.AddChild(new TextBlock() { Text = $"{seriesData.Name}: " }, Dock.Left);
             }
-            dock.AddChild(new TextBlock() { Text = seriesData.AxisY.GetStringValue(seriesData.YValue) }, Dock.Left);
+            dock.AddChild(new TextBlock() { Text = $"{seriesData.AxisY.GetStringValue(seriesData.YValue)}{seriesData.AxisY.Unit}" }, Dock.Left);
             return dock;
         }
         public override void PushData(List<SeriesData> series)
@@ -80,7 +80,7 @@ namespace WPFAnimation
             Visibility = Visibility.Visible;
             var se = series[0];
             var value = se.AxisX.GetStringValue(se.XValue);
-            XText.Text = !string.IsNullOrEmpty(se.AxisX.Name) ? $"{se.AxisX.Name}: {value}" : value;
+            XText.Text = !string.IsNullOrEmpty(se.AxisX.Name) ? $"{se.AxisX.Name}: {value}{se.AxisX.Unit}" : $"{value}{se.AxisX.Unit}";
             foreach (var item in series)
             {
                 dock_content.AddChild(MakeValueText(item), Dock.Top);

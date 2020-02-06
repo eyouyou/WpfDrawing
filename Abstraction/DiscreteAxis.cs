@@ -11,6 +11,8 @@ namespace WPFAnimation
 {
     public class DiscreteAxisVisualData : RectVisualContextData
     {
+        public static DiscreteAxisVisualData Empty => new DiscreteAxisVisualData(new List<IVariable>());
+
         public DiscreteAxisVisualData(List<IVariable> data)
         {
             Data = data;
@@ -18,7 +20,6 @@ namespace WPFAnimation
         public List<IVariable> Data { get; set; }
 
         public override bool IsEmpty => Data.Count == 0;
-        public static DiscreteAxisVisualData Empty => new DiscreteAxisVisualData(new List<IVariable>());
 
         public override RectVisualContextData Copy()
         {
@@ -64,7 +65,7 @@ namespace WPFAnimation
             {
                 return default;
             }
-            if(Data.Count == 0)
+            if (Data.Count == 0)
             {
                 return default;
             }
@@ -242,8 +243,36 @@ namespace WPFAnimation
             var plotArea = PlotArea;
             Freeze();
 
-            dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), new Point(Start.X + plotArea.Width, Start.Y));
+            var endPoint = new Point(End.X, End.Y);
 
+            dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), endPoint);
+
+            //名称设置
+            //if (!string.IsNullOrEmpty(Name))
+            //{
+            //    var endPointCopy = new Point(endPoint.X, endPoint.Y);
+            //    FormattedText name_text = new FormattedText(
+            //        Name,
+            //        CultureInfo.InvariantCulture,
+            //        FlowDirection.LeftToRight,
+            //        new Typeface("Microsoft YaHei"),
+            //        ChartFontSize,
+            //        Brushes.Black);
+
+            //    switch (Position)
+            //    {
+            //        case AxisPosition.Left:
+            //        case AxisPosition.Right:
+            //            endPointCopy.X -= name_text.Width / 2;
+            //            //此处假设是正方向；
+            //            endPointCopy.Y += name_text.Height
+            //            break;
+            //        case AxisPosition.Buttom:
+            //        case AxisPosition.Top:
+            //            break;
+            //    }
+            //    dc.DrawText(name_text, endPointCopy);
+            //}
             var point = new Point();
             var index = 0;
             var points = VisualData.Items[ContextDataItem.SortedSplitPoints] as List<Point>;
@@ -264,7 +293,7 @@ namespace WPFAnimation
                 }
                 var offset = GetPosition(splitValues[index].ValueData(Name) as IVariable).X;
                 FormattedText formatted_text = new FormattedText(
-                    splitValues[index].ToString(SplitValueFormat, FormatProvider),
+                    $"{splitValues[index].ToString(SplitValueFormat, FormatProvider)}{SplitUnit}",
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
                     new Typeface("Microsoft YaHei"),

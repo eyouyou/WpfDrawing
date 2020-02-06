@@ -28,9 +28,9 @@ namespace WPFAnimation
             InitializeComponent();
             DockPanel grid = new DockPanel() { };
 
-            ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "0.00万", SplitValueFormat = "0万", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1) };
+            ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
             //axisY.Range = new Range() { Max = new Value<double>(5000000), Min = new Value<double>(40000) };
-            chart.Offsets.Left = new GridLength(50);
+            chart.Offsets.Left = new GridLength(60);
             chart.Offsets.Buttom = new GridLength(20);
             chart.Offsets.Right = new GridLength(10);
             chart.Offsets.Top = new GridLength(20);

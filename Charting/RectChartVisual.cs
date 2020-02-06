@@ -169,8 +169,6 @@ namespace WPFAnimation
                 VisualDataSetupTidily(data.Value);
             }
 
-            var dc = RenderOpen();
-
             Components.SeriesVisuals.DataPush(data.Value, data.Value.Data);
             Components.AxisXVisuals.DataPush(data.Value, data.Value.XData);
             Components.AxisYVisuals.DataPush(data.Value, data.Value.YData);
@@ -178,6 +176,7 @@ namespace WPFAnimation
             //共享数据
             InteractionVisuals.VisualData = VisualData;
 
+            var dc = RenderOpen();
             //画分割线
             foreach (AxisVisual item in Components.GetAxisYCollection())
             {

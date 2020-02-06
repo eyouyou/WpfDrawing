@@ -141,7 +141,7 @@ namespace WPFAnimation
                                     CurrentAll[axis.Id] = axis;
                                 }
 
-                                axis.AxisLabel.Text = axis.GetStringValue(value);
+                                axis.AxisLabel.Text = $"{axis.GetStringValue(value)}{axis.Unit}";
                                 var labelData = axis.GetAxisLabelData(value);
 
                                 axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left, labelData.Top));

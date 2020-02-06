@@ -40,10 +40,10 @@ namespace WPFAnimation
 
             if (IsVisible)
             {
-                Element.Visibility = Visibility.Visible;
-                Canvas.SetLeft(Element, Left);
-                Canvas.SetTop(Element, Top);
+                Canvas.SetLeft(Element, Math.Round(Left, 1));
+                Canvas.SetTop(Element, Math.Round(Top, 1));
                 Canvas.SetZIndex(Element, ZIndex);
+                Element.Visibility = Visibility.Visible;
             }
             else
             {
@@ -142,6 +142,16 @@ namespace WPFAnimation
             }
             return offset;
         }
+
+        /// <summary>
+        /// 放在value之后
+        /// </summary>
+        public string Unit { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 放在value之后
+        /// </summary>
+        public string SplitUnit { get; set; } = string.Empty;
         public string ValueFormat { get; set; }
         public string SplitValueFormat { get; set; }
         public AxisPosition Position { get; set; }
@@ -164,7 +174,7 @@ namespace WPFAnimation
         public Pen GridLinePen { get; set; } = new Pen(Brushes.Gray, 1);
         public bool IsAxisLabelShow { get; set; } = true;
         public GridLength AxisLabelOffset { get; set; } = GridLength.Auto;
-        public AxisLabel AxisLabel { get; set; } = new AxisLabel() { Background = Brushes.DarkBlue, Foreground = Brushes.White, Opacity = 1 };
+        public AxisLabel AxisLabel { get; set; } = new AxisLabel() { Padding = new Thickness(4), Background = Brushes.DarkBlue, Foreground = Brushes.White, Opacity = 1 };
         AxisLabel IAxisConfiguare.AxisLabel { get => AxisLabel; set => AxisLabel = value; }
         public abstract IFormatProvider FormatProvider { get; }
 
@@ -232,9 +242,8 @@ namespace WPFAnimation
         public double Top { get; set; }
         public double Left { get; set; }
     }
-    public class AxisLabel : Label
+    public class AxisLabel : TextBlock
     {
         public int ZIndex { get; set; } = 1;
-        public string Text { get => this.Content as string; set => this.Content = value; }
     }
 }

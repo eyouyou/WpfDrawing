@@ -94,7 +94,7 @@ namespace WPFAnimation
                 var value = GetValue(Math.Abs(height - Start.Y));
 
                 FormattedText formatted_text = new FormattedText(
-                    value.ToString(SplitValueFormat, null),
+                    $"{value.ToString(SplitValueFormat, null)}",
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
                     new Typeface("Microsoft YaHei"),

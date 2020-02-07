@@ -36,7 +36,7 @@ namespace WPFAnimation
             chart.Offsets.Top = new GridLength(20);
 
             RectInteractionContainer container = new RectInteractionContainer(chart, chartCanvas);
-
+            container.Background = Brushes.GreenYellow;
             chart.AddAsixX(axisX);
             chart.AddAsixY(axisY);
 
@@ -45,11 +45,15 @@ namespace WPFAnimation
 
             //chart.CrossOption.IsLabelShow = false;
             //chart.CrossOption.IsXShow = false;
-
+            chart.ToolTipOption.Tip.Width = 100;
+            chart.ToolTipOption.Tip.Height = 100;
             chart.ToolTipOption.Tip.FontSize = 11;
             chart.ToolTipOption.Tip.Border.Padding = new Thickness(1);
-
-
+            chart.ToolTipOption.Tip.Background = Brushes.Transparent;
+            chart.ToolTipOption.Tip.BlurContainer = chartCanvas;
+            chart.ToolTipOption.Tip.Magnification = 0.25;
+            chart.ToolTipOption.Tip.BlurRadius = 45;
+            Canvas.SetZIndex(chart.ToolTipOption.Tip, 100);
             grid.AddChild(container, Dock.Left);
             Content = grid;
             IsVisibleChanged += WindowCharting3_IsVisibleChanged;

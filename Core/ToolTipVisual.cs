@@ -27,7 +27,7 @@ namespace WPFAnimation
     {
         FollowLeft,
     }
-    public abstract class ToolTip : UserControl
+    public abstract class ToolTip : BlurryUserControl
     {
         public ToolTipBehavior Behavior { get; set; } = ToolTipBehavior.FollowLeft;
         public abstract void PushData(List<SeriesData> series);
@@ -38,7 +38,7 @@ namespace WPFAnimation
         DockPanel dock = new DockPanel();
         TextBlock XText = new TextBlock();
         DockPanel dock_content = new DockPanel();
-        Border border = new Border() { CornerRadius = new CornerRadius(3), Background = Brushes.Black, Padding = new Thickness(10) };
+        Border border = new Border() { CornerRadius = new CornerRadius(3), Padding = new Thickness(10) };
 
         public NormalToolTip()
         {
@@ -46,10 +46,8 @@ namespace WPFAnimation
             border.Child = dock;
             Content = border;
 
-            Foreground = Brushes.White;
             dock.AddChild(XText, Dock.Top);
             dock.AddChild(dock_content, Dock.Top);
-            Opacity = 0.8;
         }
 
         public override Border Border => border;

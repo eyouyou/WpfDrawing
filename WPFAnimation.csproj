@@ -71,6 +71,8 @@
     <Compile Include="Abstraction\RectDrawingVisual.cs" />
     <Compile Include="Abstraction\RectVisualContextData.cs" />
     <Compile Include="Abstraction\SubRectDrawingVisual.cs" />
+    <Compile Include="BlurryUserControl.cs" />
+    <Compile Include="ColorHelper.cs" />
     <Compile Include="Core\AxisInteractionVisual.cs" />
     <Compile Include="Core\ComponentId.cs" />
     <Compile Include="Core\DateTimeAxis.cs" />
@@ -92,6 +94,9 @@
     </Compile>
     <Compile Include="Test3D.xaml.cs">
       <DependentUpon>Test3D.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
@@ -152,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Test3D.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControl1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

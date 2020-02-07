@@ -46,5 +46,27 @@
         <Path x:Key="p13" Data="M12.993,4.428L13,3h-1.436L8,6.565L4.435,3H3l0.007,1.428l3.565,3.565L3,11.564V13l1.428-0.007L8,9.421  l3.572,3.572L13,13v-1.436L9.428,7.993L12.993,4.428z"></Path>
         <Path x:Key="p14" Data="M501.5,309.22 L510.5,356.22 524,324.72 536,355.72 546,306.22"></Path>
 
+        <!-- style for the graphical representation of a blured UserControl -->
+        <Style TargetType="{x:Type local:BlurryUserControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:BlurryUserControl}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid ClipToBounds="True">
+                                <Rectangle x:Name="Blur"
+                                       Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type local:BlurryUserControl}}}"
+                                       Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type local:BlurryUserControl}}}"/>
+                                <Rectangle Fill="{TemplateBinding Background}"/>
+                                <AdornerDecorator>
+                                    <ContentPresenter/>
+                                </AdornerDecorator>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>

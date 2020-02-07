@@ -157,6 +157,7 @@ namespace WPFAnimation
             if (mainArea.Size.Height < 0 || mainArea.Size.Width < 0)
             {
                 ParentCanvas.Plot();
+                return;
             }
 
             var data = VisualData.TransformVisualData<RectChartVisualCollectionData>();

@@ -55,8 +55,8 @@
     <Compile Include="Abstraction\SubRectDrawingVisual.cs" />
     <Compile Include="Charting\RectChartVisual.cs" />
     <Compile Include="Charting\VisualCollectionEx.cs" />
-    <Compile Include="Controls\Candle.cs" />
-    <Compile Include="Controls\DrawingBuilder.cs" />
+    <Compile Include="UserControls\Candle.cs" />
+    <Compile Include="UserControls\DrawingBuilder.cs" />
     <Compile Include="Extensions\ColorHelper.cs" />
     <Compile Include="Core\AxisInteractionVisual.cs" />
     <Compile Include="Core\ChartVisualCollection.cs" />
@@ -77,5 +77,15 @@
     <Compile Include="zBlurry\BlurryUserControl.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Page Include="Themes\Controls\BlurryUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

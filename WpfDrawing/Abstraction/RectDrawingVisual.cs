@@ -34,7 +34,7 @@ namespace WpfDrawing
             Visuals = new System.Windows.Media.VisualCollection(this);
         }
         private RectDrawingVisualDataSource _dataSource;
-        public RectDrawingVisualDataSource DataSource
+        public virtual RectDrawingVisualDataSource DataSource
         {
             get
             {

@@ -118,39 +118,60 @@ namespace WpfDrawing
     /// <typeparam name="Ty"></typeparam>
     public class Chart : RectDrawingVisual
     {
-        private readonly ChartVisualCollection Components = new ChartVisualCollection();
-        public override RectVisualContextData DefaultData => RectChartVisualCollectionData.Empty;
+        XAxisVisualCollection AxisXVisuals = new XAxisVisualCollection();
+        YAxisVisualCollection AxisYVisuals = new YAxisVisualCollection();
+        SeriesVisualCollection SeriesVisuals = new SeriesVisualCollection();
 
-        AxisInteractionVisual _InteractionVisuals;
+        private readonly ChartDataSource Collections;
+        private readonly AxisInteractionVisual _InteractionVisuals;
+
+        public override RectVisualContextData DefaultData => RectChartVisualCollectionData.Empty;
         public Chart()
         {
-            _InteractionVisuals = new AxisInteractionVisual(this, Components);
+            Collections = new ChartDataSource(this);
+            _InteractionVisuals = new AxisInteractionVisual(this, Collections);
 
-            AddSubVisual(Components.AxisXVisuals);
-            AddSubVisual(Components.AxisYVisuals);
-            AddSubVisual(Components.SeriesVisuals);
+            AddSubVisual(AxisXVisuals);
+            AddSubVisual(AxisYVisuals);
+            AddSubVisual(SeriesVisuals);
 
-            DataSource = Components;
+            DataSource = Collections;
         }
         public void AddAsixX(DiscreteAxis axis)
         {
-            Components.AddAxisX(axis);
+            AxisXVisuals.Add(axis);
+            Collections.AddAxisX(axis);
         }
         public void AddAsixY(ContinuousAxis axis)
         {
-            Components.AddAxisY(axis);
+            AxisYVisuals.Add(axis);
+            Collections.AddAxisY(axis);
         }
         public void AddSeries(SeriesVisual series)
         {
-            Components.AddSeries(series);
+            SeriesVisuals.Add(series);
+            Collections.AddSeries(series);
         }
-        public IAxisVisualConfiguare XOption => Components.AxisXVisuals;
-        public IAxisVisualConfiguare YOption => Components.AxisYVisuals;
+        public IAxisVisualConfiguare XOption => AxisXVisuals;
+        public IAxisVisualConfiguare YOption => AxisYVisuals;
         public ICrossConfiguaration CrossOption => _InteractionVisuals.Cross;
         public IToolTipConfiguaration ToolTipOption => _InteractionVisuals.DataToolTip;
         public IIntersectable Intersectable => _InteractionVisuals;
 
         public override InteractionCanvas InteractionVisuals => _InteractionVisuals;
+
+        public override RectDrawingVisualDataSource DataSource
+        {
+            get => base.DataSource;
+            internal set
+            {
+                AxisXVisuals.DataSource = value;
+                AxisYVisuals.DataSource = value;
+                SeriesVisuals.DataSource = value;
+
+                base.DataSource = value;
+            }
+        }
 
         public override void Plot()
         {
@@ -165,22 +186,22 @@ namespace WpfDrawing
             //从seriesvisual里面取值画坐标轴
             if (data.IsBad)
             {
-                data.Value = Components.SeriesVisuals.MakeData();
-                Components.AxisXVisuals.MakeData(data.Value);
-                Components.AxisYVisuals.MakeData(data.Value);
+                data.Value = SeriesVisuals.MakeData();
+                AxisXVisuals.MakeData(data.Value);
+                AxisYVisuals.MakeData(data.Value);
                 VisualDataSetupTidily(data.Value);
             }
 
-            Components.SeriesVisuals.DataPush(data.Value, data.Value.Data);
-            Components.AxisXVisuals.DataPush(data.Value, data.Value.XData);
-            Components.AxisYVisuals.DataPush(data.Value, data.Value.YData);
+            SeriesVisuals.DataPush(data.Value, data.Value.Data);
+            AxisXVisuals.DataPush(data.Value, data.Value.XData);
+            AxisYVisuals.DataPush(data.Value, data.Value.YData);
 
             //共享数据
             InteractionVisuals.VisualData = VisualData;
 
             var dc = RenderOpen();
             //画分割线
-            foreach (AxisVisual item in Components.GetAxisYCollection())
+            foreach (AxisVisual item in Collections.AxisYCollection)
             {
                 if (item.ShowGridLine && item.VisualData.Items[ContextDataItem.SortedSplitPoints] is List<Point> points)
                 {
@@ -193,7 +214,7 @@ namespace WpfDrawing
             }
 
 
-            var xCollection = Components.GetAxisXCollection();
+            var xCollection = Collections.AxisXCollection;
             foreach (AxisVisual item in xCollection)
             {
                 bool isXClosed = false;
@@ -218,12 +239,12 @@ namespace WpfDrawing
             }
 
 
-            Components.AxisXVisuals.Freeze();
-            Components.AxisXVisuals.PlotToDc(dc);
-            Components.AxisYVisuals.Freeze();
-            Components.AxisYVisuals.PlotToDc(dc);
+            AxisXVisuals.Freeze();
+            AxisXVisuals.PlotToDc(dc);
+            AxisYVisuals.Freeze();
+            AxisYVisuals.PlotToDc(dc);
 
-            Components.SeriesVisuals.PlotToDc(dc);
+            SeriesVisuals.PlotToDc(dc);
 
             dc.Close();
 

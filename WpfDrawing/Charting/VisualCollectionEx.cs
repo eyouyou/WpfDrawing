@@ -10,7 +10,7 @@ namespace WpfDrawing
     public abstract class RectVisualCollection : SubRectDrawingVisual
     {
         public override RectVisualContextData DefaultData => null;
-        protected Dictionary<int, RectDrawingVisual> VisualMapping = new Dictionary<int, RectDrawingVisual>();
+
         public virtual void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
         {
             VisualDataSetupTidily(data);
@@ -50,7 +50,6 @@ namespace WpfDrawing
         public void Add(RectDrawingVisual item)
         {
             AddSubVisual(item);
-            VisualMapping.Add(item.Id, item);
         }
 
         public override void PlotToDc(DrawingContext dc)
@@ -60,26 +59,17 @@ namespace WpfDrawing
                 item.PlotToDc(dc);
             }
         }
-        public RectDrawingVisual FindById(int id)
-        {
-            if (VisualMapping.ContainsKey(id))
-            {
-                return VisualMapping[id];
-            }
-            if (Visuals.Count == 0)
-            {
-                return null;
-            }
-            return Visuals[0] as RectDrawingVisual;
-        }
     }
+
     /// <summary>
     /// 轴不多 不然直接从collection获取属性
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class XAxisVisualCollection : RectVisualCollection, IAxisVisualConfiguare
     {
+
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1);
+
 
         /// <summary>
         /// <see cref="VisualData.set"/>:  从父亲<see cref="RectDrawingVisual.VisualData"/>继承<see cref="RectVisualContextData.Items"/>
@@ -106,10 +96,13 @@ namespace WpfDrawing
         }
         public void MakeData(RectChartVisualCollectionData data)
         {
-            foreach (var item in data.XData)
+            if (DataSource is ChartDataSource coms)
             {
-                var component = FindById(item.ComponentId);
-                item.ComponentId = component.Id;
+                foreach (var item in data.XData)
+                {
+                    var component = coms.FindById(item.ComponentId);
+                    item.ComponentId = component.Id;
+                }
             }
         }
 
@@ -141,7 +134,7 @@ namespace WpfDrawing
                 {
                     //一根轴对应多series的情况 
                     // 轴的range调整
-                    if (DataSource is ChartVisualCollection coms)
+                    if (DataSource is ChartDataSource coms)
                     {
                         var series = coms.GetMappingSeries(item.Id);
                         var ranges = series.Select(it => (it.VisualData as RectChartVisualData).YData.Range).ToList();
@@ -154,10 +147,13 @@ namespace WpfDrawing
         }
         public void MakeData(RectChartVisualCollectionData data)
         {
-            foreach (var item in data.YData)
+            if (DataSource is ChartDataSource coms)
             {
-                var component = FindById(item.ComponentId);
-                item.ComponentId = component.Id;
+                foreach (var item in data.YData)
+                {
+                    var component = coms.FindById(item.ComponentId);
+                    item.ComponentId = component.Id;
+                }
             }
         }
         public override void Freeze()

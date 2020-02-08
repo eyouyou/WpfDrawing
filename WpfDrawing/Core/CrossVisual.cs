@@ -55,12 +55,12 @@ namespace WpfDrawing
 
 
             var data = vdata.Value;
-            var coms = DataSource as ChartVisualCollection;
+            var coms = DataSource as ChartDataSource;
 
-            var axisxs = coms.AxisXVisuals;
-            var axisys = coms.AxisYVisuals;
-            var series = coms.SeriesVisuals;
-            var plotArea = axisxs.PlotArea;
+            var axisxs = coms.AxisXCollection;
+            var axisys = coms.AxisYCollection;
+            var series = coms.SeriesCollection;
+            var plotArea = coms.Chart.PlotArea;
             if (LastPlotArea != plotArea)
             {
                 X.X1 = Y.X1 = 0;
@@ -104,7 +104,7 @@ namespace WpfDrawing
 
                     if (!isXInvariant)
                     {
-                        foreach (DiscreteAxis axis in axisxs.Visuals)
+                        foreach (DiscreteAxis axis in axisxs)
                         {
                             var value = axis.GetValue(axis.OffsetPostion(point.X));
                             if (!value.IsBad() && axis.IsAxisLabelShow)
@@ -130,7 +130,7 @@ namespace WpfDrawing
 
                     if (!isYInvariant)
                     {
-                        foreach (ContinuousAxis axis in axisys.Visuals)
+                        foreach (ContinuousAxis axis in axisys)
                         {
                             var value = axis.GetValue(axis.OffsetPostion(nearestY));
                             if (axis.IsAxisLabelShow)

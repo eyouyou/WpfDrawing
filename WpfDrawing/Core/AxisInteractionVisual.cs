@@ -18,7 +18,7 @@ namespace WpfDrawing
         public event IntersectChangedHandler IntersectChanged;
 
         private Point LastHitPoint;
-        public AxisInteractionVisual(RectDrawingVisual visual, ChartVisualCollection dataSource) : base(visual, dataSource)
+        public AxisInteractionVisual(RectDrawingVisual visual, ChartDataSource dataSource) : base(visual, dataSource)
         {
             Cross = new CrossVisual(this);
             DataToolTip = new ToolTipVisual(this);
@@ -99,26 +99,25 @@ namespace WpfDrawing
 
             VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
 
-            var coms = DataSource as ChartVisualCollection;
+            var coms = DataSource as ChartDataSource;
             var currentPoint = point;
-            var axisxs = coms.AxisXVisuals;
-            var series = coms.SeriesVisuals;
 
             var nearestX = currentPoint.X;
             var nearestY = currentPoint.Y;
 
-            var plotArea = axisxs.PlotArea;
+            var plotArea = coms.Chart.PlotArea;
 
+            var series = coms.SeriesCollection;
             if (plotArea.Contains(currentPoint))
             {
-                foreach (SeriesVisual series_item in series.Visuals)
+                foreach (SeriesVisual series_item in series)
                 {
                     if (!series_item.IsVisualEnable)
                     {
                         continue;
                     }
                     var series_plot = series_item.PlotArea;
-                    var xAxis = axisxs.FindById(series_item.XAxisId) as DiscreteAxis;
+                    var xAxis = coms.FindById(series_item.XAxisId) as DiscreteAxis;
                     var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X));
                     if (value.IsBad())
                     {
@@ -166,7 +165,7 @@ namespace WpfDrawing
             }
             else
             {
-                foreach (SeriesVisual series_item in series.Visuals)
+                foreach (SeriesVisual series_item in series)
                 {
                     SeriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
                 }
@@ -196,7 +195,7 @@ namespace WpfDrawing
             Cross.Hide();
             DataToolTip.Hide();
 
-            if(SeriesHitList == null)
+            if (SeriesHitList == null)
             {
                 return;
             }

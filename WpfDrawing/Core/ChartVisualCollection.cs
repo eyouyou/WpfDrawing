@@ -9,23 +9,23 @@ namespace WpfDrawing
     public delegate void VisualChanged(RectDrawingVisual visual, Operations op);
     public abstract class RectDrawingVisualDataSource
     {
+        RectDrawingVisual ConnectVisual;
+        public RectDrawingVisualDataSource(RectDrawingVisual visual)
+        {
+            ConnectVisual = visual;
+        }
         public abstract event VisualChanged VisualChangedHandler;
     }
     public enum Operations
     {
         Add, Remove
     }
-    public class ChartVisualCollection : RectDrawingVisualDataSource
+    public class ChartDataSource : RectDrawingVisualDataSource
     {
-        public XAxisVisualCollection AxisXVisuals = new XAxisVisualCollection();
-        public YAxisVisualCollection AxisYVisuals = new YAxisVisualCollection();
-        public SeriesVisualCollection SeriesVisuals = new SeriesVisualCollection();
-
-        public ChartVisualCollection()
+        public Chart Chart;
+        public ChartDataSource(Chart chart) : base(chart)
         {
-            AxisXVisuals.DataSource = this;
-            AxisYVisuals.DataSource = this;
-            SeriesVisuals.DataSource = this;
+            Chart = chart;
         }
         /// <summary>
         /// Y <=> Series
@@ -37,12 +37,14 @@ namespace WpfDrawing
         List<AxisVisual> AxisYs = new List<AxisVisual>();
         List<AxisVisual> AxisXs = new List<AxisVisual>();
 
+        protected Dictionary<int, RectDrawingVisual> VisualMappings = new Dictionary<int, RectDrawingVisual>();
+        List<RectDrawingVisual> All = new List<RectDrawingVisual>();
+
         public override event VisualChanged VisualChangedHandler;
         public void AddSeries(SeriesVisual series)
         {
-            SeriesVisuals.Add(series);
             Series.Add(series);
-
+            All.Add(series);
             var id = -1;
             foreach (var item in AxisYs)
             {
@@ -62,8 +64,8 @@ namespace WpfDrawing
 
         public void AddAxisY(AxisVisual axis)
         {
-            AxisYVisuals.Add(axis);
             AxisYs.Add(axis);
+            All.Add(axis);
 
             var id = -1;
             foreach (var item in Series)
@@ -82,8 +84,10 @@ namespace WpfDrawing
         }
         public void AddAxisX(AxisVisual axis)
         {
-            AxisXVisuals.Add(axis);
             AxisXs.Add(axis);
+            All.Add(axis);
+
+            VisualMappings.Add(axis.Id, axis);
             axis.DataSource = this;
         }
         public List<SeriesVisual> GetMappingSeries(int id)
@@ -115,29 +119,21 @@ namespace WpfDrawing
             }
             return null;
         }
-        public List<SeriesVisual> GetSeriesCollection()
+        public List<SeriesVisual> SeriesCollection => Series.Count == 0 ? new List<SeriesVisual>() : new List<SeriesVisual>(Series);
+        public List<AxisVisual> AxisYCollection => AxisYs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisYs);
+        public List<AxisVisual> AxisXCollection => AxisXs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisXs);
+
+        public RectDrawingVisual FindById(int id)
         {
-            if (Series.Count == 0)
+            if (VisualMappings.ContainsKey(id))
             {
-                return new List<SeriesVisual>();
+                return VisualMappings[id];
             }
-            return new List<SeriesVisual>(Series);
-        }
-        public List<AxisVisual> GetAxisYCollection()
-        {
-            if (AxisYs.Count == 0)
+            if (All.Count == 0)
             {
-                return new List<AxisVisual>();
+                return null;
             }
-            return new List<AxisVisual>(AxisYs);
-        }
-        public List<AxisVisual> GetAxisXCollection()
-        {
-            if (AxisXs.Count == 0)
-            {
-                return new List<AxisVisual>();
-            }
-            return new List<AxisVisual>(AxisXs);
+            return All[0] as RectDrawingVisual;
         }
 
     }

@@ -108,9 +108,9 @@ namespace WpfDrawing
             {
                 return;
             }
-            var coms = DataSource as ChartVisualCollection;
+            var coms = DataSource as ChartDataSource;
 
-            var axisxs = coms.AxisXVisuals;
+            var axisxs = coms.AxisXCollection;
 
             Point lasted = new Point(double.MinValue, double.MinValue);
             var plotArea = PlotArea;
@@ -120,7 +120,7 @@ namespace WpfDrawing
             {
                 return;
             }
-            var x = axisxs.FindById(Id) as DiscreteAxis;
+            var x = coms.FindById(Id) as DiscreteAxis;
             if (x == null)
             {
                 return;
@@ -168,9 +168,9 @@ namespace WpfDrawing
             {
                 return;
             }
-            var coms = DataSource as ChartVisualCollection;
+            var coms = DataSource as ChartDataSource;
 
-            var axisxs = coms.AxisXVisuals;
+            var axisxs = coms.AxisXCollection;
 
             Point lasted = new Point(double.MinValue, double.MinValue);
             var plotArea = PlotArea;
@@ -180,7 +180,7 @@ namespace WpfDrawing
             {
                 return;
             }
-            var x = axisxs.FindById(Id) as DiscreteAxis;
+            var x = coms.FindById(Id) as DiscreteAxis;
             if (x == null)
             {
                 return;

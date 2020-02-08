@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace WpfDrawing
 {
-    public abstract class RectVisualCollection : SubRectDrawingVisual
+    public abstract class RectVisualGroup : SubRectDrawingVisual
     {
         public override RectVisualContextData DefaultData => null;
 
@@ -65,7 +65,7 @@ namespace WpfDrawing
     /// 轴不多 不然直接从collection获取属性
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class XAxisVisualCollection : RectVisualCollection, IAxisVisualConfiguare
+    public class XAxisVisualGroup : RectVisualGroup, IAxisVisualConfiguare
     {
 
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1);
@@ -112,7 +112,7 @@ namespace WpfDrawing
         }
     }
 
-    public class YAxisVisualCollection : RectVisualCollection, IAxisVisualConfiguare
+    public class YAxisVisualGroup : RectVisualGroup, IAxisVisualConfiguare
     {
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1) { /*DashStyle = DashStyles.Dash, DashCap = PenLineCap.Flat*/ };
 
@@ -165,7 +165,7 @@ namespace WpfDrawing
     /// <summary>
     /// 和y轴有一一对应关系
     /// </summary>
-    public class SeriesVisualCollection : RectVisualCollection
+    public class SeriesVisualGroup : RectVisualGroup
     {
         public override void PlotToDc(DrawingContext dc)
         {

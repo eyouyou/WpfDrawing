@@ -118,9 +118,9 @@ namespace WpfDrawing
     /// <typeparam name="Ty"></typeparam>
     public class Chart : RectDrawingVisual
     {
-        XAxisVisualCollection AxisXVisuals = new XAxisVisualCollection();
-        YAxisVisualCollection AxisYVisuals = new YAxisVisualCollection();
-        SeriesVisualCollection SeriesVisuals = new SeriesVisualCollection();
+        XAxisVisualGroup AxisXVisuals = new XAxisVisualGroup();
+        YAxisVisualGroup AxisYVisuals = new YAxisVisualGroup();
+        SeriesVisualGroup SeriesVisuals = new SeriesVisualGroup();
 
         private readonly ChartDataSource Collections;
         private readonly AxisInteractionVisual _InteractionVisuals;

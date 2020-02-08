@@ -22,10 +22,12 @@ namespace WpfDrawing
     }
     public class ChartDataSource : RectDrawingVisualDataSource
     {
-        public Chart Chart;
+        public ComponentId IdGenerater = new ComponentId();
+
+        public Chart ConnectChart;
         public ChartDataSource(Chart chart) : base(chart)
         {
-            Chart = chart;
+            ConnectChart = chart;
         }
         /// <summary>
         /// Y <=> Series
@@ -43,8 +45,11 @@ namespace WpfDrawing
         public override event VisualChanged VisualChangedHandler;
         public void AddSeries(SeriesVisual series)
         {
+            GenerateId(series);
+
             Series.Add(series);
             All.Add(series);
+
             var id = -1;
             foreach (var item in AxisYs)
             {
@@ -64,6 +69,8 @@ namespace WpfDrawing
 
         public void AddAxisY(AxisVisual axis)
         {
+            GenerateId(axis);
+
             AxisYs.Add(axis);
             All.Add(axis);
 
@@ -84,11 +91,17 @@ namespace WpfDrawing
         }
         public void AddAxisX(AxisVisual axis)
         {
+            GenerateId(axis);
+
             AxisXs.Add(axis);
             All.Add(axis);
 
             VisualMappings.Add(axis.Id, axis);
             axis.DataSource = this;
+        }
+        private void GenerateId(RectDrawingVisual visual)
+        {
+            visual.Id = IdGenerater.GenerateId();
         }
         public List<SeriesVisual> GetMappingSeries(int id)
         {

@@ -49,7 +49,7 @@ namespace WpfDrawing
                 _dataSource = value;
             }
         }
-        public int Id { get; private set; } = ComponentId.Current.GenerateId();
+        public int Id { get; set; }
         public string Name { get; set; }
         /// <summary>
         /// 使用<see cref="RectInteractionContainer"/>

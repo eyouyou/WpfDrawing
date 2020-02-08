@@ -60,7 +60,7 @@ namespace WpfDrawing
             var axisxs = coms.AxisXCollection;
             var axisys = coms.AxisYCollection;
             var series = coms.SeriesCollection;
-            var plotArea = coms.Chart.PlotArea;
+            var plotArea = coms.ConnectChart.PlotArea;
             if (LastPlotArea != plotArea)
             {
                 X.X1 = Y.X1 = 0;

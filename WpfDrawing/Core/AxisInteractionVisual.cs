@@ -105,7 +105,7 @@ namespace WpfDrawing
             var nearestX = currentPoint.X;
             var nearestY = currentPoint.Y;
 
-            var plotArea = coms.Chart.PlotArea;
+            var plotArea = coms.ConnectChart.PlotArea;
 
             var series = coms.SeriesCollection;
             if (plotArea.Contains(currentPoint))

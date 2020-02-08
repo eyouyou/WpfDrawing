@@ -122,35 +122,35 @@ namespace WpfDrawing
         YAxisVisualGroup AxisYVisuals = new YAxisVisualGroup();
         SeriesVisualGroup SeriesVisuals = new SeriesVisualGroup();
 
-        private readonly ChartDataSource Collections;
+        private readonly ChartDataSource Data;
         private readonly AxisInteractionVisual _InteractionVisuals;
 
         public override RectVisualContextData DefaultData => RectChartVisualCollectionData.Empty;
         public Chart()
         {
-            Collections = new ChartDataSource(this);
-            _InteractionVisuals = new AxisInteractionVisual(this, Collections);
+            Data = new ChartDataSource(this);
+            _InteractionVisuals = new AxisInteractionVisual(this, Data);
 
             AddSubVisual(AxisXVisuals);
             AddSubVisual(AxisYVisuals);
             AddSubVisual(SeriesVisuals);
 
-            DataSource = Collections;
+            DataSource = Data;
         }
         public void AddAsixX(DiscreteAxis axis)
         {
             AxisXVisuals.Add(axis);
-            Collections.AddAxisX(axis);
+            Data.AddAxisX(axis);
         }
         public void AddAsixY(ContinuousAxis axis)
         {
             AxisYVisuals.Add(axis);
-            Collections.AddAxisY(axis);
+            Data.AddAxisY(axis);
         }
         public void AddSeries(SeriesVisual series)
         {
             SeriesVisuals.Add(series);
-            Collections.AddSeries(series);
+            Data.AddSeries(series);
         }
         public IAxisVisualConfiguare XOption => AxisXVisuals;
         public IAxisVisualConfiguare YOption => AxisYVisuals;
@@ -201,7 +201,7 @@ namespace WpfDrawing
 
             var dc = RenderOpen();
             //画分割线
-            foreach (AxisVisual item in Collections.AxisYCollection)
+            foreach (AxisVisual item in Data.AxisYCollection)
             {
                 if (item.ShowGridLine && item.VisualData.Items[ContextDataItem.SortedSplitPoints] is List<Point> points)
                 {
@@ -214,7 +214,7 @@ namespace WpfDrawing
             }
 
 
-            var xCollection = Collections.AxisXCollection;
+            var xCollection = Data.AxisXCollection;
             foreach (AxisVisual item in xCollection)
             {
                 bool isXClosed = false;

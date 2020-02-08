@@ -9,7 +9,6 @@ namespace WpfDrawing
 {
     public class ComponentId
     {
-        public static ComponentId Current = new ComponentId();
         private int _id = 0;
         public int GenerateId()
         {

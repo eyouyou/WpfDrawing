@@ -32,6 +32,7 @@ namespace WpfDrawing
         public ToolTipBehavior Behavior { get; set; } = ToolTipBehavior.FollowLeft;
         public abstract void PushData(List<SeriesData> series);
         public abstract Border Border { get; }
+        public abstract DockPanel TextContainer { get; }
         public abstract Grid Layers { get; }
     }
     public class NormalToolTip : ToolTip
@@ -55,6 +56,8 @@ namespace WpfDrawing
         public override Border Border => border;
 
         public override Grid Layers => layers;
+
+        public override DockPanel TextContainer => dock;
 
         public DockPanel MakeValueText(SeriesData seriesData)
         {

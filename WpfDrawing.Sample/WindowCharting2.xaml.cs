@@ -24,11 +24,13 @@ namespace WpfDrawing.Sample
         {
             _children = new System.Windows.Media.VisualCollection(this)
             {
-                CreateDrawingVisualAA()
+                CreateDrawingVisualAA(),
+                //CreateDrawingImage(),
                 //CreateDrawingVisualRectangle(),
                 //CreateDrawingVisualText(),
                 //CreateDrawingVisualEllipses()
             };
+
 
             // Add the event handler for MouseLeftButtonUp.
             MouseLeftButtonUp += MyVisualHost_MouseLeftButtonUp;
@@ -125,6 +127,23 @@ namespace WpfDrawing.Sample
             return drawingVisual;
 
         }
+        private DrawingVisual CreateDrawingImage()
+        {
+            var uri = $"wallpaper_mikael_gustafsson.png";
+
+            System.Windows.Media.DrawingVisual drawingVisual = new System.Windows.Media.DrawingVisual();
+            DrawingContext drawingContext = drawingVisual.RenderOpen();
+
+            drawingVisual.XSnappingGuidelines = new DoubleCollection(new List<double>() { 1 });
+            drawingVisual.YSnappingGuidelines = new DoubleCollection(new List<double>() { 1 });
+            //Image image = new Image() { Source =  };
+            var source = new BitmapImage(new Uri(uri, UriKind.Relative));
+            drawingContext.DrawImage(source, new Rect(new Size(800, 450)));
+            drawingContext.Close();
+
+            return drawingVisual;
+
+        }
 
 
         // Provide a required override for the VisualChildrenCount property.
@@ -148,8 +167,22 @@ namespace WpfDrawing.Sample
         public WindowCharting2()
         {
             InitializeComponent();
+            Grid grid = new Grid();
+            var host = new MyVisualHost();
+            grid.Children.Add(host);
+            this.Content = grid;
+            BlurryUserControl b = new BlurryUserControl() { };
+            b.BorderBrush = Brushes.White;
+            b.BorderThickness = new Thickness(2);
+            b.Background = Brushes.Transparent;
+            b.BlurContainer = host;
+            b.Width = 300;
+            b.Height = 300;
+            b.Magnification = 0.25;
+            b.BlurRadius = 45;
+            Panel.SetZIndex(b, 100);
+            grid.Children.Add(b);
 
-            this.Content = new MyVisualHost();
         }
     }
 }

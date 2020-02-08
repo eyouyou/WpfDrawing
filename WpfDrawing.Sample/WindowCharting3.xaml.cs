@@ -26,6 +26,8 @@ namespace WpfDrawing.Sample
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.OrangeRed, 1) };
         public WindowCharting3()
         {
+            var uri = $"/wallpaper_mikael_gustafsson.png";
+
             InitializeComponent();
             Grid grid = new Grid() { };
 
@@ -37,7 +39,7 @@ namespace WpfDrawing.Sample
             chart.Offsets.Top = new GridLength(20);
 
             RectInteractionContainer container = new RectInteractionContainer(chart, chartCanvas);
-            container.Background = Brushes.GreenYellow;
+            //container.Background = Brushes.GreenYellow;
             chart.AddAsixX(axisX);
             chart.AddAsixY(axisY);
 
@@ -45,28 +47,27 @@ namespace WpfDrawing.Sample
             chart.AddSeries(lineSeries2);
 
             grid.Children.Add(container);
+            //chartCanvas.Visuals.Add(CreateDrawingImage());
 
             //chart.CrossOption.IsLabelShow = false;
             //chart.CrossOption.IsXShow = false;
 
             BlurryUserControl b = new BlurryUserControl() { };
-            b.BorderBrush = Brushes.White;
-            b.BorderThickness = new Thickness(2);
             b.Background = Brushes.Transparent;
             b.BlurContainer = chartCanvas;
-            b.Width = 300;
-            b.Height = 300;
             b.Magnification = 0.25;
-            b.BlurRadius = 45;
-            Panel.SetZIndex(b, 100);
-            chart.InteractionVisuals.Children.Add(b);
-            //chart.ToolTipOption.Tip.Layers.Children.Insert(0, b);
-            //chart.ToolTipOption.Tip.FontSize = 11;
-            //chart.ToolTipOption.Tip.Border.Padding = new Thickness(0);
-            //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;
-            //chart.ToolTipOption.Tip.Border.BorderThickness = new Thickness(2);
+            b.BlurRadius = 10;
 
-            chart.ToolTipOption.Tip.Background = Brushes.Transparent;
+            chart.ToolTipOption.Tip.TextContainer.Margin = new Thickness(10);
+            chart.ToolTipOption.Tip.Layers.Children.Insert(0, b);
+            chart.ToolTipOption.Tip.FontSize = 11;
+
+            chart.ToolTipOption.Tip.Border.Padding = new Thickness(0);
+            //chart.ToolTipOption.Tip.Foreground = Brushes.White;
+            //chart.ToolTipOption.Tip.Border.BorderThickness = new Thickness(2);
+            //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;
+            //chart.ToolTipOption.Tip.Background = Brushes.Black;
+            //chart.ToolTipOption.Tip.Opacity = 0.5;
             Content = grid;
             IsVisibleChanged += WindowCharting3_IsVisibleChanged;
             SizeChanged += WindowCharting3_SizeChanged;
@@ -89,7 +90,23 @@ namespace WpfDrawing.Sample
            }));
 
         }
+        private DrawingVisual CreateDrawingImage()
+        {
+            var uri = $"wallpaper_mikael_gustafsson.png";
 
+            System.Windows.Media.DrawingVisual drawingVisual = new System.Windows.Media.DrawingVisual();
+            DrawingContext drawingContext = drawingVisual.RenderOpen();
+
+            drawingVisual.XSnappingGuidelines = new DoubleCollection(new List<double>() { 1 });
+            drawingVisual.YSnappingGuidelines = new DoubleCollection(new List<double>() { 1 });
+            //Image image = new Image() { Source =  };
+            var source = new BitmapImage(new Uri(uri, UriKind.Relative));
+            drawingContext.DrawImage(source, new Rect(new Size(800, 450)));
+            drawingContext.Close();
+
+            return drawingVisual;
+
+        }
         private void WindowCharting3_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             StartDataFeed();

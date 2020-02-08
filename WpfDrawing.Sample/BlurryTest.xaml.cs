@@ -25,7 +25,7 @@ namespace WpfDrawing.Sample
             Grid grid = new Grid();
             this.Content = grid;
             var uri = $"/wallpaper_mikael_gustafsson.png";
-            Grid grid2 = new Grid();
+            Canvas grid2 = new Canvas();
             Canvas grid3 = new Canvas();
             grid.Children.Add(grid2);
             grid.Children.Add(grid3);

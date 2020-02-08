@@ -13,8 +13,6 @@ namespace WpfDrawing
     /// 取消所有外部plot
     /// </summary>
     public class AxisInteractionVisual : InteractionCanvas
-        , ICrossConfiguaration
-        , IToolTipConfiguaration
         , IIntersectable
     {
         public event IntersectChangedHandler IntersectChanged;
@@ -82,17 +80,9 @@ namespace WpfDrawing
         }
         public CrossVisual Cross { get; private set; }
         public ToolTipVisual DataToolTip { get; private set; }
-        public Line X => Cross.X;
-        public Line Y => Cross.Y;
-
-        public bool IsXDataAttract { get => Cross.IsXDataAttract; set => Cross.IsXDataAttract = value; }
-        public bool IsYDataAttract { get => Cross.IsYDataAttract; set => Cross.IsYDataAttract = value; }
 
         public override RectVisualContextData DefaultData => RectChartVisualData.Empty;
 
-        public bool IsLabelShow { get => Cross.IsLabelShow; set => Cross.IsLabelShow = value; }
-        public bool IsYShow { get => Cross.IsYShow; set => Cross.IsYShow = value; }
-        public bool IsXShow { get => Cross.IsXShow; set => Cross.IsXShow = value; }
         public ToolTip Tip { get => DataToolTip.Tip; set => DataToolTip.Tip = value; }
 
         List<ElementPosition> SeriesHitList;
@@ -162,7 +152,7 @@ namespace WpfDrawing
                             SeriesHitList.Add(new ElementPosition(series_item.HitElement.Content));
                         }
 
-                        if (IsYDataAttract)
+                        if (Cross.IsYDataAttract)
                         {
                             nearestY = y;
                         }

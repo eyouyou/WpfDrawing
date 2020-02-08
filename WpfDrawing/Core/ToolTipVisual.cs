@@ -27,11 +27,12 @@ namespace WpfDrawing
     {
         FollowLeft,
     }
-    public abstract class ToolTip : BlurryUserControl
+    public abstract class ToolTip : UserControl
     {
         public ToolTipBehavior Behavior { get; set; } = ToolTipBehavior.FollowLeft;
         public abstract void PushData(List<SeriesData> series);
         public abstract Border Border { get; }
+        public abstract Grid Layers { get; }
     }
     public class NormalToolTip : ToolTip
     {
@@ -39,11 +40,12 @@ namespace WpfDrawing
         TextBlock XText = new TextBlock();
         DockPanel dock_content = new DockPanel();
         Border border = new Border() { CornerRadius = new CornerRadius(3), Padding = new Thickness(10) };
-
+        Grid layers = new Grid();
         public NormalToolTip()
         {
             Visibility = Visibility.Collapsed;
-            border.Child = dock;
+            layers.Children.Add(dock);
+            border.Child = layers;
             Content = border;
 
             dock.AddChild(XText, Dock.Top);
@@ -51,6 +53,8 @@ namespace WpfDrawing
         }
 
         public override Border Border => border;
+
+        public override Grid Layers => layers;
 
         public DockPanel MakeValueText(SeriesData seriesData)
         {

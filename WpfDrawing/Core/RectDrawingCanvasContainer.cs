@@ -25,7 +25,6 @@ namespace WpfDrawing
             Children.Add(Canvas);
             Canvas.AddChild(visual);
             EnableInteraction = true;
-
         }
         private bool _enableInteraction = false;
         public bool EnableInteraction

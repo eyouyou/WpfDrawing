@@ -9,6 +9,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WpfDrawing.Sample
 {
@@ -17,7 +18,7 @@ namespace WpfDrawing.Sample
     /// </summary>
     public partial class WindowCharting3 : Window
     {
-        RectChartVisual chart = new RectChartVisual();
+        Chart chart = new Chart();
         RectDrawingCanvas chartCanvas = new RectDrawingCanvas(true) { };
         DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
 
@@ -26,7 +27,7 @@ namespace WpfDrawing.Sample
         public WindowCharting3()
         {
             InitializeComponent();
-            DockPanel grid = new DockPanel() { };
+            Grid grid = new Grid() { };
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
             //axisY.Range = new Range() { Max = new Value<double>(5000000), Min = new Value<double>(40000) };
@@ -43,18 +44,29 @@ namespace WpfDrawing.Sample
             chart.AddSeries(lineSeries);
             chart.AddSeries(lineSeries2);
 
+            grid.Children.Add(container);
+
             //chart.CrossOption.IsLabelShow = false;
             //chart.CrossOption.IsXShow = false;
-            chart.ToolTipOption.Tip.Width = 100;
-            chart.ToolTipOption.Tip.Height = 100;
-            chart.ToolTipOption.Tip.FontSize = 11;
-            chart.ToolTipOption.Tip.Border.Padding = new Thickness(1);
+
+            BlurryUserControl b = new BlurryUserControl() { };
+            b.BorderBrush = Brushes.White;
+            b.BorderThickness = new Thickness(2);
+            b.Background = Brushes.Transparent;
+            b.BlurContainer = chartCanvas;
+            b.Width = 300;
+            b.Height = 300;
+            b.Magnification = 0.25;
+            b.BlurRadius = 45;
+            Panel.SetZIndex(b, 100);
+            chart.InteractionVisuals.Children.Add(b);
+            //chart.ToolTipOption.Tip.Layers.Children.Insert(0, b);
+            //chart.ToolTipOption.Tip.FontSize = 11;
+            //chart.ToolTipOption.Tip.Border.Padding = new Thickness(0);
+            //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;
+            //chart.ToolTipOption.Tip.Border.BorderThickness = new Thickness(2);
+
             chart.ToolTipOption.Tip.Background = Brushes.Transparent;
-            chart.ToolTipOption.Tip.BlurContainer = chartCanvas;
-            chart.ToolTipOption.Tip.Magnification = 0.25;
-            chart.ToolTipOption.Tip.BlurRadius = 45;
-            Canvas.SetZIndex(chart.ToolTipOption.Tip, 100);
-            grid.AddChild(container, Dock.Left);
             Content = grid;
             IsVisibleChanged += WindowCharting3_IsVisibleChanged;
             SizeChanged += WindowCharting3_SizeChanged;

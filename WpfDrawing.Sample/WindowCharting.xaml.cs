@@ -22,7 +22,7 @@ namespace WpfDrawing.Sample
     /// </summary>
     public partial class WindowCharting : Window
     {
-        RectChartVisual chart = new RectChartVisual();
+        Chart chart = new Chart();
 
         public WindowCharting()
         {

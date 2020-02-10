@@ -10,10 +10,10 @@ namespace WpfDrawing
     public delegate void VisualChanged(RectDrawingVisual visual, Operations op);
     public abstract class RectDrawingVisualDataSource
     {
-        RectDrawingVisual ConnectVisual;
+        public RectDrawingVisual ConnectVisual;
         public RectDrawingVisualDataSource(RectDrawingVisual visual)
         {
-            ConnectVisual = visual;
+            ConnectVisual = visual ?? throw new ArgumentNullException("please");
         }
         public abstract event VisualChanged VisualChangedHandler;
     }

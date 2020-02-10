@@ -14,7 +14,7 @@ namespace WpfDrawing
     /// </summary>
     public abstract class InteractionCanvas : Canvas
     {
-        public Dictionary<int, RectDrawingVisualDataSource> DataSource { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
+        public Dictionary<int, RectDrawingVisualDataSource> DataSources { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
         public abstract RectVisualContextData DefaultData { get; }
         public InteractionCanvas(RectDrawingCanvas canvas)
         {
@@ -59,7 +59,7 @@ namespace WpfDrawing
         public InteractionLayer(InteractionCanvas canvas)
         {
             ParentCanvas = canvas;
-            DataSource = canvas.DataSource;
+            DataSource = canvas.DataSources;
         }
         public InteractionCanvas ParentCanvas { get; set; }
 

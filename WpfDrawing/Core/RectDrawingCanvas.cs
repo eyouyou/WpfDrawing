@@ -29,17 +29,34 @@ namespace WpfDrawing
                 _dataSource = value;
             }
         }
-
-        public int Id { get; set; }
+        /// <summary>
+        /// int.MinValue 无效
+        /// </summary>
+        public int Id { get; set; } = int.MinValue;
         /// <summary>
         /// drawingvisual交互
         /// </summary>
         public bool EnableInteraction { get; set; }
 
+        private InteractionCanvas _InteractionCanvas = null;
         /// <summary>
         /// 其他交互 目前有十字线、tip
         /// </summary>
-        public InteractionCanvas InteractionCanvas { get; set; }
+        public InteractionCanvas InteractionCanvas
+        {
+            get => _InteractionCanvas;
+            set
+            {
+                foreach (Visual item in Visuals)
+                {
+                    if (item is RectDrawingVisual rect)
+                    {
+                        rect.InteractionVisuals = value;
+                    }
+                }
+                _InteractionCanvas = value;
+            }
+        }
 
         /// <summary>
         /// 和所有visual的交互
@@ -148,6 +165,7 @@ namespace WpfDrawing
         public Rect PlotArea { get; set; }
         public void AddChild(RectDrawingVisual visual)
         {
+            visual.InteractionVisuals = _InteractionCanvas;
             Visuals.Add(visual);
             visual.ParentCanvas = this;
         }

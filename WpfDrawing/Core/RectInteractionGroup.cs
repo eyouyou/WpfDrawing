@@ -14,6 +14,7 @@ namespace WpfDrawing
     /// </summary>
     public class RectInteractionGroup : Grid
     {
+        ComponentId IdGenerater = new ComponentId();
         public RectInteractionGroup(AxisInteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvas[] canvas)
         {
             InteractionVisuals = interaction;
@@ -36,7 +37,11 @@ namespace WpfDrawing
                 Children.Add(item);
                 SetColumn(item, i % col);
                 SetRow(item, i / col);
-                interaction.DataSource.Add(item.Id, item.DataSource);
+                if (item.Id == int.MinValue)
+                {
+                    item.Id = IdGenerater.GenerateId();
+                }
+                interaction.DataSources.Add(item.Id, item.DataSource);
             }
 
             SetColumn(interaction, 0);

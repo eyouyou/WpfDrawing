@@ -24,12 +24,16 @@ namespace WpfDrawing
         private Point LastHitPoint;
         public AxisInteractionCanvas(RectDrawingCanvas canvas) : base(canvas)
         {
+            var _canvas = canvas ?? throw new ArgumentNullException("please");
+
             Cross = new CrossVisual(this);
             DataToolTip = new ToolTipVisual(this);
 
             MouseMove += AxisInteractionVisual_MouseMove;
             IsCrossShow = true;
             IsToolTipShow = true;
+
+            canvas.InteractionCanvas = this;
         }
 
         private void AxisInteractionVisual_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -104,7 +108,8 @@ namespace WpfDrawing
 
             VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
 
-            var coms = DataSource[0] as ChartDataSource;
+            var coms = DataSources.ElementAt(0).Value as ChartDataSource;
+
             var currentPoint = point;
 
             var nearestX = currentPoint.X;

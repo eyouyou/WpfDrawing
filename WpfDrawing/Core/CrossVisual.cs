@@ -55,7 +55,7 @@ namespace WpfDrawing
 
 
             var data = vdata.Value;
-            var coms = DataSource[0] as ChartDataSource;
+            var coms = DataSource.ElementAt(0).Value as ChartDataSource;
 
             var axisxs = coms.AxisXCollection;
             var axisys = coms.AxisYCollection;

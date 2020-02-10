@@ -41,7 +41,6 @@ namespace WpfDrawing.Sample
             chartCanvas.AddChild(chart);
             chartCanvas.DataSource = chart.DataSource;
             AxisInteractionCanvas interaction = new AxisInteractionCanvas(chartCanvas);
-            chart.InteractionVisuals = interaction;
 
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
             //container.Background = Brushes.GreenYellow;

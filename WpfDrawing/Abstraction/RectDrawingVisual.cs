@@ -56,7 +56,7 @@ namespace WpfDrawing
         /// 使用<see cref="RectInteractionGroup"/>
         /// </summary>
         public InteractionCanvas InteractionVisuals { get; set; }
-        public VisualCollection Visuals { get; set; }
+        protected VisualCollection Visuals { get; set; }
 
         /// <summary>
         /// 不做缓存 在各自plot节约调用
@@ -132,6 +132,7 @@ namespace WpfDrawing
                 return;
             }
             Visuals.Add(subRectVisual);
+            subRectVisual.ParentCanvas = ParentCanvas;
         }
 
         public virtual ILocatable ParentLocateble => Parent as ILocatable;

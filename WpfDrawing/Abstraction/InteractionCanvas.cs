@@ -54,12 +54,12 @@ namespace WpfDrawing
     }
     public abstract class InteractionLayer : IVisualControllable
     {
-        protected Dictionary<int, RectDrawingVisualDataSource> DataSource { get; set; }
+        protected Dictionary<int, RectDrawingVisualDataSource> DataSources { get; set; }
 
         public InteractionLayer(InteractionCanvas canvas)
         {
             ParentCanvas = canvas;
-            DataSource = canvas.DataSources;
+            DataSources = canvas.DataSources;
         }
         public InteractionCanvas ParentCanvas { get; set; }
 

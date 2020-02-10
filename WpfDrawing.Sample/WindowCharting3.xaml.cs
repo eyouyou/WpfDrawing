@@ -38,7 +38,12 @@ namespace WpfDrawing.Sample
             chart.Offsets.Right = new GridLength(10);
             chart.Offsets.Top = new GridLength(20);
 
-            RectInteractionContainer container = new RectInteractionContainer(chart, chartCanvas);
+            chartCanvas.AddChild(chart);
+            chartCanvas.DataSource = chart.DataSource;
+            AxisInteractionCanvas interaction = new AxisInteractionCanvas(chartCanvas);
+            chart.InteractionVisuals = interaction;
+
+            RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
             //container.Background = Brushes.GreenYellow;
             chart.AddAsixX(axisX);
             chart.AddAsixY(axisY);
@@ -53,16 +58,15 @@ namespace WpfDrawing.Sample
             //chart.CrossOption.IsXShow = false;
 
             BlurryUserControl b = new BlurryUserControl() { };
-            b.Background = Brushes.Transparent;
             b.BlurContainer = chartCanvas;
             b.Magnification = 0.25;
             b.BlurRadius = 10;
 
-            chart.ToolTipOption.Tip.TextContainer.Margin = new Thickness(10);
-            chart.ToolTipOption.Tip.Layers.Children.Insert(0, b);
-            chart.ToolTipOption.Tip.FontSize = 11;
+            interaction.ToolTipOption.Tip.TextContainer.Margin = new Thickness(10);
+            interaction.ToolTipOption.Tip.Layers.Children.Insert(0, b);
+            interaction.ToolTipOption.Tip.FontSize = 11;
 
-            chart.ToolTipOption.Tip.Border.Padding = new Thickness(0);
+            interaction.ToolTipOption.Tip.Border.Padding = new Thickness(0);
             //chart.ToolTipOption.Tip.Foreground = Brushes.White;
             //chart.ToolTipOption.Tip.Border.BorderThickness = new Thickness(2);
             //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;

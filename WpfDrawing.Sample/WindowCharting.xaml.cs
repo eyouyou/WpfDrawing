@@ -47,8 +47,11 @@ namespace WpfDrawing.Sample
             axisX.AxisPen = new Pen(Brushes.Red, 1);
             axisX2.AxisPen = new Pen(Brushes.PeachPuff, 1);
             axisX3.AxisPen = new Pen(Brushes.DarkCyan, 1);
-            RectInteractionContainer container = new RectInteractionContainer(chart, chartCanvas);
-            chart.CrossOption.IsCrossShow = true;
+
+            AxisInteractionCanvas interaction = new AxisInteractionCanvas(chartCanvas);
+            chartCanvas.AddChild(chart);
+            RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
+            interaction.CrossOption.IsCrossShow = true;
             chart.AddAsixX(axisX);
             chart.AddAsixX(axisX2);
             chart.AddAsixX(axisX3);

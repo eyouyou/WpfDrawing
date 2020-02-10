@@ -154,7 +154,7 @@ namespace WpfDrawing
             }
             LastPoint = hitPointer;
 
-            var area = ParentCanvas.DependencyVisual.PlotArea;
+            var area = ParentCanvas.DependencyCanvas.PlotArea;
 
             if (!area.Contains(point))
             {

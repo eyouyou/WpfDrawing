@@ -14,12 +14,11 @@ namespace WpfDrawing
     /// </summary>
     public abstract class InteractionCanvas : Canvas
     {
-        public RectDrawingVisualDataSource DataSource { get; private set; }
+        public Dictionary<int, RectDrawingVisualDataSource> DataSource { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
         public abstract RectVisualContextData DefaultData { get; }
-        public InteractionCanvas(RectDrawingVisual visual, RectDrawingVisualDataSource dataSource)
+        public InteractionCanvas(RectDrawingCanvas canvas)
         {
-            DependencyVisual = visual;
-            DataSource = dataSource;
+            DependencyCanvas = canvas;
             Background = Brushes.Transparent;
         }
         public void AddElement(UIElement element)
@@ -31,7 +30,7 @@ namespace WpfDrawing
             Children.Remove(element);
         }
 
-        public RectDrawingVisual DependencyVisual { get; }
+        public RectDrawingCanvas DependencyCanvas { get; }
 
         private RectVisualContextData _visualData = null;
         public RectVisualContextData VisualData
@@ -55,7 +54,7 @@ namespace WpfDrawing
     }
     public abstract class InteractionLayer : IVisualControllable
     {
-        public RectDrawingVisualDataSource DataSource { get; private set; }
+        protected Dictionary<int, RectDrawingVisualDataSource> DataSource { get; set; }
 
         public InteractionLayer(InteractionCanvas canvas)
         {

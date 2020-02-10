@@ -13,10 +13,34 @@ namespace WpfDrawing
 {
     public class RectDrawingCanvas : Canvas, ILocatable
     {
+        private RectDrawingVisualDataSource _dataSource;
+        public RectDrawingVisualDataSource DataSource
+        {
+            get
+            {
+                if (_dataSource == null)
+                {
+                    throw new ArgumentNullException();
+                }
+                return _dataSource;
+            }
+            set
+            {
+                _dataSource = value;
+            }
+        }
+
+        public int Id { get; set; }
         /// <summary>
-        /// drawing交互
+        /// drawingvisual交互
         /// </summary>
         public bool EnableInteraction { get; set; }
+
+        /// <summary>
+        /// 其他交互 目前有十字线、tip
+        /// </summary>
+        public InteractionCanvas InteractionCanvas { get; set; }
+
         /// <summary>
         /// 和所有visual的交互
         /// </summary>

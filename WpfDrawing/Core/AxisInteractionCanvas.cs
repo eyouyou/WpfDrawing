@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using WpfDrawing.Abstraction;
 
 namespace WpfDrawing
 {
     /// <summary>
     /// 取消所有外部plot
     /// </summary>
-    public class AxisInteractionVisual : InteractionCanvas
+    public class AxisInteractionCanvas : InteractionCanvas
         , IIntersectable
     {
+        public ICrossConfiguaration CrossOption => Cross;
+        public IToolTipConfiguaration ToolTipOption => DataToolTip;
+
         public event IntersectChangedHandler IntersectChanged;
 
         private Point LastHitPoint;
-        public AxisInteractionVisual(RectDrawingVisual visual, ChartDataSource dataSource) : base(visual, dataSource)
+        public AxisInteractionCanvas(RectDrawingCanvas canvas) : base(canvas)
         {
             Cross = new CrossVisual(this);
             DataToolTip = new ToolTipVisual(this);
@@ -95,11 +99,12 @@ namespace WpfDrawing
             }
             //series上的悬浮控件 标记当前位置
             SeriesHitList = new List<ElementPosition>();
+
             var seriesDatas = new List<SeriesData>();
 
             VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
 
-            var coms = DataSource as ChartDataSource;
+            var coms = DataSource[0] as ChartDataSource;
             var currentPoint = point;
 
             var nearestX = currentPoint.X;

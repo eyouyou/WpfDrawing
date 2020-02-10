@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using WpfDrawing.Abstraction;
 
 namespace WpfDrawing
 {
@@ -123,13 +124,11 @@ namespace WpfDrawing
         SeriesVisualGroup SeriesVisuals = new SeriesVisualGroup();
 
         private readonly ChartDataSource Data;
-        private readonly AxisInteractionVisual _InteractionVisuals;
 
         public override RectVisualContextData DefaultData => RectChartVisualCollectionData.Empty;
         public Chart()
         {
             Data = new ChartDataSource(this);
-            _InteractionVisuals = new AxisInteractionVisual(this, Data);
 
             AddSubVisual(AxisXVisuals);
             AddSubVisual(AxisYVisuals);
@@ -154,11 +153,6 @@ namespace WpfDrawing
         }
         public IAxisVisualConfiguare XOption => AxisXVisuals;
         public IAxisVisualConfiguare YOption => AxisYVisuals;
-        public ICrossConfiguaration CrossOption => _InteractionVisuals.Cross;
-        public IToolTipConfiguaration ToolTipOption => _InteractionVisuals.DataToolTip;
-        public IIntersectable Intersectable => _InteractionVisuals;
-
-        public override InteractionCanvas InteractionVisuals => _InteractionVisuals;
 
         public override RectDrawingVisualDataSource DataSource
         {
@@ -197,7 +191,10 @@ namespace WpfDrawing
             AxisYVisuals.DataPush(data.Value, data.Value.YData);
 
             //共享数据
-            InteractionVisuals.VisualData = VisualData;
+            if (InteractionVisuals != null)
+            {
+                InteractionVisuals.VisualData = VisualData;
+            }
 
             var dc = RenderOpen();
             //画分割线

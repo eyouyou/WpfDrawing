@@ -51,12 +51,12 @@ namespace WpfDrawing
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        /// <summary>
-        /// 使用<see cref="RectInteractionContainer"/>
-        /// </summary>
-        public virtual InteractionCanvas InteractionVisuals => null;
-        public System.Windows.Media.VisualCollection Visuals { get; set; }
 
+        /// <summary>
+        /// 使用<see cref="RectInteractionGroup"/>
+        /// </summary>
+        public InteractionCanvas InteractionVisuals { get; set; }
+        public VisualCollection Visuals { get; set; }
 
         /// <summary>
         /// 不做缓存 在各自plot节约调用

@@ -78,18 +78,25 @@ namespace WpfDrawing
         {
             base.DataPush(data, list);
 
+            //存在一个轴对应多个data的情况
+
             foreach (DiscreteAxis item in Visuals)
             {
+                // 这个visualdata 已分发好
                 if (!(item.VisualData is DiscreteAxisVisualData visualData))
                 {
                     continue;
                 }
-
-                //针对DiscreteAxis轴 
-                item.Data = visualData.Data.Select(it => it.ValueData(item.Name) as IVariable).ToList();
+                //TODO 性能
+                var datas = list.Where(it => it is DiscreteAxisVisualData && it.ComponentId == item.Id).Select(it => it as DiscreteAxisVisualData);
+                
+                //针对DiscreteAxis轴 会聚多数据源
+                item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().OrderBy(it => it).ToList();
 
                 item.CalculateRequireData();
             }
+
+
         }
         public void MakeData(RectChartVisualCollectionData data)
         {

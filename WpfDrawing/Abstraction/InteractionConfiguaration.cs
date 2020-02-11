@@ -23,7 +23,7 @@ namespace WpfDrawing
         ToolTip Tip { get; set; }
     }
 
-    public delegate void IntersectChangedHandler(List<SeriesData> data);
+    public delegate void IntersectChangedHandler(Dictionary<string, SeriesData> data);
 
     public interface IIntersectable
     {

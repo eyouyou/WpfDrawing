@@ -61,8 +61,8 @@ namespace WpfDrawing
 
         private DockPanel MakeValueText(SeriesData seriesData)
         {
-            DockPanel dock = new DockPanel() { LastChildFill = false };
-            var ellipse = new Ellipse() { Width = 10, Height = 10, Fill = seriesData.Color, Margin = new Thickness(0, 0, 5, 0) };
+            DockPanel dock = new DockPanel() { LastChildFill = false, VerticalAlignment = VerticalAlignment.Center };
+            var ellipse = new Ellipse() { Width = 10, Height = 10, Fill = seriesData.Color, Margin = new Thickness(0, 0, 5, 0), VerticalAlignment = VerticalAlignment.Center };
 
             dock.AddChild(ellipse, Dock.Left);
             if (!string.IsNullOrEmpty(seriesData.Name))

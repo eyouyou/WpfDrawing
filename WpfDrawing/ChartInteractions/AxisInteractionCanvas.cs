@@ -201,7 +201,7 @@ namespace WpfDrawing
                             seriesHitItem.Value.Render();
                         }
                     }
-                    IntersectChanged?.Invoke(seriesDatas);
+                    IntersectChanged?.Invoke(seriesDatas.ToDictionary(it => it.Name, it => it));
                     isHint = true;
                 }
             }

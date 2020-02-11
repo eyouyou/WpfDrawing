@@ -139,7 +139,7 @@ namespace WpfDrawing
         public BlurryUserControl()
         {
             Loaded += OnLoaded;
-            Background = Brushes.WhiteSmoke.OfStrength(0.2d);
+            
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)

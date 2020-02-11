@@ -204,6 +204,7 @@ namespace WpfDrawing
             var plotArea = PlotArea;
             var margin = AxisLabelOffset.GetActualLength(plotArea.Height);
             AxisLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            AxisLabel.Arrange(new Rect(AxisLabel.DesiredSize));
             switch (Position)
             {
                 case AxisPosition.Left:
@@ -244,6 +245,6 @@ namespace WpfDrawing
     }
     public class AxisLabel : TextBlock
     {
-        public int ZIndex { get; set; } = 1;
+        public int ZIndex { get; set; } = 0;
     }
 }

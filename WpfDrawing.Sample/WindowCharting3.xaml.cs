@@ -24,6 +24,7 @@ namespace WpfDrawing.Sample
 
         StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度" };
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.OrangeRed, 1) };
+
         public WindowCharting3()
         {
             var uri = $"/wallpaper_mikael_gustafsson.png";
@@ -58,7 +59,7 @@ namespace WpfDrawing.Sample
             //chart.CrossOption.IsLabelShow = false;
             //chart.CrossOption.IsXShow = false;
 
-            BlurryUserControl b = new BlurryUserControl() { };
+            BlurryUserControl b = new BlurryUserControl() { Background = Brushes.Black.OfStrength(0.2d) };
             b.BlurContainer = chartCanvas;
             b.Magnification = 0.25;
             b.BlurRadius = 10;
@@ -68,8 +69,8 @@ namespace WpfDrawing.Sample
             interaction.Tip.FontSize = 11;
             interaction.Tip.Border.CornerRadius = new CornerRadius(5);
             interaction.Tip.Border.Padding = new Thickness(0);
-            //chart.ToolTipOption.Tip.Foreground = Brushes.White;
-            //chart.ToolTipOption.Tip.Border.BorderThickness = new Thickness(2);
+            //interaction.Tip.Border.BorderBrush = Brushes.White;
+            //interaction.Tip.Border.BorderThickness = new Thickness(2);
             //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;
             //chart.ToolTipOption.Tip.Background = Brushes.Black;
             //chart.ToolTipOption.Tip.Opacity = 0.5;
@@ -123,22 +124,22 @@ namespace WpfDrawing.Sample
         private async Task Render(string blockId, string marketId)
         {
             var dic = await Request(blockId);
-            //var dic2 = await Request(marketId, true);
+            var dic2 = await Request(marketId, true);
 
             var group = dic.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList();
-            //group.AddRange(dic2.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList());
+            group.AddRange(dic2.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList());
             group = group.Distinct().OrderBy(it => it).ToList();
             axisX.SplitValues = group.Select(it => it.ToVisualData()).ToList();
 
-            //lineSeries2.VisualData = dic2.ToVisualData();
+            lineSeries2.VisualData = dic2.ToVisualData();
             lineSeries.VisualData = dic.ToVisualData();
             chartCanvas.Replot();
         }
         public async void StartDataFeed()
         {
             await Render("300843", "000001");
-            await Task.Delay(6000);
-            await Render("300843", "000001");
+            //await Task.Delay(6000);
+            //await Render("300843", "000001");
         }
         bool isFirst = true;
         public async Task<Dictionary<DateTime, double>> Request(string blockId, bool isMarket = false)

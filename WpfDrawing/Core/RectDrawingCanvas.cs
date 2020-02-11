@@ -157,6 +157,7 @@ namespace WpfDrawing
             {
                 if (item is RectDrawingVisual rect)
                 {
+                    rect.InteractionVisuals?.Hide();
                     rect.Plot();
                 }
             }

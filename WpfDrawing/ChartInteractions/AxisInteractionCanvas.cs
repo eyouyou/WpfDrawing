@@ -176,25 +176,6 @@ namespace WpfDrawing
                             }
 
                         }
-
-                        var hitPoint = new Point(nearestX, nearestY);
-                        VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
-                        //优化
-                        if (LastHitPoint.X == nearestX)
-                        {
-                            return;
-                        }
-                        LastHitPoint = hitPoint;
-
-                        if (IsCrossShow)
-                        {
-                            foreach (var seriesHitItem in SeriesHitList)
-                            {
-                                seriesHitItem.Value.Render();
-                            }
-                        }
-                        IntersectChanged?.Invoke(seriesDatas);
-                        isHint = true;
                     }
                     else
                     {
@@ -204,6 +185,24 @@ namespace WpfDrawing
                         }
                     }
 
+                    var hitPoint = new Point(nearestX, nearestY);
+                    VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
+                    //优化
+                    if (LastHitPoint.X == nearestX)
+                    {
+                        return;
+                    }
+                    LastHitPoint = hitPoint;
+
+                    if (IsCrossShow)
+                    {
+                        foreach (var seriesHitItem in SeriesHitList)
+                        {
+                            seriesHitItem.Value.Render();
+                        }
+                    }
+                    IntersectChanged?.Invoke(seriesDatas);
+                    isHint = true;
                 }
             }
 

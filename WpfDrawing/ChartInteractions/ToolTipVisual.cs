@@ -154,37 +154,47 @@ namespace WpfDrawing
             }
             LastPoint = hitPointer;
 
-            var area = ParentCanvas.DependencyCanvas.PlotArea;
-
-            if (!area.Contains(point))
+            bool isHint = false;
+            foreach (var item in DataSources)
             {
-                Tip.Visibility = Visibility.Collapsed;
-                return;
-            }
-            if (!isXInvariant)
-            {
-                Tip.PushData(data);
-            }
-            Tip.Visibility = Visibility.Visible;
-
-            switch (Tip.Behavior)
-            {
-                case ToolTipBehavior.FollowLeft:
+                if (item.Value is ChartDataSource dataSource)
+                {
+                    var area = dataSource.ConnectVisual.PlotArea;
+                    if (!isHint && !area.Contains(point))
                     {
-                        Tip.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-                        var offsetPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y);
-
-                        if (area.Contains(offsetPoint))
-                        {
-                            Canvas.SetTop(Tip, offsetPoint.Y);
-                            Canvas.SetLeft(Tip, offsetPoint.X);
-                        }
+                        Tip.Visibility = Visibility.Collapsed;
+                        continue;
                     }
-                    break;
-                default:
-                    break;
+                    if (!isXInvariant)
+                    {
+                        Tip.PushData(data);
+                    }
+                    Tip.Visibility = Visibility.Visible;
+
+                    switch (Tip.Behavior)
+                    {
+                        case ToolTipBehavior.FollowLeft:
+                            {
+                                Tip.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+                                var offsetPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y);
+
+                                if (area.Contains(offsetPoint))
+                                {
+                                    Canvas.SetTop(Tip, offsetPoint.Y);
+                                    Canvas.SetLeft(Tip, offsetPoint.X);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    isHint = true;
+                }
             }
+
+
 
         }
         public override void Hide()

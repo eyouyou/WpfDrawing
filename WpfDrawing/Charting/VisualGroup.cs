@@ -86,10 +86,7 @@ namespace WpfDrawing
                 }
 
                 //针对DiscreteAxis轴 
-                if (item.Data == null || item.Data.Count == 0)
-                {
-                    item.Data = visualData.Data.Select(it => it.ValueData(item.Name) as IVariable).ToList();
-                }
+                item.Data = visualData.Data.Select(it => it.ValueData(item.Name) as IVariable).ToList();
 
                 item.CalculateRequireData();
             }

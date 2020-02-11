@@ -167,7 +167,9 @@ namespace WpfDrawing
                     splitValues.Add(data[index]);
                 }
             }
+
             isMapping = splitRatiosPlus.Count >= data.Count;
+
             var index2 = 0;
 
             //数据和x轴能对应上的情况

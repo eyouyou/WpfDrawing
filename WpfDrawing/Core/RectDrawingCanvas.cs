@@ -20,7 +20,7 @@ namespace WpfDrawing
             {
                 if (_dataSource == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("please init datasource!");
                 }
                 return _dataSource;
             }

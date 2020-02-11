@@ -12,42 +12,41 @@ namespace WpfDrawing
     {
         public override RectVisualContextData DefaultData => null;
 
+        public abstract bool IsolateData { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="list">未处理数据</param>
+        /// <returns></returns>
         public virtual void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
         {
             VisualDataSetupTidily(data);
 
             var visuals = new List<RectDrawingVisual>();
+
             foreach (RectDrawingVisual visual in Visuals)
             {
                 var item = list.FirstOrDefault(it => it.ComponentId == visual.Id);
                 if (item != null)
                 {
-                    if (!visual.IsShieldedParentData)
-                    {
-                        visual.VisualData = item.Copy();
-                    }
-                    visual.VisualData.Current = data;
-                    visual.Reset();
+                    visual.DeliverVisualData(item.Copy());
                 }
                 else
                 {
                     visuals.Add(visual);
                 }
             }
-            if (list.Count > 0)
+            if (list.Count > 0 && !IsolateData)
             {
                 foreach (var visual in visuals)
                 {
-                    if (!visual.IsShieldedParentData)
-                    {
-                        visual.VisualData = list[0].Copy();
-                    }
-                    visual.VisualData.Current = data;
-                    visual.Reset();
+                    visual.DeliverVisualData(list[0].Copy());
                 }
             }
 
         }
+
         public void Add(RectDrawingVisual item)
         {
             AddSubVisual(item);
@@ -68,9 +67,9 @@ namespace WpfDrawing
     /// <typeparam name="T"></typeparam>
     public class XAxisVisualGroup : RectVisualGroup, IAxisVisualConfiguare
     {
-
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1);
 
+        public override bool IsolateData => false;
 
         /// <summary>
         /// <see cref="VisualData.set"/>:  从父亲<see cref="RectDrawingVisual.VisualData"/>继承<see cref="RectVisualContextData.Items"/>
@@ -117,6 +116,8 @@ namespace WpfDrawing
     {
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1) { /*DashStyle = DashStyles.Dash, DashCap = PenLineCap.Flat*/ };
 
+        public override bool IsolateData => false;
+
         public override void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
         {
             base.DataPush(data, list);
@@ -138,7 +139,7 @@ namespace WpfDrawing
                     if (DataSource is ChartDataSource coms)
                     {
                         var series = coms.GetMappingSeries(item.Id);
-                        var ranges = series.Select(it => (it.VisualData as RectChartVisualData).YData.Range).ToList();
+                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as RectChartVisualData).YData.Range).ToList();
                         visualData.Range = new Range() { Max = ranges.Max(it => it.Max), Min = ranges.Min(it => it.Min) };
                     }
                 }
@@ -168,6 +169,8 @@ namespace WpfDrawing
     /// </summary>
     public class SeriesVisualGroup : RectVisualGroup
     {
+        public override bool IsolateData => true;
+
         public override void PlotToDc(DrawingContext dc)
         {
             foreach (SeriesVisual item in Visuals)
@@ -190,7 +193,7 @@ namespace WpfDrawing
             foreach (SeriesVisual item in Visuals)
             {
                 index++;
-                if (item.VisualData is RectChartVisualData rectData)
+                if (item.VisualData is RectChartVisualData rectData && !rectData.IsEmpty)
                 {
                     rectData.YData.Range = item.GetRange();
                     rectData.ComponentId = item.Id;

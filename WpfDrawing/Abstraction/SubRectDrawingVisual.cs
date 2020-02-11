@@ -48,12 +48,7 @@ namespace WpfDrawing
                 _visualData = value;
                 foreach (RectDrawingVisual item in Visuals)
                 {
-                    if (!item.IsShieldedParentData || item.VisualData.IsEmpty())
-                    {
-                        item.VisualData = VisualData.Copy();
-                    }
-                    item.VisualData.Current = VisualData;
-                    item.Reset();
+                    item.DeliverVisualData(VisualData.Copy());
                 }
             }
         }

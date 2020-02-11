@@ -154,6 +154,9 @@ namespace WpfDrawing
         public IAxisVisualConfiguare XOption => AxisXVisuals;
         public IAxisVisualConfiguare YOption => AxisYVisuals;
 
+        /// <summary>
+        /// 赋值给Canvas.DataSource
+        /// </summary>
         public override RectDrawingVisualDataSource DataSource
         {
             get => base.DataSource;
@@ -180,10 +183,15 @@ namespace WpfDrawing
             //从seriesvisual里面取值画坐标轴
             if (data.IsBad)
             {
-                data.Value = SeriesVisuals.MakeData();
-                AxisXVisuals.MakeData(data.Value);
-                AxisYVisuals.MakeData(data.Value);
-                VisualDataSetupTidily(data.Value);
+                var dataMade = SeriesVisuals.MakeData();
+                if (dataMade.IsEmpty)
+                {
+                    return;
+                }
+                data.Value = dataMade;
+                AxisXVisuals.MakeData(dataMade);
+                AxisYVisuals.MakeData(dataMade);
+                VisualDataSetupTidily(dataMade);
             }
 
             SeriesVisuals.DataPush(data.Value, data.Value.Data);

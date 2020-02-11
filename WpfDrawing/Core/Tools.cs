@@ -188,6 +188,22 @@ namespace WpfDrawing
             DockPanel.SetDock(element, dock);
             panel.Children.Add(element);
         }
+
+        /// <summary>
+        /// 传递visualdata
+        /// </summary>
+        /// <param name="visual"></param>
+        /// <param name="data"></param>
+        public static void DeliverVisualData(this RectDrawingVisual visual, RectVisualContextData data)
+        {
+            if (!visual.IsShieldedParentData)
+            {
+                visual.VisualData = data;
+            }
+            visual.VisualData.Current = data;
+            visual.Reset();
+        }
+
     }
     public class VisualData<T>
     {

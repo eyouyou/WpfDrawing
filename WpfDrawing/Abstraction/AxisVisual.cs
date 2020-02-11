@@ -218,7 +218,7 @@ namespace WpfDrawing
                     }
                     break;
                 case AxisPosition.Right:
-                    {
+                    { 
                         data.Top = Start.Y - Math.Abs(position.Y) - AxisLabel.DesiredSize.Height / 2;
                         data.Left = Start.X + margin;
                     }

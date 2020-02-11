@@ -10,7 +10,7 @@ using System.Windows.Media;
 namespace WpfDrawing
 {
     public struct ElementPosition
-    {
+    { 
         public ElementPosition(UIElement element, bool isVisible = false, double left = double.NaN, double top = double.NaN, int zIndex = -1)
         {
             Element = element;

@@ -59,7 +59,7 @@ namespace WpfDrawing
 
         public override DockPanel TextContainer => dock;
 
-        public DockPanel MakeValueText(SeriesData seriesData)
+        private DockPanel MakeValueText(SeriesData seriesData)
         {
             DockPanel dock = new DockPanel() { LastChildFill = false };
             var ellipse = new Ellipse() { Width = 10, Height = 10, Fill = seriesData.Color, Margin = new Thickness(0, 0, 5, 0) };

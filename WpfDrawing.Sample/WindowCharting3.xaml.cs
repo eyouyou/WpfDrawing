@@ -63,11 +63,11 @@ namespace WpfDrawing.Sample
             b.Magnification = 0.25;
             b.BlurRadius = 10;
 
-            interaction.ToolTipOption.Tip.TextContainer.Margin = new Thickness(10);
-            interaction.ToolTipOption.Tip.Layers.Children.Insert(0, b);
-            interaction.ToolTipOption.Tip.FontSize = 11;
-
-            interaction.ToolTipOption.Tip.Border.Padding = new Thickness(0);
+            interaction.Tip.TextContainer.Margin = new Thickness(10);
+            interaction.Tip.Layers.Children.Insert(0, b);
+            interaction.Tip.FontSize = 11;
+            interaction.Tip.Border.CornerRadius = new CornerRadius(5);
+            interaction.Tip.Border.Padding = new Thickness(0);
             //chart.ToolTipOption.Tip.Foreground = Brushes.White;
             //chart.ToolTipOption.Tip.Border.BorderThickness = new Thickness(2);
             //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;

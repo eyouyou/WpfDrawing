@@ -205,7 +205,7 @@ namespace WpfDrawing
                     {
                         foreach (var visual in AxisVisuals)
                         {
-                            visual.Value.AxisLabel.Visibility = Visibility.Collapsed;
+                            visual.Value.AxisLabel.Visibility = Visibility.Hidden;
                         }
 
                         X.Visibility = Visibility.Collapsed;
@@ -222,7 +222,8 @@ namespace WpfDrawing
         {
             foreach (var item in AxisVisuals)
             {
-                item.Value.AxisLabel.Visibility = Visibility.Collapsed;
+                //这个一定要hidden 不然没法计算大小
+                item.Value.AxisLabel.Visibility = Visibility.Hidden;
             }
 
             X.Visibility = Visibility.Collapsed;

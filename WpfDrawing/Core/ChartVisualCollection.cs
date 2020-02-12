@@ -40,7 +40,8 @@ namespace WpfDrawing
         List<AxisVisual> AxisYs = new List<AxisVisual>();
         List<AxisVisual> AxisXs = new List<AxisVisual>();
 
-        protected Dictionary<int, RectDrawingVisual> VisualMappings = new Dictionary<int, RectDrawingVisual>();
+        protected Dictionary<int, RectDrawingVisual> XMappings = new Dictionary<int, RectDrawingVisual>();
+        protected Dictionary<int, RectDrawingVisual> YMappings = new Dictionary<int, RectDrawingVisual>();
         List<RectDrawingVisual> All = new List<RectDrawingVisual>();
 
         public override event VisualChanged VisualChangedHandler;
@@ -87,6 +88,7 @@ namespace WpfDrawing
             {
                 SeriesMapping[id] = new List<AxisVisual>();
             }
+            YMappings.Add(axis.Id, axis);
             SeriesMapping[id].Add(axis);
             axis.DataSource = this;
         }
@@ -97,7 +99,7 @@ namespace WpfDrawing
             AxisXs.Add(axis);
             All.Add(axis);
 
-            VisualMappings.Add(axis.Id, axis);
+            XMappings.Add(axis.Id, axis);
             axis.DataSource = this;
         }
         private void GenerateId(RectDrawingVisual visual)
@@ -137,18 +139,29 @@ namespace WpfDrawing
         public List<AxisVisual> AxisYCollection => AxisYs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisYs);
         public List<AxisVisual> AxisXCollection => AxisXs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisXs);
 
-        public RectDrawingVisual FindById(int id)
+        public RectDrawingVisual FindXById(int id)
         {
-            if (VisualMappings.ContainsKey(id))
+            if (XMappings.ContainsKey(id))
             {
-                return VisualMappings[id];
+                return XMappings[id];
             }
-            if (All.Count == 0)
+            if (AxisXs.Count == 0)
             {
                 return null;
             }
-            return All[0] as RectDrawingVisual;
+            return AxisXs[0] as RectDrawingVisual;
         }
-
+        public RectDrawingVisual FindYById(int id)
+        {
+            if (YMappings.ContainsKey(id))
+            {
+                return YMappings[id];
+            }
+            if (AxisYs.Count == 0)
+            {
+                return null;
+            }
+            return AxisYs[0] as RectDrawingVisual;
+        }
     }
 }

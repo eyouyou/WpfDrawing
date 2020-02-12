@@ -103,13 +103,13 @@ namespace WpfDrawing
 
 
         }
-        public void MakeData(RectChartGroupContextData data)
+        public void InductiveData(RectChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
                 foreach (var item in data.XData)
                 {
-                    var component = coms.FindById(item.ComponentId);
+                    var component = coms.FindXById(item.ComponentId);
                     item.ComponentId = component.Id;
                 }
             }
@@ -156,13 +156,13 @@ namespace WpfDrawing
 
             }
         }
-        public void MakeData(RectChartGroupContextData data)
+        public void InductiveData(RectChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
                 foreach (var item in data.YData)
                 {
-                    var component = coms.FindById(item.ComponentId);
+                    var component = coms.FindYById(item.ComponentId);
                     item.ComponentId = component.Id;
                 }
             }
@@ -192,10 +192,11 @@ namespace WpfDrawing
             base.DataPush(data, list);
         }
         /// <summary>
+        /// 归纳
         /// 临时方案 可以用分组或分治算法进行优化
         /// </summary>
         /// <returns></returns>
-        public RectChartGroupContextData MakeData()
+        public RectChartGroupContextData InductiveData()
         {
             var index = -1;
             var list = new List<RectChartContextData>();

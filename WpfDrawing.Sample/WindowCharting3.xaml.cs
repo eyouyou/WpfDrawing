@@ -47,8 +47,8 @@ namespace WpfDrawing.Sample
 
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
             //container.Background = Brushes.GreenYellow;
-            chart.AddAsixX(axisX);
             chart.AddAsixY(axisY);
+            chart.AddAsixX(axisX);
 
             chart.AddSeries(lineSeries);
             chart.AddSeries(lineSeries2);

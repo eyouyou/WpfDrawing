@@ -183,14 +183,14 @@ namespace WpfDrawing
             //从seriesvisual里面取值画坐标轴
             if (data.IsBad)
             {
-                var dataMade = SeriesVisuals.MakeData();
+                var dataMade = SeriesVisuals.InductiveData();
                 if (dataMade.IsEmpty)
                 {
                     return;
                 }
                 data.Value = dataMade;
-                AxisXVisuals.MakeData(dataMade);
-                AxisYVisuals.MakeData(dataMade);
+                AxisXVisuals.InductiveData(dataMade);
+                AxisYVisuals.InductiveData(dataMade);
                 VisualDataSetupTidily(dataMade);
             }
 

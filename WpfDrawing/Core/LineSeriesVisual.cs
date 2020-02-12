@@ -41,7 +41,7 @@ namespace WpfDrawing
             {
                 return;
             }
-            var x = coms.FindById(Id) as DiscreteAxis;
+            var x = coms.FindXById(Id) as DiscreteAxis;
             if (x == null)
             {
                 return;
@@ -101,7 +101,7 @@ namespace WpfDrawing
             {
                 return;
             }
-            var x = coms.FindById(Id) as DiscreteAxis;
+            var x = coms.FindXById(Id) as DiscreteAxis;
             if (x == null)
             {
                 return;

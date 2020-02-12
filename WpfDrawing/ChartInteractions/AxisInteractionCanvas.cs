@@ -129,7 +129,7 @@ namespace WpfDrawing
                                 continue;
                             }
                             var series_plot = series_item.PlotArea;
-                            var xAxis = dataSource.FindById(series_item.XAxisId) as DiscreteAxis;
+                            var xAxis = dataSource.FindXById(series_item.XAxisId) as DiscreteAxis;
                             var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X));
                             if (value.IsBad())
                             {

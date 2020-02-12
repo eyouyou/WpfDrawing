@@ -9,11 +9,11 @@ using System.Windows.Media;
 
 namespace WpfDrawing
 {
-    public class DiscreteAxisVisualData : RectVisualContextData
+    public class DiscreteAxisContextData : RectVisualContextData
     {
-        public static DiscreteAxisVisualData Empty => new DiscreteAxisVisualData(new List<IVariable>());
+        public static DiscreteAxisContextData Empty => new DiscreteAxisContextData(new List<IVariable>());
 
-        public DiscreteAxisVisualData(List<IVariable> data)
+        public DiscreteAxisContextData(List<IVariable> data)
         {
             Data = data;
         }
@@ -23,7 +23,7 @@ namespace WpfDrawing
 
         public override RectVisualContextData Copy()
         {
-            return new DiscreteAxisVisualData(Data);
+            return new DiscreteAxisContextData(Data);
         }
     }
 
@@ -33,7 +33,7 @@ namespace WpfDrawing
         {
             Position = position;
         }
-        public override RectVisualContextData DefaultData => DiscreteAxisVisualData.Empty;
+        public override RectVisualContextData DefaultData => DiscreteAxisContextData.Empty;
         /// <summary>
         /// 是否区间
         /// </summary>
@@ -237,7 +237,7 @@ namespace WpfDrawing
         }
         public override void PlotToDc(DrawingContext dc)
         {
-            if (!(VisualData is DiscreteAxisVisualData contextData))
+            if (!(VisualData is DiscreteAxisContextData contextData))
             {
                 return;
             }

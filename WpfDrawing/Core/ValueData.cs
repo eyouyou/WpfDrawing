@@ -11,7 +11,7 @@ namespace WpfDrawing
         public static RectVisualContextData ToVisualData<X>(this Dictionary<X, double> dic)
             where X : IFormattable, IComparable
         {
-            return new RectChartVisualData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
+            return new RectChartContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
         }
         public static IVariable ToVisualData<T>(this T t)
             where T : IFormattable, IComparable
@@ -90,9 +90,9 @@ namespace WpfDrawing
 
 
     }
-    public class ListVisualData<T> : RectVisualContextData
+    public class ListContextData<T> : RectVisualContextData
     {
-        public ListVisualData(List<T> list)
+        public ListContextData(List<T> list)
         {
             Value = list;
         }
@@ -105,7 +105,7 @@ namespace WpfDrawing
 
         public override RectVisualContextData Copy()
         {
-            return new ListVisualData<T>(Value);
+            return new ListContextData<T>(Value);
         }
     }
 }

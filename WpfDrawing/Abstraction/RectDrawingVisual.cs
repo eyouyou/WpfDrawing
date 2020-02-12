@@ -23,7 +23,7 @@ namespace WpfDrawing
         /// <summary>
         /// 屏蔽父visual的<see cref="VisualData"/>
         /// </summary>
-        public bool IsShieldedParentData { get; set; } = false;
+        public bool IsolateData { get; set; } = false;
 
         public RectDrawingVisual(RectDrawingVisualDataSource dataSource) : this()
         {

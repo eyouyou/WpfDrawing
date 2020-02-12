@@ -196,7 +196,7 @@ namespace WpfDrawing
         /// <param name="data"></param>
         public static void DeliverVisualData(this RectDrawingVisual visual, RectVisualContextData data)
         {
-            if (!visual.IsShieldedParentData)
+            if (!visual.IsolateData)
             {
                 visual.VisualData = data;
             }

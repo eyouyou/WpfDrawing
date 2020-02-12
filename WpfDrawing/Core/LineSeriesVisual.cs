@@ -24,7 +24,7 @@ namespace WpfDrawing
         public override void PlotToDc(DrawingContext dc)
         {
             VisualScrollableAreaClip = PlotArea;
-            var vData = VisualData.TransformVisualData<RectChartVisualData>();
+            var vData = VisualData.TransformVisualData<RectChartContextData>();
             if (vData.IsBad)
             {
                 return;
@@ -85,7 +85,7 @@ namespace WpfDrawing
 
         public override void PlotToDc(DrawingContext dc)
         {
-            if (!(VisualData is RectChartVisualData data))
+            if (!(VisualData is RectChartContextData data))
             {
                 return;
             }

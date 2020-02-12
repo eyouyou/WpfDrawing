@@ -89,7 +89,7 @@ namespace WpfDrawing
         public CrossVisual Cross { get; private set; }
         public ToolTipVisual DataToolTip { get; private set; }
 
-        public override RectVisualContextData DefaultData => RectChartVisualData.Empty;
+        public override RectVisualContextData DefaultData => RectChartContextData.Empty;
 
         public ToolTip Tip { get => DataToolTip.Tip; set => DataToolTip.Tip = value; }
 
@@ -139,7 +139,7 @@ namespace WpfDrawing
                             var key = new ComponentKey(series_item.ParentCanvas.Id, series_item.Id);
                             if (series_item.HitElement.Content != null
                                 && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
-                                && series_item.VisualData is RectChartVisualData series_data
+                                && series_item.VisualData is RectChartContextData series_data
                                 && series_data.Data.ContainsKey(value))
                             {
                                 var x = xAxis.GetPosition(value).X + xAxis.Start.X;

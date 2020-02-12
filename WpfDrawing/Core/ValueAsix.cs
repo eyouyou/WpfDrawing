@@ -9,31 +9,31 @@ using System.Windows.Media;
 
 namespace WpfDrawing
 {
-    public class ContinuousAxisVisualData : RectVisualContextData
+    public class ContinuousAxisContextData : RectVisualContextData
     {
         public Range Range { get; set; }
 
         public override bool IsEmpty => Range.Min.Data == 0 && double.IsNaN(Range.Max.Data);
 
-        public static ContinuousAxisVisualData Empty =>
-            new ContinuousAxisVisualData(new Range() { Max = new Value<double>(double.NaN), Min = new Value<double>(0) });
+        public static ContinuousAxisContextData Empty =>
+            new ContinuousAxisContextData(new Range() { Max = new Value<double>(double.NaN), Min = new Value<double>(0) });
 
 
-        public ContinuousAxisVisualData(Range range)
+        public ContinuousAxisContextData(Range range)
         {
             Range = range;
         }
-        public ContinuousAxisVisualData(List<double> values)
+        public ContinuousAxisContextData(List<double> values)
         {
             Range = new Range() { Max = new Value<double>(values.Max()), Min = new Value<double>(values.Min()) };
         }
-        public ContinuousAxisVisualData(List<Value<double>> values)
+        public ContinuousAxisContextData(List<Value<double>> values)
         {
             Range = new Range() { Max = values.Max(), Min = values.Min() };
         }
         public override RectVisualContextData Copy()
         {
-            return new ContinuousAxisVisualData(Range);
+            return new ContinuousAxisContextData(Range);
         }
     }
 
@@ -58,7 +58,7 @@ namespace WpfDrawing
         public double Base { get; set; }
         public int SplitNum { get; set; }
 
-        public override RectVisualContextData DefaultData => ContinuousAxisVisualData.Empty;
+        public override RectVisualContextData DefaultData => ContinuousAxisContextData.Empty;
 
         public override IFormatProvider FormatProvider => null;
 
@@ -72,7 +72,7 @@ namespace WpfDrawing
 
         public override void PlotToDc(DrawingContext dc)
         {
-            var vData = VisualData.TransformVisualData<ContinuousAxisVisualData>();
+            var vData = VisualData.TransformVisualData<ContinuousAxisContextData>();
             if (vData.IsBad)
             {
                 return;
@@ -136,7 +136,7 @@ namespace WpfDrawing
 
         public override IVariable GetValue(double offsetPosition)
         {
-            if (!(VisualData is ContinuousAxisVisualData context))
+            if (!(VisualData is ContinuousAxisContextData context))
             {
                 return default;
             }
@@ -152,7 +152,7 @@ namespace WpfDrawing
 
         public override Vector GetPosition(IVariable value)
         {
-            if (!(VisualData is ContinuousAxisVisualData context))
+            if (!(VisualData is ContinuousAxisContextData context))
             {
                 return new Vector();
             }
@@ -165,7 +165,7 @@ namespace WpfDrawing
 
         public override void CalculateRequireData()
         {
-            if (!(VisualData is ContinuousAxisVisualData context))
+            if (!(VisualData is ContinuousAxisContextData context))
             {
                 return;
             }

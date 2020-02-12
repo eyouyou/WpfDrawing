@@ -12,7 +12,12 @@ namespace WpfDrawing
     {
         public override RectVisualContextData DefaultData => null;
 
-        public abstract bool IsolateData { get; }
+        /// <summary>
+        /// 必须要一个visualdata
+        /// 如果需要就拿挡墙
+        /// </summary>
+        protected abstract bool NeedData { get; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -37,7 +42,7 @@ namespace WpfDrawing
                     visuals.Add(visual);
                 }
             }
-            if (list.Count > 0 && !IsolateData)
+            if (list.Count > 0 && visuals.Count > 0 && NeedData)
             {
                 foreach (var visual in visuals)
                 {
@@ -69,7 +74,7 @@ namespace WpfDrawing
     {
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1);
 
-        public override bool IsolateData => false;
+        protected override bool NeedData => true;
 
         /// <summary>
         /// <see cref="VisualData.set"/>:  从父亲<see cref="RectDrawingVisual.VisualData"/>继承<see cref="RectVisualContextData.Items"/>
@@ -83,13 +88,13 @@ namespace WpfDrawing
             foreach (DiscreteAxis item in Visuals)
             {
                 // 这个visualdata 已分发好
-                if (!(item.VisualData is DiscreteAxisVisualData visualData))
+                if (!(item.VisualData is DiscreteAxisContextData visualData))
                 {
                     continue;
                 }
                 //TODO 性能
-                var datas = list.Where(it => it is DiscreteAxisVisualData && it.ComponentId == item.Id).Select(it => it as DiscreteAxisVisualData);
-                
+                var datas = list.Where(it => it is DiscreteAxisContextData && it.ComponentId == item.Id).Select(it => it as DiscreteAxisContextData);
+
                 //针对DiscreteAxis轴 会聚多数据源
                 item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().OrderBy(it => it).ToList();
 
@@ -98,7 +103,7 @@ namespace WpfDrawing
 
 
         }
-        public void MakeData(RectChartVisualCollectionData data)
+        public void MakeData(RectChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
@@ -120,7 +125,7 @@ namespace WpfDrawing
     {
         public Pen CrossPen { get; set; } = new Pen(Brushes.DarkGray, 1) { /*DashStyle = DashStyles.Dash, DashCap = PenLineCap.Flat*/ };
 
-        public override bool IsolateData => false;
+        protected override bool NeedData => true;
 
         public override void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
         {
@@ -128,7 +133,7 @@ namespace WpfDrawing
 
             foreach (ContinuousAxis item in Visuals)
             {
-                if (!(item.VisualData is ContinuousAxisVisualData visualData))
+                if (!(item.VisualData is ContinuousAxisContextData visualData))
                 {
                     return;
                 }
@@ -143,7 +148,7 @@ namespace WpfDrawing
                     if (DataSource is ChartDataSource coms)
                     {
                         var series = coms.GetMappingSeries(item.Id);
-                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as RectChartVisualData).YData.Range).ToList();
+                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as RectChartContextData).YData.Range).ToList();
                         visualData.Range = new Range() { Max = ranges.Max(it => it.Max), Min = ranges.Min(it => it.Min) };
                     }
                 }
@@ -151,7 +156,7 @@ namespace WpfDrawing
 
             }
         }
-        public void MakeData(RectChartVisualCollectionData data)
+        public void MakeData(RectChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
@@ -173,7 +178,7 @@ namespace WpfDrawing
     /// </summary>
     public class SeriesVisualGroup : RectVisualGroup
     {
-        public override bool IsolateData => true;
+        protected override bool NeedData => false;
 
         public override void PlotToDc(DrawingContext dc)
         {
@@ -190,14 +195,14 @@ namespace WpfDrawing
         /// 临时方案 可以用分组或分治算法进行优化
         /// </summary>
         /// <returns></returns>
-        public RectChartVisualCollectionData MakeData()
+        public RectChartGroupContextData MakeData()
         {
             var index = -1;
-            var list = new List<RectChartVisualData>();
+            var list = new List<RectChartContextData>();
             foreach (SeriesVisual item in Visuals)
             {
                 index++;
-                if (item.VisualData is RectChartVisualData rectData && !rectData.IsEmpty)
+                if (item.VisualData is RectChartContextData rectData && !rectData.IsEmpty)
                 {
                     rectData.YData.Range = item.GetRange();
                     rectData.ComponentId = item.Id;
@@ -207,9 +212,9 @@ namespace WpfDrawing
             }
             if (list.Count == 0)
             {
-                return RectChartVisualCollectionData.Empty;
+                return RectChartGroupContextData.Empty;
             }
-            RectChartVisualCollectionData data = new RectChartVisualCollectionData(list);
+            RectChartGroupContextData data = new RectChartGroupContextData(list);
             return data;
         }
 

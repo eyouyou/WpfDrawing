@@ -26,7 +26,7 @@ namespace WpfDrawing.Abstraction
 
     public abstract class SeriesVisual : SubRectDrawingVisual
     {
-        public override RectVisualContextData DefaultData => RectChartVisualData.Empty;
+        public override RectVisualContextData DefaultData => RectChartContextData.Empty;
         public int XAxisId { get; set; } = 0;
         public SeriesVisual()
         {
@@ -47,7 +47,7 @@ namespace WpfDrawing.Abstraction
         /// <summary>
         /// 对外接口 计算range
         /// </summary>
-        public Func<RectChartVisualData, Range> RangeCalculator { get; set; }
+        public Func<RectChartContextData, Range> RangeCalculator { get; set; }
 
         /// <summary>
         /// 独立获取range
@@ -55,7 +55,7 @@ namespace WpfDrawing.Abstraction
         /// <returns></returns>
         public Range GetRange()
         {
-            if (!(VisualData is RectChartVisualData data))
+            if (!(VisualData is RectChartContextData data))
             {
                 return default;
             }

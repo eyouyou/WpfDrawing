@@ -13,61 +13,61 @@ using WpfDrawing.Abstraction;
 
 namespace WpfDrawing
 {
-    public class RectChartVisualCollectionData : RectVisualContextData
+    public class RectChartGroupContextData : RectVisualContextData
     {
         public List<RectVisualContextData> Data { get; } = new List<RectVisualContextData>();
         public List<RectVisualContextData> XData { get; } = new List<RectVisualContextData>();
         public List<RectVisualContextData> YData { get; } = new List<RectVisualContextData>();
 
-        public RectChartVisualCollectionData(List<RectChartVisualData> data)
+        public RectChartGroupContextData(List<RectChartContextData> data)
         {
             Data = data.Select(it => (RectVisualContextData)it).ToList();
             XData = data.Select(it => (RectVisualContextData)it.XData).ToList();
             YData = data.Select(it => (RectVisualContextData)it.YData).ToList();
         }
-        public RectChartVisualCollectionData(List<RectVisualContextData> data) : this(data.Select(it => it as RectChartVisualData).ToList())
+        public RectChartGroupContextData(List<RectVisualContextData> data) : this(data.Select(it => it as RectChartContextData).ToList())
         {
 
         }
         public override bool IsEmpty => Data.Count == 0 || Data.Any(it => it.IsEmpty);
-        public static RectChartVisualCollectionData Empty => new RectChartVisualCollectionData(new List<RectChartVisualData>());
+        public static RectChartGroupContextData Empty => new RectChartGroupContextData(new List<RectChartContextData>());
         public override RectVisualContextData Copy()
         {
-            return new RectChartVisualCollectionData(Data.Select(it => it.Copy()).ToList());
+            return new RectChartGroupContextData(Data.Select(it => it.Copy()).ToList());
         }
     }
 
-    public class RectChartVisualData : RectVisualContextData
+    public class RectChartContextData : RectVisualContextData
     {
-        public RectChartVisualData(double max, double min, DiscreteAxisVisualData xs)
+        public RectChartContextData(double max, double min, DiscreteAxisContextData xs)
             : this(new Value<double>(max), new Value<double>(min), xs)
         {
         }
-        public RectChartVisualData(Value<double> max, Value<double> min, List<IVariable> xs)
-            : this(max, min, new DiscreteAxisVisualData(xs))
+        public RectChartContextData(Value<double> max, Value<double> min, List<IVariable> xs)
+            : this(max, min, new DiscreteAxisContextData(xs))
         {
         }
-        public RectChartVisualData(Value<double> max, Value<double> min, DiscreteAxisVisualData xs)
+        public RectChartContextData(Value<double> max, Value<double> min, DiscreteAxisContextData xs)
             : this(new Range() { Max = max, Min = min }, xs)
         {
         }
 
-        public RectChartVisualData(Range range, DiscreteAxisVisualData xs)
-            : this(new Dictionary<IVariable, Value<double>>(), new ContinuousAxisVisualData(range), xs)
+        public RectChartContextData(Range range, DiscreteAxisContextData xs)
+            : this(new Dictionary<IVariable, Value<double>>(), new ContinuousAxisContextData(range), xs)
         {
         }
-        public RectChartVisualData(RectChartVisualData axisVisualData)
+        public RectChartContextData(RectChartContextData axisVisualData)
             : this(axisVisualData.Data, axisVisualData.YData, axisVisualData.XData)
         {
         }
-        public RectChartVisualData(Dictionary<IVariable, Value<double>> data)
+        public RectChartContextData(Dictionary<IVariable, Value<double>> data)
         {
             Data = data;
-            XData = new DiscreteAxisVisualData(Data.Keys.ToList());
+            XData = new DiscreteAxisContextData(Data.Keys.ToList());
             var ydata = Data.Values.ToList();
-            YData = new ContinuousAxisVisualData(ydata);
+            YData = new ContinuousAxisContextData(ydata);
         }
-        private RectChartVisualData(Dictionary<IVariable, Value<double>> data, ContinuousAxisVisualData ydata, DiscreteAxisVisualData xdata)
+        private RectChartContextData(Dictionary<IVariable, Value<double>> data, ContinuousAxisContextData ydata, DiscreteAxisContextData xdata)
         {
             Data = data;
             YData = ydata;
@@ -75,7 +75,7 @@ namespace WpfDrawing
             XData.Items = Items;
             YData.Items = Items;
         }
-        public RectChartVisualData(List<IVariable> xData, List<double> yData)
+        public RectChartContextData(List<IVariable> xData, List<double> yData)
         {
             if (xData.Count != yData.Count)
             {
@@ -88,22 +88,22 @@ namespace WpfDrawing
                 Data.Add(item, new Value<double>(yData[index]));
                 index++;
             }
-            XData = new DiscreteAxisVisualData(xData);
-            YData = new ContinuousAxisVisualData(yData);
+            XData = new DiscreteAxisContextData(xData);
+            YData = new ContinuousAxisContextData(yData);
             XData.Items = Items;
             YData.Items = Items;
         }
         public Dictionary<IVariable, Value<double>> Data { get; set; }
-        public DiscreteAxisVisualData XData { get; set; }
-        public ContinuousAxisVisualData YData { get; set; }
+        public DiscreteAxisContextData XData { get; set; }
+        public ContinuousAxisContextData YData { get; set; }
 
         public override bool IsEmpty => XData.Data.Count == 0 || YData.Range.IsEmpty;
 
-        public static RectChartVisualData Empty => new RectChartVisualData(new Range(), DiscreteAxisVisualData.Empty);
+        public static RectChartContextData Empty => new RectChartContextData(new Range(), DiscreteAxisContextData.Empty);
 
         public override RectVisualContextData Copy()
         {
-            var data = new RectChartVisualData(YData.Range.Max, YData.Range.Min, XData.Data.ToList());
+            var data = new RectChartContextData(YData.Range.Max, YData.Range.Min, XData.Data.ToList());
             data.Data = Data;
             data.Items = new Dictionary<ContextDataItem, object>(Items);
             return data;
@@ -125,7 +125,7 @@ namespace WpfDrawing
 
         private readonly ChartDataSource Data;
 
-        public override RectVisualContextData DefaultData => RectChartVisualCollectionData.Empty;
+        public override RectVisualContextData DefaultData => RectChartGroupContextData.Empty;
         public Chart()
         {
             Data = new ChartDataSource(this);
@@ -179,7 +179,7 @@ namespace WpfDrawing
                 return;
             }
 
-            var data = VisualData.TransformVisualData<RectChartVisualCollectionData>();
+            var data = VisualData.TransformVisualData<RectChartGroupContextData>();
             //从seriesvisual里面取值画坐标轴
             if (data.IsBad)
             {

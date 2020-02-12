@@ -16,9 +16,6 @@ namespace WpfDrawing
     public class AxisInteractionCanvas : InteractionCanvas
         , IIntersectable
     {
-        public ICrossConfiguaration CrossOption => Cross;
-        public IToolTipConfiguaration ToolTipOption => DataToolTip;
-
         public event IntersectChangedHandler IntersectChanged;
 
         private Point LastHitPoint;

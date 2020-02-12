@@ -51,7 +51,7 @@ namespace WpfDrawing.Sample
             AxisInteractionCanvas interaction = new AxisInteractionCanvas(chartCanvas);
             chartCanvas.AddChild(chart);
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
-            interaction.CrossOption.IsCrossShow = true;
+            interaction.Cross.IsCrossShow = true;
             chart.AddAsixX(axisX);
             chart.AddAsixX(axisX2);
             chart.AddAsixX(axisX3);

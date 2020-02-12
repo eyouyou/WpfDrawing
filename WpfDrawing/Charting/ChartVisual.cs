@@ -117,7 +117,7 @@ namespace WpfDrawing
     /// </summary>
     /// <typeparam name="Tx"></typeparam>
     /// <typeparam name="Ty"></typeparam>
-    public class Chart : RectDrawingVisual
+    public class ChartVisual : RectDrawingVisual
     {
         XAxisVisualGroup AxisXVisuals = new XAxisVisualGroup();
         YAxisVisualGroup AxisYVisuals = new YAxisVisualGroup();
@@ -126,7 +126,7 @@ namespace WpfDrawing
         private readonly ChartDataSource Data;
 
         public override RectVisualContextData DefaultData => RectChartGroupContextData.Empty;
-        public Chart()
+        public ChartVisual()
         {
             Data = new ChartDataSource(this);
 

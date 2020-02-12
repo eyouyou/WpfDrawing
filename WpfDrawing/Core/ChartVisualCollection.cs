@@ -25,8 +25,8 @@ namespace WpfDrawing
     {
         public ComponentId IdGenerater = new ComponentId();
 
-        public Chart ConnectChart;
-        public ChartDataSource(Chart chart) : base(chart)
+        public ChartVisual ConnectChart;
+        public ChartDataSource(ChartVisual chart) : base(chart)
         {
             ConnectChart = chart;
         }

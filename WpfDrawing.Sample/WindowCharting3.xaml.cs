@@ -18,7 +18,7 @@ namespace WpfDrawing.Sample
     /// </summary>
     public partial class WindowCharting3 : Window
     {
-        Chart chart = new Chart();
+        ChartVisual chart = new ChartVisual();
         RectDrawingCanvas chartCanvas = new RectDrawingCanvas(true) { };
         DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
 

@@ -54,7 +54,7 @@
     <Compile Include="Abstraction\RectVisualContextData.cs" />
     <Compile Include="Abstraction\SeriesVisual.cs" />
     <Compile Include="Abstraction\SubRectDrawingVisual.cs" />
-    <Compile Include="Charting\Chart.cs" />
+    <Compile Include="Charting\ChartVisual.cs" />
     <Compile Include="Charting\VisualGroup.cs" />
     <Compile Include="Core\ComponentKey.cs" />
     <Compile Include="UserControls\Candle.cs" />

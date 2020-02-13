@@ -88,6 +88,8 @@ namespace WpfDrawing
         public ToolTip Tip { get => DataToolTip.Tip; set => DataToolTip.Tip = value; }
 
         Dictionary<ComponentKey, ElementPosition> SeriesHitList = new Dictionary<ComponentKey, ElementPosition>();
+        List<double> NearestXs = new List<double>();
+        List<double> NearestYs = new List<double>();
         public override void Plot(Point point, EventMessage @event)
         {
             var vdata = VisualData.TransformVisualData<RectVisualContextData>();
@@ -97,6 +99,8 @@ namespace WpfDrawing
             }
             //series上的悬浮控件 标记当前位置
             SeriesHitList.Clear();
+            NearestXs.Clear();
+            NearestYs.Clear();
 
             var seriesDatas = new List<SeriesData>();
 
@@ -109,15 +113,16 @@ namespace WpfDrawing
 
             //一个hit到了其他的都不要了
             var isHint = false;
+
             foreach (var item in DataSources)
             {
                 if (item.Value is ChartDataSource dataSource)
                 {
-                    var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasArea;
+                    var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasPlotArea;
                     var series = dataSource.SeriesCollection;
                     var offset = dataSource.ConnectVisual.ParentCanvas.Offset;
                     bool canHint = !isHint && plotArea.Contains(currentPoint);
-                    //多层hintTest
+                    //进入当前画布
                     if (canHint)
                     {
                         foreach (SeriesVisual series_item in series)
@@ -183,8 +188,9 @@ namespace WpfDrawing
                             SeriesHitList.Add(new ComponentKey(series_item.ParentCanvas.Id, series_item.Id), new ElementPosition(series_item.HitElement.Content));
                         }
                     }
-                    var hitPoint = new Point(nearestX, nearestY);
-                    VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
+
+                    NearestXs.Add(nearestX);
+                    NearestYs.Add(nearestY);
 
                     //优化
                     //if (canHint && LastHitPoint.X == nearestX)
@@ -193,9 +199,16 @@ namespace WpfDrawing
                     //}
                     //LastHitPoint = hitPoint;
 
+                    //TODO 不支持
                     IntersectChanged?.Invoke(seriesDatas.ToDictionary(it => it.Name, it => it));
                 }
             }
+
+            //记录触点坐标
+            //TODO 日后需要多chart公用大十字线
+            var hitPoint = new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());
+            VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
+
             if (IsCrossShow)
             {
                 foreach (var seriesHitItem in SeriesHitList)

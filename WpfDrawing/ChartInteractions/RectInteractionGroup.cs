@@ -18,7 +18,7 @@ namespace WpfDrawing
         ComponentId IdGenerater = new ComponentId();
         double ColPercentage = 0.0;
         double RowPercentage = 0.0;
-        public RectInteractionGroup(AxisInteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvas[] canvas)
+        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvas[] canvas)
         {
             InteractionVisuals = interaction;
             InteractionVisuals.ParentElement = this;

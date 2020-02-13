@@ -122,12 +122,21 @@ namespace WpfDrawing
             //    return;
             //}
         }
+
         /// <summary>
-        /// 给 InteractionCanvas 定位用
+        /// 给 <see cref="InteractionCanvas"/> 定位用
         /// </summary>
         public Vector Offset { get; set; } = new Vector(0, 0);
+
+        /// <summary>
+        /// 当前整个 <see cref="RectInteractionGroup"/> 内的定位
+        /// </summary>
         public Point CurrentLocation { get; set; } = new Point(0, 0);
-        public Rect InteractionCanvasArea => new Rect(CurrentLocation, PlotArea.Size);
+
+        /// <summary>
+        /// 在 <see cref="InteractionCanvas"/> 中的画板位置
+        /// </summary>
+        public Rect InteractionCanvasPlotArea => new Rect(CurrentLocation, PlotArea.Size);
 
         public void Reset()
         {

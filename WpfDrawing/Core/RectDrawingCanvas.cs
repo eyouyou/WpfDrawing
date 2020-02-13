@@ -13,6 +13,10 @@ namespace WpfDrawing
 {
     public class RectDrawingCanvas : Canvas, ILocatable
     {
+        //在container中所在的位置 
+        public int Col { get; set; } = -1;
+        public int Row { get; set; } = -1;
+
         private RectDrawingVisualDataSource _dataSource;
         public RectDrawingVisualDataSource DataSource
         {
@@ -118,9 +122,17 @@ namespace WpfDrawing
             //    return;
             //}
         }
+        /// <summary>
+        /// 给 InteractionCanvas 定位用
+        /// </summary>
+        public Vector Offset { get; set; } = new Vector(0, 0);
+        public Point CurrentLocation { get; set; } = new Point(0, 0);
+        public Rect InteractionCanvasArea => new Rect(CurrentLocation, PlotArea.Size);
+
         public void Reset()
         {
-            PlotArea = new Rect(PlotArea.Location, new Size(this.ActualWidth, this.ActualHeight));
+            PlotArea = new Rect(PlotArea.Location, new Size(ActualWidth, ActualHeight));
+
             foreach (Visual item in Visuals)
             {
                 if (item is RectDrawingVisual rect)

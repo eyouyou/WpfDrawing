@@ -16,33 +16,38 @@ namespace WpfDrawing
     {
         Dictionary<int, RectDrawingCanvas> Canvas;
         ComponentId IdGenerater = new ComponentId();
+        double ColPercentage = 0.0;
+        double RowPercentage = 0.0;
         public RectInteractionGroup(AxisInteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvas[] canvas)
         {
             InteractionVisuals = interaction;
             InteractionVisuals.ParentElement = this;
 
-            var colPercent = 1.0 / col;
+            ColPercentage = 1.0 / col;
             for (int i = 0; i < col; i++)
             {
-                ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(colPercent, GridUnitType.Star) });
+                ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
             }
 
-            var rowPercent = 1.0 / row;
+            RowPercentage = 1.0 / row;
             for (int i = 0; i < row; i++)
             {
-                RowDefinitions.Add(new RowDefinition() { Height = new GridLength(rowPercent, GridUnitType.Star) });
+                RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
             }
             var index = 0;
             foreach (var item in canvas)
             {
                 var value = item;
                 Children.Add(value);
-                SetColumn(value, index % col);
-                SetRow(value, index / col);
+                item.Col = index % col;
+                item.Row = index / col;
+                SetColumn(value, item.Col);
+                SetRow(value, item.Row);
                 if (value.Id == int.MinValue)
                 {
                     value.Id = IdGenerater.GenerateId();
                 }
+
                 interaction?.DataSources.Add(value.Id, value.DataSource);
                 item.InteractionCanvas = interaction;
                 index++;
@@ -57,6 +62,25 @@ namespace WpfDrawing
                 SetRowSpan(interaction, row);
 
                 EnableInteraction = true;
+            }
+
+            SizeChanged += RectInteractionGroup_SizeChanged;
+        }
+
+        private void RectInteractionGroup_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (IsVisible)
+            {
+                var index = 0;
+                foreach (var item in Canvas)
+                {
+                    var canvas = item.Value;
+                    canvas.InteractionCanvas.Hide();
+                    canvas.Offset = new Vector(canvas.Col * ColPercentage * ActualWidth, canvas.Row * RowPercentage * ActualHeight);
+                    canvas.CurrentLocation = Point.Add(new Point(0, 0), canvas.Offset);
+
+                    index++;
+                }
             }
         }
 

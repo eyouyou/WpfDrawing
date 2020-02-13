@@ -5,5 +5,5 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfDrawing.Sample"
         mc:Ignorable="d"
-        Title="MultiChartings" Height="450" Width="800">
+        Title="MultiChartings" Height="900" Width="1200">
 </Window>

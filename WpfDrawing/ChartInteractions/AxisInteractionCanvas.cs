@@ -106,14 +106,17 @@ namespace WpfDrawing
             var nearestX = currentPoint.X;
             var nearestY = currentPoint.Y;
 
+            //一个hit到了其他的都不要了
             var isHint = false;
             foreach (var item in DataSources)
             {
                 if (item.Value is ChartDataSource dataSource)
                 {
-                    var plotArea = dataSource.ConnectVisual.PlotArea;
+                    var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasArea;
                     var series = dataSource.SeriesCollection;
-                    if (!isHint && plotArea.Contains(currentPoint))
+                    var offset = dataSource.ConnectVisual.ParentCanvas.Offset;
+                    bool canHint = !isHint && plotArea.Contains(currentPoint);
+                    if (canHint)
                     {
                         foreach (SeriesVisual series_item in series)
                         {
@@ -121,24 +124,24 @@ namespace WpfDrawing
                             {
                                 continue;
                             }
-                            var series_plot = series_item.PlotArea;
-                            var xAxis = dataSource.FindXById(series_item.XAxisId) as DiscreteAxis;
-                            var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X));
-                            if (value.IsBad())
-                            {
-                                continue;
-                            }
 
+                            var series_plot = series_item.InteractionPlotArea;
+                            var xAxis = dataSource.FindXById(series_item.XAxisId) as DiscreteAxis;
+                            var axisx_offset = xAxis.OffsetPostion(currentPoint.X - offset.X);
+                            var value = xAxis.GetValue(axisx_offset);
                             var key = new ComponentKey(series_item.ParentCanvas.Id, series_item.Id);
-                            if (series_item.HitElement.Content != null
-                                && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
-                                && series_item.VisualData is RectChartContextData series_data
-                                && series_data.Data.ContainsKey(value))
+
+                            //验证数据是否包含等
+                            if (!value.IsBad() &&
+                                series_item.HitElement.Content != null
+                                    && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
+                                    && series_item.VisualData is RectChartContextData series_data
+                                    && series_data.Data.ContainsKey(value))
                             {
-                                var x = xAxis.GetPosition(value).X + xAxis.Start.X;
-                                var y = yAxis.GetPosition(series_data.Data[value]).Y + xAxis.Start.Y;
+                                //获取当前值对应的x、y 进行十字轴的定位
+                                var x = xAxis.GetPosition(value).X + xAxis.Start.X + offset.X;
+                                var y = yAxis.GetPosition(series_data.Data[value]).Y + xAxis.Start.Y + offset.Y;
                                 seriesDatas.Add(new SeriesData() { Color = series_item.Color, Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = series_data.Data[value], AxisX = xAxis, AxisY = (AxisVisual<IVariable>)yAxis });
-                                //获取y坐标
 
                                 nearestX = x;
 
@@ -169,6 +172,7 @@ namespace WpfDrawing
                             }
 
                         }
+                        isHint = true;
                     }
                     else
                     {
@@ -177,28 +181,26 @@ namespace WpfDrawing
                             SeriesHitList.Add(new ComponentKey(series_item.ParentCanvas.Id, series_item.Id), new ElementPosition(series_item.HitElement.Content));
                         }
                     }
-
                     var hitPoint = new Point(nearestX, nearestY);
                     VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
-                    //优化
-                    if (LastHitPoint.X == nearestX)
-                    {
-                        return;
-                    }
-                    LastHitPoint = hitPoint;
 
-                    if (IsCrossShow)
-                    {
-                        foreach (var seriesHitItem in SeriesHitList)
-                        {
-                            seriesHitItem.Value.Render();
-                        }
-                    }
+                    //优化
+                    //if (canHint && LastHitPoint.X == nearestX)
+                    //{
+                    //    continue;
+                    //}
+                    //LastHitPoint = hitPoint;
+
                     IntersectChanged?.Invoke(seriesDatas.ToDictionary(it => it.Name, it => it));
-                    isHint = true;
                 }
             }
-
+            if (IsCrossShow)
+            {
+                foreach (var seriesHitItem in SeriesHitList)
+                {
+                    seriesHitItem.Value.Render();
+                }
+            }
         }
 
         public override void Hide()

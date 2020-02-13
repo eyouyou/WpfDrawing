@@ -10,7 +10,7 @@ using System.Windows.Media;
 namespace WpfDrawing
 {
     public struct ElementPosition
-    { 
+    {
         public ElementPosition(UIElement element, bool isVisible = false, double left = double.NaN, double top = double.NaN, int zIndex = -1)
         {
             Element = element;
@@ -133,11 +133,19 @@ namespace WpfDrawing
             {
                 case AxisPosition.Left:
                 case AxisPosition.Right:
-                    offset = Math.Abs(position - Start.Y);
+                    {
+                        var start = Start.Y;
+                        var dir = End.Y - start > 0;
+                        offset = dir ? position - start : start - position;
+                    }
                     break;
                 case AxisPosition.Buttom:
                 case AxisPosition.Top:
-                    offset = Math.Abs(position - Start.X);
+                    {
+                        var start = Start.X;
+                        var dir = End.X - start > 0;
+                        offset = dir ? position - start : start - position;
+                    }
                     break;
             }
             return offset;
@@ -218,7 +226,7 @@ namespace WpfDrawing
                     }
                     break;
                 case AxisPosition.Right:
-                    { 
+                    {
                         data.Top = Start.Y - Math.Abs(position.Y) - AxisLabel.DesiredSize.Height / 2;
                         data.Left = Start.X + margin;
                     }

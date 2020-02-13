@@ -70,6 +70,10 @@ namespace WpfDrawing
                 return default;
             }
             var percent = offsetPosition / (End - Start).Length;
+            if (percent > 1 || percent < 0)
+            {
+                return default;
+            }
             //isInterregional 决定往那里靠 默认是isInterregional = true 
             var blockIndex = Tools.BinaryCompare(ratiosCoordinate, 0, ratiosCoordinate.Count, percent, isInterregional);
             //var index = (int)Math.Round();

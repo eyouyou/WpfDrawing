@@ -28,7 +28,7 @@ namespace WpfDrawing.Sample
             InitializeComponent();
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 2, 2, new ChartItem(), new ChartItem(), new ChartItem(), new ChartItem());
+            container = new RectInteractionGroup(interaction, 2, 2, new ChartItem() { Background = Brushes.LightGreen }, new ChartItem() { Background = Brushes.LightPink }, new ChartItem() { Background = Brushes.LightSalmon }, new ChartItem() { Background = Brushes.LightGreen });
 
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
             b.BlurContainer = container;
@@ -63,6 +63,7 @@ namespace WpfDrawing.Sample
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
 
         ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
+
         public ChartItem() : base(true)
         {
             chart.Offsets.Left = new GridLength(20);
@@ -78,8 +79,9 @@ namespace WpfDrawing.Sample
             chart.AddSeries(lineSeries);
             chart.AddSeries(lineSeries2);
 
-            this.AddChild(chart);
-            this.DataSource = chart.DataSource;
+            AddChild(chart);
+
+            DataSource = chart.DataSource;
 
             IsVisibleChanged += ChartItem_IsVisibleChanged;
         }

@@ -11,6 +11,7 @@ namespace WpfDrawing
     public interface ILocatable
     {
         Rect PlotArea { get; }
+        Vector Offset { set; get; }
     }
     public interface IVisualControllable
     {
@@ -67,6 +68,17 @@ namespace WpfDrawing
             {
                 var area = ParentLocateble.PlotArea;
                 return new Rect(new Point(area.Location.X + Offsets.LeftOffset, area.Location.Y + Offsets.TopOffset),
+                    Tools.GetSize(area.Size.Width - Offsets.LeftOffset - Offsets.RightOffset, area.Size.Height - Offsets.TopOffset - Offsets.ButtomOffset));
+            }
+        }
+
+        public Rect InteractionPlotArea
+        {
+            get
+            {
+                var area = ParentLocateble.PlotArea;
+                var offset = ParentCanvas.Offset;
+                return new Rect(new Point(area.Location.X + Offsets.LeftOffset + offset.X, area.Location.Y + Offsets.TopOffset + offset.Y),
                     Tools.GetSize(area.Size.Width - Offsets.LeftOffset - Offsets.RightOffset, area.Size.Height - Offsets.TopOffset - Offsets.ButtomOffset));
             }
         }

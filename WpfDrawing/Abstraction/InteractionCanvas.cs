@@ -16,9 +16,8 @@ namespace WpfDrawing
     {
         public Dictionary<int, RectDrawingVisualDataSource> DataSources { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
         public abstract RectVisualContextData DefaultData { get; }
-        public InteractionCanvas(RectDrawingCanvas canvas)
+        public InteractionCanvas()
         {
-            DependencyCanvas = canvas;
             Background = Brushes.Transparent;
         }
         public void AddElement(UIElement element)
@@ -30,7 +29,7 @@ namespace WpfDrawing
             Children.Remove(element);
         }
 
-        public RectDrawingCanvas DependencyCanvas { get; }
+        public Dictionary<int, RectDrawingCanvas> DependencyCanvas { get; } = new Dictionary<int, RectDrawingCanvas>();
 
         private RectVisualContextData _visualData = null;
         public RectVisualContextData VisualData

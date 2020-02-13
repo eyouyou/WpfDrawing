@@ -19,18 +19,14 @@ namespace WpfDrawing
         public event IntersectChangedHandler IntersectChanged;
 
         private Point LastHitPoint;
-        public AxisInteractionCanvas(RectDrawingCanvas canvas) : base(canvas)
+        public AxisInteractionCanvas()
         {
-            var _canvas = canvas ?? throw new ArgumentNullException("please");
-
             Cross = new CrossVisual(this);
             DataToolTip = new ToolTipVisual(this);
 
             MouseMove += AxisInteractionVisual_MouseMove;
             IsCrossShow = true;
             IsToolTipShow = true;
-
-            canvas.InteractionCanvas = this;
         }
 
         private void AxisInteractionVisual_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

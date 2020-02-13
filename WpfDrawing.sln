@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDrawing", "WpfDrawing\Wp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDrawing.Sample", "WpfDrawing.Sample\WpfDrawing.Sample.csproj", "{79DA7207-99E2-414C-B393-88DED84F5769}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDrawing.Winform.Sample", "WpfDrawing.Winform.Sample\WpfDrawing.Winform.Sample.csproj", "{9F7A5D39-1D29-4472-B869-7F80E49F86C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{79DA7207-99E2-414C-B393-88DED84F5769}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79DA7207-99E2-414C-B393-88DED84F5769}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79DA7207-99E2-414C-B393-88DED84F5769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F7A5D39-1D29-4472-B869-7F80E49F86C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F7A5D39-1D29-4472-B869-7F80E49F86C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F7A5D39-1D29-4472-B869-7F80E49F86C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F7A5D39-1D29-4472-B869-7F80E49F86C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

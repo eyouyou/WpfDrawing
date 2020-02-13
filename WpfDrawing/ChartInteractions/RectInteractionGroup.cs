@@ -14,6 +14,7 @@ namespace WpfDrawing
     /// </summary>
     public class RectInteractionGroup : Grid
     {
+        Dictionary<int, RectDrawingCanvas> Canvas;
         ComponentId IdGenerater = new ComponentId();
         public RectInteractionGroup(AxisInteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvas[] canvas)
         {
@@ -31,25 +32,32 @@ namespace WpfDrawing
             {
                 RowDefinitions.Add(new RowDefinition() { Height = new GridLength(rowPercent, GridUnitType.Star) });
             }
-            for (int i = 0; i < canvas.Length; i++)
+            var index = 0;
+            foreach (var item in canvas)
             {
-                var item = canvas[i];
-                Children.Add(item);
-                SetColumn(item, i % col);
-                SetRow(item, i / col);
-                if (item.Id == int.MinValue)
+                var value = item;
+                Children.Add(value);
+                SetColumn(value, index % col);
+                SetRow(value, index / col);
+                if (value.Id == int.MinValue)
                 {
-                    item.Id = IdGenerater.GenerateId();
+                    value.Id = IdGenerater.GenerateId();
                 }
-                interaction.DataSources.Add(item.Id, item.DataSource);
+                interaction?.DataSources.Add(value.Id, value.DataSource);
+                item.InteractionCanvas = interaction;
+                index++;
             }
+            Canvas = canvas.ToDictionary(it => it.Id, it => it);
 
-            SetColumn(interaction, 0);
-            SetRow(interaction, 0);
-            SetColumnSpan(interaction, col);
-            SetRowSpan(interaction, row);
+            if (interaction != null)
+            {
+                SetColumn(interaction, 0);
+                SetRow(interaction, 0);
+                SetColumnSpan(interaction, col);
+                SetRowSpan(interaction, row);
 
-            EnableInteraction = true;
+                EnableInteraction = true;
+            }
         }
 
         private bool _enableInteraction = false;
@@ -72,6 +80,18 @@ namespace WpfDrawing
                 _enableInteraction = value;
             }
         }
+
+
+        public void Replot()
+        {
+            foreach (var item in Canvas)
+            {
+                item.Value.Replot();
+            }
+        }
+        /// <summary>
+        /// 可空 调用时需要判断
+        /// </summary>
         public InteractionCanvas InteractionVisuals { get; } = null;
     }
 }

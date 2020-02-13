@@ -1,12 +1,9 @@
-﻿<Window x:Class="WpfDrawing.Sample.WindowCharting3"
+﻿<Window x:Class="WpfDrawing.Sample.MultiChartings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfDrawing.Sample"
         mc:Ignorable="d"
-        Title="WindowCharting3" Height="900" Width="1200">
-    <Grid>
-        
-    </Grid>
+        Title="MultiChartings" Height="450" Width="800">
 </Window>

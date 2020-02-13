@@ -4,64 +4,34 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace WpfDrawing.Sample
 {
     /// <summary>
-    /// WindowCharting3.xaml 的交互逻辑
+    /// MultiChartings.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowCharting3 : Window
+    public partial class MultiChartings : Window
     {
-        ChartVisual chart = new ChartVisual();
-        RectDrawingCanvas chartCanvas = new RectDrawingCanvas(true) { };
-        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
-
-        StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.OrangeRed, 5) };
-        StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
-
-        public WindowCharting3()
+        RectInteractionGroup container;
+        public MultiChartings()
         {
-            Background = new SolidColorBrush() { Color = ColorHelper.StringToColor("#FF1C1D21") };
-            var uri = $"/wallpaper_mikael_gustafsson.png";
-
             InitializeComponent();
-            Grid grid = new Grid() { };
 
-            axisX.IsInterregional = false;
-
-            ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
-            //axisY.Range = new Range() { Max = new Value<double>(5000000), Min = new Value<double>(40000) };
-            chart.Offsets.Left = new GridLength(60);
-            chart.Offsets.Buttom = new GridLength(20);
-            chart.Offsets.Right = new GridLength(10);
-            chart.Offsets.Top = new GridLength(20);
-
-            chartCanvas.AddChild(chart);
-            chartCanvas.DataSource = chart.DataSource;
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-
-            RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
-            //container.Background = Brushes.GreenYellow;
-            chart.AddAsixY(axisY);
-            chart.AddAsixX(axisX);
-
-            chart.AddSeries(lineSeries);
-            chart.AddSeries(lineSeries2);
-
-            grid.Children.Add(container);
-            chartCanvas.Visuals.Add(CreateDrawingImage());
-
-            //chart.CrossOption.IsLabelShow = false;
-            //chart.CrossOption.IsXShow = false;
+            container = new RectInteractionGroup(interaction, 2, 2, new ChartItem(), new ChartItem(), new ChartItem(), new ChartItem());
 
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            b.BlurContainer = chartCanvas;
+            b.BlurContainer = container;
             b.Magnification = 0.25;
             b.BlurRadius = 30;
 
@@ -72,58 +42,61 @@ namespace WpfDrawing.Sample
             interaction.Tip.Border.Padding = new Thickness(0);
             interaction.Tip.Border.BorderBrush = Brushes.Black;
             interaction.Tip.Foreground = Brushes.White;
-            //interaction.Tip.Border.BorderBrush = Brushes.White;
-            //interaction.Tip.Border.BorderThickness = new Thickness(2);
-            //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;
-            //chart.ToolTipOption.Tip.Background = Brushes.Black;
-            //chart.ToolTipOption.Tip.Opacity = 0.5;
-            Content = grid;
-            IsVisibleChanged += WindowCharting3_IsVisibleChanged;
-            SizeChanged += WindowCharting3_SizeChanged;
-            //StartDataFeed();
-            //Timer timer = new Timer(200);
-            //timer.Elapsed += Timer_Elapsed;
-            //timer.Start();
+
+            this.Content = container;
+
+            this.SizeChanged += MultiChartings_SizeChanged;
         }
 
-        private void WindowCharting3_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void MultiChartings_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            chartCanvas.Plot();
+            container.Replot();
         }
+    }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+    public class ChartItem : RectDrawingCanvas
+    {
+        ChartVisual chart = new ChartVisual();
+        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
+
+        StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
+        StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
+
+        ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
+        public ChartItem() : base(true)
         {
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
-           {
-               StartDataFeed();
-           }));
+            chart.Offsets.Left = new GridLength(20);
+            chart.Offsets.Buttom = new GridLength(20);
+            chart.Offsets.Right = new GridLength(20);
+            chart.Offsets.Top = new GridLength(20);
 
+            axisX.IsInterregional = false;
+
+            chart.AddAsixY(axisY);
+            chart.AddAsixX(axisX);
+
+            chart.AddSeries(lineSeries);
+            chart.AddSeries(lineSeries2);
+
+            this.AddChild(chart);
+            this.DataSource = chart.DataSource;
+
+            IsVisibleChanged += ChartItem_IsVisibleChanged;
         }
-        private DrawingVisual CreateDrawingImage()
-        {
-            var uri = $"wallpaper_mikael_gustafsson.png";
 
-            System.Windows.Media.DrawingVisual drawingVisual = new System.Windows.Media.DrawingVisual();
-            DrawingContext drawingContext = drawingVisual.RenderOpen();
-
-            drawingVisual.XSnappingGuidelines = new DoubleCollection(new List<double>() { 1 });
-            drawingVisual.YSnappingGuidelines = new DoubleCollection(new List<double>() { 1 });
-            //Image image = new Image() { Source =  };
-            var source = new BitmapImage(new Uri(uri, UriKind.Relative));
-            drawingContext.DrawImage(source, new Rect(new Size(800, 450)));
-            drawingContext.Close();
-
-            return drawingVisual;
-
-        }
-        private void WindowCharting3_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue)
             {
                 StartDataFeed();
             }
         }
-
+        public async void StartDataFeed()
+        {
+            await Render("300843", "000001");
+            //await Task.Delay(6000);
+            //await Render("300843", "000001");
+        }
         private async Task Render(string blockId, string marketId)
         {
             var dic = await Request(blockId);
@@ -136,13 +109,7 @@ namespace WpfDrawing.Sample
 
             lineSeries2.VisualData = dic2.ToVisualData();
             lineSeries.VisualData = dic.ToVisualData();
-            chartCanvas.Replot();
-        }
-        public async void StartDataFeed()
-        {
-            await Render("300843", "000001");
-            //await Task.Delay(6000);
-            //await Render("300843", "000001");
+            this.Replot();
         }
         bool isFirst = true;
         public async Task<Dictionary<DateTime, double>> Request(string blockId, bool isMarket = false)
@@ -179,10 +146,7 @@ namespace WpfDrawing.Sample
                 }
                 return new Dictionary<DateTime, double>();
             }
-
-
         }
-
         private T GetValue<T>(JToken it, string v)
         {
             if (it is JProperty value && value.Value[v] != null && !value.Value[v].HasValues && value.Value[v] is JValue trueValue && !string.IsNullOrEmpty(trueValue.Value.ToString()))
@@ -191,7 +155,6 @@ namespace WpfDrawing.Sample
             }
             return default;
         }
-
         private DateTime GetKeyTime(JToken it)
         {
             if (it is JProperty value && !string.IsNullOrEmpty(value.Name))
@@ -200,5 +163,6 @@ namespace WpfDrawing.Sample
             }
             return DateTime.MinValue;
         }
+
     }
 }

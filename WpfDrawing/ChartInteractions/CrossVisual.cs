@@ -75,33 +75,34 @@ namespace WpfDrawing
 
             var tested = false;
             var isHint = false;
-
+            var hitCanvasId = -1;
             foreach (var item in DataSources)
             {
                 if (item.Value is ChartDataSource dataSource)
                 {
                     var area = dataSource.ConnectVisual.PlotArea;
-                    var axisxs = dataSource.AxisXCollection;
-                    var axisys = dataSource.AxisYCollection;
-                    var series = dataSource.SeriesCollection;
+                    var interactionArea = dataSource.ConnectVisual.InteractionPlotArea;
 
-                    if (!tested && LastPlotArea != area)
+                    if (!isHint && interactionArea.Contains(point))
                     {
-                        X.X1 = Y.X1 = 0;
-                        X.Y1 = Y.X1 = 0;
-                        X.X2 = area.Width;
-                        X.Y2 = 0;
-                        Y.X2 = 0;
-                        Y.Y2 = area.Height;
-                        Canvas.SetLeft(X, area.Location.X);
-                        Canvas.SetTop(X, area.Location.Y);
-                        Canvas.SetTop(Y, area.Location.Y);
-                        Canvas.SetLeft(Y, area.Location.X);
-                        tested = true;
-                    }
+                        hitCanvasId = dataSource.ConnectVisual.ParentCanvas.Id;
 
-                    if (!isHint && area.Contains(point))
-                    {
+                        var axisxs = dataSource.AxisXCollection;
+                        var axisys = dataSource.AxisYCollection;
+                        var series = dataSource.SeriesCollection;
+
+                        X.X1 = Y.X1 = interactionArea.Location.X;
+                        X.Y1 = Y.Y1 = interactionArea.Location.Y;
+                        X.X2 = interactionArea.Location.X + area.Width;
+                        X.Y2 = interactionArea.Location.Y;
+                        Y.X2 = interactionArea.Location.X;
+                        Y.Y2 = interactionArea.Location.Y + area.Height;
+
+                        Canvas.SetLeft(X, interactionArea.Location.X);
+                        Canvas.SetTop(X, interactionArea.Location.Y);
+                        Canvas.SetTop(Y, interactionArea.Location.Y);
+                        Canvas.SetLeft(Y, interactionArea.Location.X);
+
                         if (IsLabelShow)
                         {
                             var nearestX = point.X;
@@ -109,12 +110,13 @@ namespace WpfDrawing
                             //var nearestY = point.Y;
                             //找最小距离
                             var axisLabelList = new List<ElementPosition>();
+                            var offset = dataSource.ConnectVisual.ParentLocateble.Offset;
 
                             if (!isXInvariant)
                             {
                                 foreach (DiscreteAxis axis in axisxs)
                                 {
-                                    var value = axis.GetValue(axis.OffsetPostion(point.X));
+                                    var value = axis.GetValue(axis.OffsetPostion(point.X - offset.X));
                                     if (!value.IsBad() && axis.IsAxisLabelShow)
                                     {
                                         var key = new ComponentKey(axis.ParentCanvas.Id, axis.Id);
@@ -127,7 +129,7 @@ namespace WpfDrawing
                                         axis.AxisLabel.Text = axis.GetStringValue(value);
                                         var labelData = axis.GetAxisLabelData(value);
 
-                                        axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left, labelData.Top, axis.AxisLabel.ZIndex));
+                                        axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left + offset.X, labelData.Top + offset.Y, axis.AxisLabel.ZIndex));
 
                                     }
                                     else
@@ -155,7 +157,7 @@ namespace WpfDrawing
                                         axis.AxisLabel.Text = $"{axis.GetStringValue(value)}{axis.Unit}";
                                         var labelData = axis.GetAxisLabelData(value);
 
-                                        axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left, labelData.Top));
+                                        axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left + offset.X, labelData.Top + offset.Y));
 
                                     }
                                     else
@@ -200,20 +202,22 @@ namespace WpfDrawing
                         }
 
                         isHint = true;
-                    }
-                    else
-                    {
-                        foreach (var visual in AxisVisuals)
-                        {
-                            visual.Value.AxisLabel.Visibility = Visibility.Hidden;
-                        }
 
-                        X.Visibility = Visibility.Collapsed;
-                        Y.Visibility = Visibility.Collapsed;
+                        break;
                     }
-
                 }
             }
+            foreach (var visual in AxisVisuals)
+            {
+                if (visual.Key.CanvasId != hitCanvasId)
+                {
+                    visual.Value.AxisLabel.Visibility = Visibility.Hidden;
+                }
+            }
+
+
+            //X.Visibility = Visibility.Collapsed;
+            //Y.Visibility = Visibility.Collapsed;
 
 
         }

@@ -21,6 +21,7 @@ namespace WpfDrawing
         private Point LastHitPoint;
         public AxisInteractionCanvas()
         {
+            //Background = Brushes.LightCyan;
             Cross = new CrossVisual(this);
             DataToolTip = new ToolTipVisual(this);
 
@@ -116,6 +117,7 @@ namespace WpfDrawing
                     var series = dataSource.SeriesCollection;
                     var offset = dataSource.ConnectVisual.ParentCanvas.Offset;
                     bool canHint = !isHint && plotArea.Contains(currentPoint);
+                    //多层hintTest
                     if (canHint)
                     {
                         foreach (SeriesVisual series_item in series)
@@ -133,6 +135,7 @@ namespace WpfDrawing
 
                             //验证数据是否包含等
                             if (!value.IsBad() &&
+                                series_plot.Contains(currentPoint) &&
                                 series_item.HitElement.Content != null
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
                                     && series_item.VisualData is RectChartContextData series_data
@@ -170,7 +173,6 @@ namespace WpfDrawing
                             {
                                 SeriesHitList.Add(key, new ElementPosition(series_item.HitElement.Content));
                             }
-
                         }
                         isHint = true;
                     }

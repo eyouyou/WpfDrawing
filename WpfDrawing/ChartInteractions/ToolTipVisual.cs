@@ -159,7 +159,7 @@ namespace WpfDrawing
             {
                 if (item.Value is ChartDataSource dataSource)
                 {
-                    var area = dataSource.ConnectVisual.PlotArea;
+                    var area = dataSource.ConnectVisual.InteractionPlotArea;
                     if (!isHint && !area.Contains(point))
                     {
                         Tip.Visibility = Visibility.Collapsed;

@@ -160,7 +160,11 @@ namespace WpfDrawing
                 if (item.Value is ChartDataSource dataSource)
                 {
                     var area = dataSource.ConnectVisual.InteractionPlotArea;
-                    if (!isHint && !area.Contains(point))
+                    if (isHint)
+                    {
+                        continue;
+                    }
+                    if (!area.Contains(point))
                     {
                         Tip.Visibility = Visibility.Collapsed;
                         continue;
@@ -177,13 +181,21 @@ namespace WpfDrawing
                             {
                                 Tip.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-                                var offsetPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y);
-
-                                if (area.Contains(offsetPoint))
+                                var offsetLeftTopPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y);
+                                var offsetLeftButtomPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y + Tip.DesiredSize.Height);
+                                var offsetRightButtomPoint = new Point(point.X, point.Y + Tip.DesiredSize.Height);
+                                var offsetRightTopPoint = new Point(point.X, point.Y);
+                                if (!area.Contains(offsetLeftTopPoint) && !area.Contains(offsetLeftButtomPoint))
                                 {
-                                    Canvas.SetTop(Tip, offsetPoint.Y);
-                                    Canvas.SetLeft(Tip, offsetPoint.X);
+                                    offsetLeftTopPoint.X += Tip.DesiredSize.Width;
                                 }
+                                if (!area.Contains(offsetRightButtomPoint) && !area.Contains(offsetLeftButtomPoint))
+                                {
+                                    offsetLeftTopPoint.Y -= Tip.DesiredSize.Height;
+                                }
+
+                                Canvas.SetTop(Tip, offsetLeftTopPoint.Y);
+                                Canvas.SetLeft(Tip, offsetLeftTopPoint.X);
                             }
                             break;
                         default:

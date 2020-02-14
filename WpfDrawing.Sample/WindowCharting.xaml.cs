@@ -31,7 +31,7 @@ namespace WpfDrawing.Sample
             timer.Start();
 
             DockPanel grid = new DockPanel() { };
-            RectDrawingCanvas chartCanvas = new RectDrawingCanvas(true) { };
+            GenericCanvasContainer chartCanvas = new GenericCanvasContainer(true) { };
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1) };
             ContinuousAxis axisY2 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Purple, 1) };
@@ -49,7 +49,7 @@ namespace WpfDrawing.Sample
             axisX3.AxisPen = new Pen(Brushes.DarkCyan, 1);
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            chartCanvas.AddChild(chart);
+            chartCanvas.Canvas.AddChild(chart);
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
             interaction.Cross.IsCrossShow = true;
             chart.AddAsixX(axisX);

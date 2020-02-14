@@ -18,7 +18,7 @@ namespace WpfDrawing
         ComponentId IdGenerater = new ComponentId();
         double ColPercentage = 0.0;
         double RowPercentage = 0.0;
-        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvas[] canvas)
+        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvasContainer[] canvas)
         {
             InteractionVisuals = interaction;
             InteractionVisuals.ParentElement = this;
@@ -37,22 +37,22 @@ namespace WpfDrawing
             var index = 0;
             foreach (var item in canvas)
             {
-                var value = item;
-                Children.Add(value);
-                item.Col = index % col;
-                item.Row = index / col;
-                SetColumn(value, item.Col);
-                SetRow(value, item.Row);
-                if (value.Id == int.MinValue)
+                var c = item.Canvas;
+                Children.Add(item);
+                c.Col = index % col;
+                c.Row = index / col;
+                SetColumn(item, c.Col);
+                SetRow(item, c.Row);
+                if (c.Id == -1)
                 {
-                    value.Id = IdGenerater.GenerateId();
+                    c.Id = IdGenerater.GenerateId();
                 }
 
-                interaction?.DataSources.Add(value.Id, value.DataSource);
-                item.InteractionCanvas = interaction;
+                interaction?.DataSources.Add(c.Id, c.DataSource);
+                c.InteractionCanvas = interaction;
                 index++;
             }
-            Canvas = canvas.ToDictionary(it => it.Id, it => it);
+            Canvas = canvas.ToDictionary(it => it.Canvas.Id, it => it.Canvas);
 
             if (interaction != null)
             {
@@ -76,9 +76,9 @@ namespace WpfDrawing
                 {
                     var canvas = item.Value;
                     canvas.InteractionCanvas.Hide();
-                    canvas.Offset = new Vector(canvas.Col * ColPercentage * ActualWidth, canvas.Row * RowPercentage * ActualHeight);
-                    canvas.CurrentLocation = Point.Add(new Point(0, 0), canvas.Offset);
-
+                    var point = canvas.TranslatePoint(new Point(0, 0), this);
+                    canvas.CurrentLocation = point;
+                    canvas.Offset = new Vector(point.X, point.Y);
                     index++;
                 }
             }

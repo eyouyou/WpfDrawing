@@ -19,7 +19,7 @@ namespace WpfDrawing.Sample
     public partial class WindowCharting3 : Window
     {
         ChartVisual chart = new ChartVisual();
-        RectDrawingCanvas chartCanvas = new RectDrawingCanvas(true) { };
+        GenericCanvasContainer canvasContainer = new GenericCanvasContainer(true) { };
         DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
 
         StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.OrangeRed, 5) };
@@ -42,11 +42,11 @@ namespace WpfDrawing.Sample
             chart.Offsets.Right = new GridLength(10);
             chart.Offsets.Top = new GridLength(20);
 
-            chartCanvas.AddChild(chart);
-            chartCanvas.DataSource = chart.DataSource;
+            canvasContainer.Canvas.AddChild(chart);
+            canvasContainer.Canvas.DataSource = chart.DataSource;
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
 
-            RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
+            RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, canvasContainer);
             //container.Background = Brushes.GreenYellow;
             chart.AddAsixY(axisY);
             chart.AddAsixX(axisX);
@@ -55,18 +55,18 @@ namespace WpfDrawing.Sample
             chart.AddSeries(lineSeries2);
 
             grid.Children.Add(container);
-            chartCanvas.Visuals.Add(CreateDrawingImage());
+            canvasContainer.Canvas.Visuals.Add(CreateDrawingImage());
 
             //chart.CrossOption.IsLabelShow = false;
             //chart.CrossOption.IsXShow = false;
 
-            BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            b.BlurContainer = chartCanvas;
-            b.Magnification = 0.25;
-            b.BlurRadius = 30;
+            //BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
+            //b.BlurContainer = canvasContainer;
+            //b.Magnification = 0.25;
+            //b.BlurRadius = 30;
 
             interaction.Tip.TextContainer.Margin = new Thickness(10);
-            interaction.Tip.Layers.Children.Insert(0, b);
+            //interaction.Tip.Layers.Children.Insert(0, b);
             interaction.Tip.FontSize = 11;
             interaction.Tip.Border.BorderThickness = new Thickness(1);
             interaction.Tip.Border.Padding = new Thickness(0);
@@ -88,7 +88,7 @@ namespace WpfDrawing.Sample
 
         private void WindowCharting3_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            chartCanvas.Plot();
+            canvasContainer.Replot();
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -136,7 +136,7 @@ namespace WpfDrawing.Sample
 
             lineSeries2.VisualData = dic2.ToVisualData();
             lineSeries.VisualData = dic.ToVisualData();
-            chartCanvas.Replot();
+            canvasContainer.Replot();
         }
         public async void StartDataFeed()
         {

@@ -36,7 +36,7 @@ namespace WpfDrawing
         /// <summary>
         /// int.MinValue 无效
         /// </summary>
-        public int Id { get; set; } = int.MinValue;
+        public int Id { get; set; } = -1;
         /// <summary>
         /// drawingvisual交互
         /// </summary>

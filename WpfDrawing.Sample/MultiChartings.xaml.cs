@@ -53,8 +53,7 @@ namespace WpfDrawing.Sample
             container.Replot();
         }
     }
-
-    public class ChartItem : RectDrawingCanvas
+    public class ChartItem : RectDrawingCanvasContainer
     {
         ChartVisual chart = new ChartVisual();
         DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
@@ -64,7 +63,9 @@ namespace WpfDrawing.Sample
 
         ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
 
-        public ChartItem() : base(true)
+        RectDrawingCanvas rectDrawingCanvas = new RectDrawingCanvas();
+
+        public ChartItem()
         {
             chart.Offsets.Left = new GridLength(20);
             chart.Offsets.Buttom = new GridLength(20);
@@ -79,11 +80,13 @@ namespace WpfDrawing.Sample
             chart.AddSeries(lineSeries);
             chart.AddSeries(lineSeries2);
 
-            AddChild(chart);
+            rectDrawingCanvas.AddChild(chart);
 
-            DataSource = chart.DataSource;
+            Canvas.DataSource = chart.DataSource;
 
             IsVisibleChanged += ChartItem_IsVisibleChanged;
+
+            Content = rectDrawingCanvas;
         }
 
         private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -96,8 +99,6 @@ namespace WpfDrawing.Sample
         public async void StartDataFeed()
         {
             await Render("300843", "000001");
-            //await Task.Delay(6000);
-            //await Render("300843", "000001");
         }
         private async Task Render(string blockId, string marketId)
         {
@@ -111,9 +112,12 @@ namespace WpfDrawing.Sample
 
             lineSeries2.VisualData = dic2.ToVisualData();
             lineSeries.VisualData = dic.ToVisualData();
-            this.Replot();
+            Canvas.Replot();
         }
         bool isFirst = true;
+
+        public override RectDrawingCanvas Canvas => rectDrawingCanvas;
+
         public async Task<Dictionary<DateTime, double>> Request(string blockId, bool isMarket = false)
         {
             var str = $"http://zx.10jqka.com.cn/hotevent/api/getselfstocknum?blockid={blockId}";

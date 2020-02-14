@@ -57,6 +57,7 @@
     <Compile Include="Charting\ChartVisual.cs" />
     <Compile Include="Charting\VisualGroup.cs" />
     <Compile Include="Core\ComponentKey.cs" />
+    <Compile Include="Core\RectDrawingCanvasContainer.cs" />
     <Compile Include="UserControls\Candle.cs" />
     <Compile Include="UserControls\DrawingBuilder.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />

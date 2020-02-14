@@ -14,6 +14,7 @@ namespace WpfDrawing
     /// </summary>
     public class RectInteractionGroup : Grid
     {
+        public Grid DrawingGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
         ComponentId IdGenerater = new ComponentId();
         double ColPercentage = 0.0;
@@ -26,19 +27,19 @@ namespace WpfDrawing
             ColPercentage = 1.0 / col;
             for (int i = 0; i < col; i++)
             {
-                ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
+                DrawingGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
             }
 
             RowPercentage = 1.0 / row;
             for (int i = 0; i < row; i++)
             {
-                RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
+                DrawingGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
             }
             var index = 0;
             foreach (var item in canvas)
             {
                 var c = item.Canvas;
-                Children.Add(item);
+                DrawingGrid.Children.Add(item);
                 c.Col = index % col;
                 c.Row = index / col;
                 SetColumn(item, c.Col);
@@ -53,6 +54,8 @@ namespace WpfDrawing
                 index++;
             }
             Canvas = canvas.ToDictionary(it => it.Canvas.Id, it => it.Canvas);
+
+            Children.Add(DrawingGrid);
 
             if (interaction != null)
             {

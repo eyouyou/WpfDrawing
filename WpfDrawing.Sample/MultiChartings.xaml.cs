@@ -28,12 +28,16 @@ namespace WpfDrawing.Sample
             InitializeComponent();
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 2, 2, new ChartItem() { Background = Brushes.LightGreen }, new ChartItem() { Background = Brushes.LightPink }, new ChartItem() { Background = Brushes.LightSalmon }, new ChartItem() { Background = Brushes.LightGreen });
-
+            container = new RectInteractionGroup(interaction, 2, 2,
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ },
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */},
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ },
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */});
+            //container.Background = Brushes.LightGreen;
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            b.BlurContainer = container;
+            b.BlurContainer = container.DrawingGrid;
             b.Magnification = 0.25;
-            b.BlurRadius = 30;
+            b.BlurRadius = 20;
 
             interaction.Tip.TextContainer.Margin = new Thickness(10);
             interaction.Tip.Layers.Children.Insert(0, b);
@@ -70,6 +74,9 @@ namespace WpfDrawing.Sample
 
         public ChartItem()
         {
+            BorderThickness = new Thickness(1);
+            BorderBrush = Brushes.Black;
+
             chart.IntersectChanged += Chart_IntersectChanged;
 
             chart.Offsets.Left = new GridLength(20);

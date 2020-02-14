@@ -113,18 +113,24 @@ namespace WpfDrawing
     /// <summary>
     /// 2d chart
     /// 假定x轴都是离散的 y轴都是连续的double
-    /// 
     /// </summary>
     /// <typeparam name="Tx"></typeparam>
     /// <typeparam name="Ty"></typeparam>
     public class ChartVisual : RectDrawingVisual
+                                , IIntersectable
     {
+        public event IntersectChangedHandler IntersectChanged;
+
         XAxisVisualGroup AxisXVisuals = new XAxisVisualGroup();
         YAxisVisualGroup AxisYVisuals = new YAxisVisualGroup();
         SeriesVisualGroup SeriesVisuals = new SeriesVisualGroup();
 
         private readonly ChartDataSource Data;
 
+        internal void TriggerIntersectChanged(Dictionary<string, SeriesData> data)
+        {
+            IntersectChanged?.Invoke(data);
+        }
         public override RectVisualContextData DefaultData => RectChartGroupContextData.Empty;
         public ChartVisual()
         {
@@ -151,8 +157,6 @@ namespace WpfDrawing
             SeriesVisuals.Add(series);
             Data.AddSeries(series);
         }
-        public IAxisVisualConfiguare XOption => AxisXVisuals;
-        public IAxisVisualConfiguare YOption => AxisYVisuals;
 
         /// <summary>
         /// 赋值给Canvas.DataSource

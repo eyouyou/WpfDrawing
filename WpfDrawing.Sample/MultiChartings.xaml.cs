@@ -43,9 +43,9 @@ namespace WpfDrawing.Sample
             interaction.Tip.Border.BorderBrush = Brushes.Black;
             interaction.Tip.Foreground = Brushes.White;
 
-            this.Content = container;
+            Content = container;
 
-            this.SizeChanged += MultiChartings_SizeChanged;
+            SizeChanged += MultiChartings_SizeChanged;
         }
 
         private void MultiChartings_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -65,8 +65,13 @@ namespace WpfDrawing.Sample
 
         RectDrawingCanvas rectDrawingCanvas = new RectDrawingCanvas();
 
+        TextBlock text1 = new TextBlock();
+        TextBlock text2 = new TextBlock();
+
         public ChartItem()
         {
+            chart.IntersectChanged += Chart_IntersectChanged;
+
             chart.Offsets.Left = new GridLength(20);
             chart.Offsets.Buttom = new GridLength(20);
             chart.Offsets.Right = new GridLength(20);
@@ -86,8 +91,43 @@ namespace WpfDrawing.Sample
 
             IsVisibleChanged += ChartItem_IsVisibleChanged;
 
-            Content = rectDrawingCanvas;
+            DockPanel dock = new DockPanel();
+            DockPanel title = new DockPanel();
+            title.VerticalAlignment = VerticalAlignment.Center;
+            title.AddChild(new TextBlock() { Height = 20, Text = "MultiCharting" }, Dock.Left);
+            title.AddChild(text1, Dock.Left);
+            text2.Margin = new Thickness(10, 0, 0, 0);
+            title.AddChild(text2, Dock.Right);
+            dock.AddChild(title, Dock.Top);
+            dock.AddChild(rectDrawingCanvas, Dock.Top);
+            Content = dock;
         }
+
+        private void Chart_IntersectChanged(Dictionary<string, SeriesData> data)
+        {
+            if (data.ContainsKey("概念关注度") && data["概念关注度"].YValue.ValueData("") is Value<double> currentValue
+                && !currentValue.IsBad)
+            {
+                text1.Text = currentValue.Data.ToString("G4");
+            }
+            else
+            {
+                text1.Text = "--";
+            }
+
+            if (data.ContainsKey("A股平均关注度") && data["A股平均关注度"].YValue.ValueData("") is Value<double> currentValue2
+                && !currentValue2.IsBad)
+            {
+                text2.Text = currentValue2.Data.ToString("G4");
+            }
+            else
+            {
+                text2.Text = "--";
+            }
+
+        }
+
+        public override RectDrawingCanvas Canvas => rectDrawingCanvas;
 
         private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -115,9 +155,6 @@ namespace WpfDrawing.Sample
             Canvas.Replot();
         }
         bool isFirst = true;
-
-        public override RectDrawingCanvas Canvas => rectDrawingCanvas;
-
         public async Task<Dictionary<DateTime, double>> Request(string blockId, bool isMarket = false)
         {
             var str = $"http://zx.10jqka.com.cn/hotevent/api/getselfstocknum?blockid={blockId}";

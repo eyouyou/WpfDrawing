@@ -145,6 +145,7 @@ namespace WpfDrawing
                 Tip.Visibility = Visibility.Collapsed;
                 return;
             }
+
             //优化
             var hitPointer = (Point)VisualData.Current.Items[ContextDataItem.HitPointer];
             bool isXInvariant = false;

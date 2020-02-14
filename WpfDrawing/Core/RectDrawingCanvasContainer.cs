@@ -21,7 +21,7 @@ namespace WpfDrawing
         public GenericCanvasContainer(bool isEnableInteraction = false)
         {
             canvas = new RectDrawingCanvas(isEnableInteraction);
-            this.Content = canvas;
+            Content = canvas;
         }
         public override RectDrawingCanvas Canvas => canvas;
 

@@ -14,10 +14,7 @@ namespace WpfDrawing
     /// 取消所有外部plot
     /// </summary>
     public class AxisInteractionCanvas : InteractionCanvas
-        , IIntersectable
     {
-        public event IntersectChangedHandler IntersectChanged;
-
         private Point LastHitPoint;
         public AxisInteractionCanvas()
         {
@@ -102,9 +99,9 @@ namespace WpfDrawing
             NearestXs.Clear();
             NearestYs.Clear();
 
-            var seriesDatas = new List<SeriesData>();
+            var hitSeriesDatas = new List<SeriesData>();
 
-            VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
+            VisualData.Items[ContextDataItem.SeriesData] = hitSeriesDatas;
 
             var currentPoint = point;
 
@@ -116,6 +113,7 @@ namespace WpfDrawing
 
             foreach (var item in DataSources)
             {
+                var seriesData = new List<SeriesData>();
                 if (item.Value is ChartDataSource dataSource)
                 {
                     var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasPlotArea;
@@ -149,7 +147,7 @@ namespace WpfDrawing
                                 //获取当前值对应的x、y 进行十字轴的定位
                                 var x = xAxis.GetPosition(value).X + xAxis.Start.X + offset.X;
                                 var y = yAxis.GetPosition(series_data.Data[value]).Y + xAxis.Start.Y + offset.Y;
-                                seriesDatas.Add(new SeriesData() { Color = series_item.Color, Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = series_data.Data[value], AxisX = xAxis, AxisY = (AxisVisual<IVariable>)yAxis });
+                                hitSeriesDatas.Add(new SeriesData() { Color = series_item.Color, Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = series_data.Data[value], AxisX = xAxis, AxisY = (AxisVisual<IVariable>)yAxis });
 
                                 nearestX = x;
 
@@ -178,6 +176,7 @@ namespace WpfDrawing
                             {
                                 SeriesHitList.Add(key, new ElementPosition(series_item.HitElement.Content));
                             }
+                            seriesData = hitSeriesDatas;
                         }
                         isHint = true;
                     }
@@ -199,8 +198,8 @@ namespace WpfDrawing
                     //}
                     //LastHitPoint = hitPoint;
 
-                    //TODO 不支持
-                    IntersectChanged?.Invoke(seriesDatas.ToDictionary(it => it.Name, it => it));
+                    //这么调用是否合适
+                    (dataSource.ConnectVisual as ChartVisual)?.TriggerIntersectChanged(seriesData.ToDictionary(it => it.Name, it => it));
                 }
             }
 

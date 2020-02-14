@@ -60,13 +60,13 @@ namespace WpfDrawing.Sample
             //chart.CrossOption.IsLabelShow = false;
             //chart.CrossOption.IsXShow = false;
 
-            //BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            //b.BlurContainer = canvasContainer;
-            //b.Magnification = 0.25;
-            //b.BlurRadius = 30;
+            BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
+            b.BlurContainer = canvasContainer;
+            b.Magnification = 0.25;
+            b.BlurRadius = 30;
 
             interaction.Tip.TextContainer.Margin = new Thickness(10);
-            //interaction.Tip.Layers.Children.Insert(0, b);
+            interaction.Tip.Layers.Children.Insert(0, b);
             interaction.Tip.FontSize = 11;
             interaction.Tip.Border.BorderThickness = new Thickness(1);
             interaction.Tip.Border.Padding = new Thickness(0);

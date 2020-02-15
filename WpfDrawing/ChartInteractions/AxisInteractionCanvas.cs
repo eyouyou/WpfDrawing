@@ -136,10 +136,16 @@ namespace WpfDrawing
                             var value = xAxis.GetValue(axisx_offset);
                             var key = new ComponentKey(series_item.ParentCanvas.Id, series_item.Id);
 
+                            //HoverElement LineSeriesVisual 
+                            LineSeriesVisual lineSeries = null;
+                            if (series_item.IsInterectHoverable())
+                            {
+                                lineSeries = series_item as LineSeriesVisual;
+                            }
+
                             //验证数据是否包含等
                             if (!value.IsBad() &&
-                                series_plot.Contains(currentPoint) &&
-                                series_item.HitElement.Content != null
+                                series_plot.Contains(currentPoint)
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
                                     && series_item.VisualData is RectChartContextData series_data
                                     && series_data.Data.ContainsKey(value))
@@ -151,30 +157,36 @@ namespace WpfDrawing
 
                                 nearestX = x;
 
-                                if (!series_item.HitElement.IsAdded)
-                                {
-                                    AddElement(series_item.HitElement.Content);
-                                    series_item.HitElement.IsAdded = true;
-                                }
-                                var leftTop = new Point(x - series_item.HitElement.Width / 2, y - series_item.HitElement.Height / 2);
-
-                                if (series_plot.Contains(new Point(x, y)))
-                                {
-                                    SeriesHitList.Add(key, new ElementPosition(series_item.HitElement.Content, true, leftTop.X, leftTop.Y, series_item.HitElement.ZIndex));
-                                }
-                                else
-                                {
-                                    SeriesHitList.Add(key, new ElementPosition(series_item.HitElement.Content));
-                                }
-
                                 if (Cross.IsYDataAttract)
                                 {
                                     nearestY = y;
                                 }
+
+                                if (lineSeries != null)
+                                {
+                                    if (!lineSeries.HoverElement.IsAdded)
+                                    {
+                                        AddElement(lineSeries.HoverElement.Content);
+                                        lineSeries.HoverElement.IsAdded = true;
+                                    }
+                                    var leftTop = new Point(x - lineSeries.HoverElement.Width / 2, y - lineSeries.HoverElement.Height / 2);
+
+                                    if (series_plot.Contains(new Point(x, y)))
+                                    {
+                                        SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content, true, leftTop.X, leftTop.Y, lineSeries.HoverElement.ZIndex));
+                                    }
+                                    else
+                                    {
+                                        SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content));
+                                    }
+                                }
                             }
                             else
                             {
-                                SeriesHitList.Add(key, new ElementPosition(series_item.HitElement.Content));
+                                if (lineSeries != null)
+                                {
+                                    SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content));
+                                }
                             }
                             seriesData = hitSeriesDatas;
                         }
@@ -184,7 +196,11 @@ namespace WpfDrawing
                     {
                         foreach (SeriesVisual series_item in series)
                         {
-                            SeriesHitList.Add(new ComponentKey(series_item.ParentCanvas.Id, series_item.Id), new ElementPosition(series_item.HitElement.Content));
+                            if (series_item.IsInterectHoverable())
+                            {
+                                var line = series_item as LineSeriesVisual;
+                                SeriesHitList.Add(new ComponentKey(series_item.ParentCanvas.Id, series_item.Id), new ElementPosition(line.HoverElement.Content));
+                            }
                         }
                     }
 

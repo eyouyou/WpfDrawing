@@ -50,6 +50,7 @@
     <Compile Include="Abstraction\DiscreteAxis.cs" />
     <Compile Include="Abstraction\InteractionCanvas.cs" />
     <Compile Include="Abstraction\InteractionConfiguaration.cs" />
+    <Compile Include="Abstraction\PointsSeriesVisual.cs" />
     <Compile Include="Abstraction\RectDrawingVisual.cs" />
     <Compile Include="Abstraction\RectVisualContextData.cs" />
     <Compile Include="Abstraction\SeriesVisual.cs" />
@@ -57,7 +58,10 @@
     <Compile Include="Charting\ChartVisual.cs" />
     <Compile Include="Charting\VisualGroup.cs" />
     <Compile Include="Core\ComponentKey.cs" />
+    <Compile Include="Abstraction\MarkLineSeriesVisual.cs" />
+    <Compile Include="Core\EllipseSolidHitElement.cs" />
     <Compile Include="Core\RectDrawingCanvasContainer.cs" />
+    <Compile Include="Core\ScatterSeriesVisual.cs" />
     <Compile Include="UserControls\Candle.cs" />
     <Compile Include="UserControls\DrawingBuilder.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />

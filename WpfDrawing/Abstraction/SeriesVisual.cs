@@ -24,26 +24,21 @@ namespace WpfDrawing.Abstraction
 
     }
 
+    /// <summary>
+    /// Line\Scatter\Bar
+    /// </summary>
     public abstract class SeriesVisual : SubRectDrawingVisual
     {
         public override RectVisualContextData DefaultData => RectChartContextData.Empty;
         public int XAxisId { get; set; } = 0;
         public SeriesVisual()
         {
-            HitElement = new EllipseSolidHitElement();
         }
+        /// <summary>
+        /// tip 使用
+        /// </summary>
         public abstract Brush Color { get; }
-        private HitElement _hitElement = null;
-        public HitElement HitElement
-        {
-            get => _hitElement;
-            set
-            {
-                _hitElement = value;
-                _hitElement.ParentSeries = this;
-            }
-        }
-
+        
         /// <summary>
         /// 对外接口 计算range
         /// </summary>
@@ -67,28 +62,6 @@ namespace WpfDrawing.Abstraction
         }
 
 
-    }
-    public class EllipseSolidHitElement : HitElement
-    {
-        private Ellipse _ellipse = new Ellipse() { };
-        public override FrameworkElement Content
-        {
-            get
-            {
-                _ellipse.Width = Width;
-                _ellipse.Height = Height;
-                ZIndex = 2;
-                if (Color != null)
-                {
-                    _ellipse.Fill = Color;
-                }
-                else if (ParentSeries != null)
-                {
-                    _ellipse.Fill = ParentSeries.Color;
-                }
-                return _ellipse;
-            }
-        }
     }
 
 }

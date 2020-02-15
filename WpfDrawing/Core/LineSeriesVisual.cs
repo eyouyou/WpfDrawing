@@ -11,7 +11,84 @@ using WpfDrawing.Abstraction;
 
 namespace WpfDrawing
 {
-    public class StraightLineSeriesVisual : SeriesVisual
+    public static class LineSeriesVisualExtension
+    {
+        /// <summary>
+        ///  需要lineSeries
+        /// </summary>
+        /// <param name="series"></param>
+        /// <returns></returns>
+        public static bool IsInterectHoverable(this SeriesVisual series)
+        {
+            return series is LineSeriesVisual line && line.HoverElement.Content != null;
+        }
+    }
+    public abstract class LineSeriesVisual : PointsSeriesVisual
+    {
+        public override RectVisualContextData DefaultData => RectChartContextData.Empty;
+
+        public LineSeriesVisual()
+        {
+            HoverElement = new EllipseSolidHitElement();
+        }
+
+        /// <summary>
+        /// 优化点 减少至一个 移动至交互层
+        /// </summary>
+        private HitElement _hoverElement = null;
+        public HitElement HoverElement
+        {
+            get => _hoverElement;
+            set
+            {
+                _hoverElement = value;
+                _hoverElement.ParentSeries = this;
+            }
+        }
+
+
+        public override List<Point> Points
+        {
+            get
+            {
+                var list = new List<Point>();
+                var vData = VisualData.TransformVisualData<RectChartContextData>();
+                if (vData.IsBad)
+                {
+                    return list;
+                }
+                var coms = DataSource as ChartDataSource;
+
+                var axisxs = coms.AxisXCollection;
+
+                Point lasted = new Point(double.MinValue, double.MinValue);
+
+                var y = coms.GetMappingAxisY(Id) as ContinuousAxis;
+                if (y == null)
+                {
+                    return list;
+                }
+                var x = coms.FindXById(Id) as DiscreteAxis;
+                if (x == null)
+                {
+                    return list;
+                }
+
+                var offsetx = x.Start.X;
+                var offsety = x.Start.Y;
+                var index = 0;
+                foreach (var item in vData.Value.Data)
+                {
+                    var current = new Point(offsetx + x.GetPosition(item.Key.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Value).Y);
+                    list.Add(current);
+                    index++;
+                }
+                return list;
+            }
+        }
+    }
+
+    public class StraightLineSeriesVisual : LineSeriesVisual
     {
         public Pen LinePen { get; set; } = new Pen(Brushes.Blue, 1);
 
@@ -20,59 +97,27 @@ namespace WpfDrawing
             get => LinePen.Brush;
         }
 
-
         public override void PlotToDc(DrawingContext dc)
         {
-            VisualScrollableAreaClip = PlotArea;
-            var vData = VisualData.TransformVisualData<RectChartContextData>();
-            if (vData.IsBad)
+            var points = Points;
+            if (points.Count == 0)
             {
                 return;
             }
-            var coms = DataSource as ChartDataSource;
-
-            var axisxs = coms.AxisXCollection;
-
-            Point lasted = new Point(double.MinValue, double.MinValue);
-            var plotArea = PlotArea;
-
-            var y = coms.GetMappingAxisY(Id) as ContinuousAxis;
-            if (y == null)
-            {
-                return;
-            }
-            var x = coms.FindXById(Id) as DiscreteAxis;
-            if (x == null)
-            {
-                return;
-            }
-
-            var offsetx = x.Start.X;
-            var offsety = x.Start.Y;
-            var index = 0;
             var stream = new StreamGeometry();
-            //stream.Bounds.Location = plotArea.Location;
-            var points = new List<Point>();
-            foreach (var item in vData.Value.Data)
-            {
-                var current = new Point(offsetx + x.GetPosition(item.Key.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Value).Y);
-                points.Add(current);
-                index++;
-            }
             using (var sgc = stream.Open())
             {
                 sgc.BeginFigure(points[0], false, false);
                 sgc.PolyLineTo(points.Skip(0).ToList(), true, true);
             }
+            var plotArea = PlotArea;
             dc.PushClip(new RectangleGeometry() { Rect = plotArea });
             dc.DrawGeometry(Brushes.Transparent, LinePen, stream);
             dc.Pop();
         }
-
-
     }
 
-    public class BezierLineSeriesVisual : SeriesVisual
+    public class BezierLineSeriesVisual : LineSeriesVisual
     {
         public Pen LinePen { get; } = new Pen(Brushes.Blue, 1);
 
@@ -80,8 +125,6 @@ namespace WpfDrawing
         {
             get => LinePen.Brush;
         }
-
-        public override RectVisualContextData DefaultData => throw new NotImplementedException();
 
         public override void PlotToDc(DrawingContext dc)
         {
@@ -129,10 +172,6 @@ namespace WpfDrawing
                     lasted = current;
 
                     index++;
-                    //if(index != 0)
-                    //{
-                    //    points.Add(GetCenterPoint(lasted, current));
-                    //}
 
                 }
 

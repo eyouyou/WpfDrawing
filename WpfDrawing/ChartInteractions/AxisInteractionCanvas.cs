@@ -137,11 +137,7 @@ namespace WpfDrawing
                             var key = new ComponentKey(series_item.ParentCanvas.Id, series_item.Id);
 
                             //HoverElement LineSeriesVisual 
-                            LineSeriesVisual lineSeries = null;
-                            if (series_item.IsInterectHoverable())
-                            {
-                                lineSeries = series_item as LineSeriesVisual;
-                            }
+                            LineSeriesVisual lineSeries = series_item.GetInterectHoverableLineSeriesVisual();
 
                             //验证数据是否包含等
                             if (!value.IsBad() &&
@@ -196,9 +192,9 @@ namespace WpfDrawing
                     {
                         foreach (SeriesVisual series_item in series)
                         {
-                            if (series_item.IsInterectHoverable())
+                            var line = series_item.GetInterectHoverableLineSeriesVisual();
+                            if (line != null)
                             {
-                                var line = series_item as LineSeriesVisual;
                                 SeriesHitList.Add(new ComponentKey(series_item.ParentCanvas.Id, series_item.Id), new ElementPosition(line.HoverElement.Content));
                             }
                         }

@@ -18,9 +18,13 @@ namespace WpfDrawing
         /// </summary>
         /// <param name="series"></param>
         /// <returns></returns>
-        public static bool IsInterectHoverable(this SeriesVisual series)
+        public static LineSeriesVisual GetInterectHoverableLineSeriesVisual(this SeriesVisual series)
         {
-            return series is LineSeriesVisual line && line.HoverElement.Content != null;
+            if (series is LineSeriesVisual line && line.HoverElement.Content != null)
+            {
+                return line;
+            }
+            return null;
         }
     }
     public abstract class LineSeriesVisual : PointsSeriesVisual

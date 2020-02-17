@@ -119,7 +119,7 @@ namespace WpfDrawing
                     var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasPlotArea;
                     var series = dataSource.SeriesCollection;
                     var offset = dataSource.ConnectVisual.ParentCanvas.Offset;
-                    bool canHint = !isHint && plotArea.Contains(currentPoint);
+                    bool canHint = !isHint && plotArea.Contains(currentPoint) && !dataSource.ConnectVisual.ParentCanvas.IsPloting;
                     //进入当前画布
                     if (canHint)
                     {

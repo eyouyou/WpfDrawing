@@ -57,6 +57,7 @@
     <Compile Include="Abstraction\SubRectDrawingVisual.cs" />
     <Compile Include="Charting\ChartVisual.cs" />
     <Compile Include="Charting\VisualGroup.cs" />
+    <Compile Include="Core\BarSeriesVisual.cs" />
     <Compile Include="Core\ComponentKey.cs" />
     <Compile Include="Abstraction\MarkLineSeriesVisual.cs" />
     <Compile Include="Core\EllipseSolidHitElement.cs" />

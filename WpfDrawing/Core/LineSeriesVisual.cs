@@ -50,46 +50,6 @@ namespace WpfDrawing
             }
         }
 
-
-        public override List<Point> Points
-        {
-            get
-            {
-                var list = new List<Point>();
-                var vData = VisualData.TransformVisualData<RectChartContextData>();
-                if (vData.IsBad)
-                {
-                    return list;
-                }
-                var coms = DataSource as ChartDataSource;
-
-                var axisxs = coms.AxisXCollection;
-
-                Point lasted = new Point(double.MinValue, double.MinValue);
-
-                var y = coms.GetMappingAxisY(Id) as ContinuousAxis;
-                if (y == null)
-                {
-                    return list;
-                }
-                var x = coms.FindXById(Id) as DiscreteAxis;
-                if (x == null)
-                {
-                    return list;
-                }
-
-                var offsetx = x.Start.X;
-                var offsety = x.Start.Y;
-                var index = 0;
-                foreach (var item in vData.Value.Data)
-                {
-                    var current = new Point(offsetx + x.GetPosition(item.Key.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Value).Y);
-                    list.Add(current);
-                    index++;
-                }
-                return list;
-            }
-        }
     }
 
     public class StraightLineSeriesVisual : LineSeriesVisual
@@ -132,48 +92,27 @@ namespace WpfDrawing
 
         public override void PlotToDc(DrawingContext dc)
         {
-            if (!(VisualData is RectChartContextData data))
+            var points = Points;
+            if (points.Count == 0)
             {
                 return;
             }
-            var coms = DataSource as ChartDataSource;
-
-            var axisxs = coms.AxisXCollection;
-
-            Point lasted = new Point(double.MinValue, double.MinValue);
-            var plotArea = PlotArea;
-
-            var y = coms.GetMappingAxisY(Id) as ContinuousAxis;
-            if (y == null)
-            {
-                return;
-            }
-            var x = coms.FindXById(Id) as DiscreteAxis;
-            if (x == null)
-            {
-                return;
-            }
-
-            var offsetx = x.Start.X;
-            var offsety = x.Start.Y;
             var index = 0;
-            var points = new List<Point>();
 
+            Point lasted = new Point(0, 0);
             var stream = new StreamGeometry();
             using (var sgc = stream.Open())
             {
-                foreach (var item in data.Data)
+                foreach (var item in points)
                 {
-                    var current = new Point(offsetx + x.GetPosition(item.Key.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Value).Y);
-
                     if (index >= 1)
                     {
-                        var center = GetCenterPoint(lasted, current);
+                        var center = GetCenterPoint(lasted, item);
                         sgc.BeginFigure(lasted, false, false);
-                        sgc.BezierTo(new Point(center.X, lasted.Y), new Point(center.X, current.Y), current, true, false);
-                        points.Add(current);
+                        sgc.BezierTo(new Point(center.X, lasted.Y), new Point(center.X, item.Y), item, true, false);
+                        points.Add(item);
                     }
-                    lasted = current;
+                    lasted = item;
 
                     index++;
 

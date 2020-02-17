@@ -13,6 +13,7 @@ namespace WpfDrawing
 {
     public class RectDrawingCanvas : Canvas, ILocatable
     {
+        public bool IsPloting { get; set; } = false;
         //在container中所在的位置 
         public int Col { get; set; } = -1;
         public int Row { get; set; } = -1;
@@ -156,6 +157,7 @@ namespace WpfDrawing
         /// </summary>
         public void Replot()
         {
+            IsPloting = true;
             Reset();
             foreach (Visual item in Visuals)
             {
@@ -166,6 +168,7 @@ namespace WpfDrawing
                     rect.Plot();
                 }
             }
+            IsPloting = false;
         }
 
         /// <summary>
@@ -173,6 +176,7 @@ namespace WpfDrawing
         /// </summary>
         public void Plot()
         {
+            IsPloting = true;
             Reset();
             foreach (Visual item in Visuals)
             {
@@ -182,6 +186,7 @@ namespace WpfDrawing
                     rect.Plot();
                 }
             }
+            IsPloting = false;
         }
         public System.Windows.Media.VisualCollection Visuals { get; set; }
         public Rect PlotArea { get; set; }

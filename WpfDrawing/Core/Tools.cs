@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public static class Tools
     {
@@ -130,7 +131,7 @@ namespace WpfDrawing
             }
         }
 
-        public static T GetVisualDataItem<T>(this RectVisualContextData data, ContextDataItem tag)
+        public static T GetVisualDataItem<T>(this ContextData data, ContextDataItem tag)
             where T : class
         {
             if (!data.Items.ContainsKey(tag)
@@ -140,7 +141,7 @@ namespace WpfDrawing
             }
             return item;
         }
-        public static T GetMainVisualDataItem<T>(this RectVisualContextData data, ContextDataItem tag)
+        public static T GetMainVisualDataItem<T>(this ContextData data, ContextDataItem tag)
             where T : class
         {
             if (!data.Current.Items.ContainsKey(tag)
@@ -151,7 +152,7 @@ namespace WpfDrawing
             return item;
         }
 
-        public static T GetMainVisualDataItemThrow<T>(this RectVisualContextData data, ContextDataItem tag)
+        public static T GetMainVisualDataItemThrow<T>(this ContextData data, ContextDataItem tag)
         {
             if (!data.Current.Items.ContainsKey(tag)
                 || !(data.Current.Items[tag] is T item))
@@ -160,7 +161,7 @@ namespace WpfDrawing
             }
             return item;
         }
-        public static T GetVisualDataItemThrow<T>(this RectVisualContextData data, ContextDataItem tag)
+        public static T GetVisualDataItemThrow<T>(this ContextData data, ContextDataItem tag)
         {
             if (!data.Items.ContainsKey(tag)
                 || !(data.Items[tag] is T item))
@@ -170,7 +171,7 @@ namespace WpfDrawing
             return item;
         }
 
-        public static VisualData<T> TransformVisualData<T>(this RectVisualContextData data)
+        public static VisualData<T> TransformVisualData<T>(this ContextData data)
         {
             VisualData<T> vData = new VisualData<T>();
             if (data is T t && !data.IsEmpty)
@@ -194,7 +195,7 @@ namespace WpfDrawing
         /// </summary>
         /// <param name="visual"></param>
         /// <param name="data"></param>
-        public static void DeliverVisualData(this RectDrawingVisual visual, RectVisualContextData data)
+        public static void DeliverVisualData(this RectDrawingVisual visual, ContextData data)
         {
             if (!visual.IsolateData)
             {

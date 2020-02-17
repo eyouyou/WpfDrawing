@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing.Abstractions
 {
     public abstract class SubRectDrawingVisual : RectDrawingVisual
     {
@@ -24,16 +24,16 @@ namespace WpfDrawing
                 _paddingOffset = value;
             }
         }
-        private RectVisualContextData _visualData = null;
-        public override void VisualDataSetupTidily(RectVisualContextData data)
+        private ContextData _visualData = null;
+        public override void VisualDataSetupTidily(ContextData data)
         {
             _visualData = data;
         }
         /// <summary>
         /// 需要从上层<see cref="RectDrawingVisual"/>赋值
-        /// <see cref="SubRectDrawingVisual.set"/>:  从父亲<see cref="SubRectDrawingVisual.VisualData"/>继承<see cref="RectVisualContextData.Items"/>
+        /// <see cref="SubRectDrawingVisual.set"/>:  从父亲<see cref="SubRectDrawingVisual.VisualData"/>继承<see cref="ContextData.Items"/>
         /// </summary>
-        public override RectVisualContextData VisualData
+        public override ContextData VisualData
         {
             get
             {

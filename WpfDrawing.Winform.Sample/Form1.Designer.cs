@@ -1,4 +1,4 @@
-﻿namespace WpfDrawing.Winform.Sample
+﻿namespace HevoDrawing.Winform.Sample
 {
     partial class Form1
     {

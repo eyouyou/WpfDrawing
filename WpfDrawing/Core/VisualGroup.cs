@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using WpfDrawing.Abstraction;
+using HevoDrawing.Abstractions;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public abstract class RectVisualGroup : SubRectDrawingVisual
     {
-        public override RectVisualContextData DefaultData => null;
+        public override ContextData DefaultData => null;
 
         /// <summary>
         /// 必须要一个visualdata
@@ -24,7 +24,7 @@ namespace WpfDrawing
         /// <param name="data"></param>
         /// <param name="list">未处理数据</param>
         /// <returns></returns>
-        public virtual void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
+        public virtual void DataPush(ContextData data, IList<ContextData> list)
         {
             VisualDataSetupTidily(data);
 
@@ -77,9 +77,9 @@ namespace WpfDrawing
         protected override bool NeedData => true;
 
         /// <summary>
-        /// <see cref="VisualData.set"/>:  从父亲<see cref="RectDrawingVisual.VisualData"/>继承<see cref="RectVisualContextData.Items"/>
+        /// <see cref="VisualData.set"/>:  从父亲<see cref="RectDrawingVisual.VisualData"/>继承<see cref="ContextData.Items"/>
         /// </summary>
-        public override void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
+        public override void DataPush(ContextData data, IList<ContextData> list)
         {
             base.DataPush(data, list);
 
@@ -127,7 +127,7 @@ namespace WpfDrawing
 
         protected override bool NeedData => true;
 
-        public override void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
+        public override void DataPush(ContextData data, IList<ContextData> list)
         {
             base.DataPush(data, list);
 
@@ -148,7 +148,7 @@ namespace WpfDrawing
                     if (DataSource is ChartDataSource coms)
                     {
                         var series = coms.GetMappingSeries(item.Id);
-                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as RectChartContextData).YData.Range).ToList();
+                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as Chart2DContextData).YData.Range).ToList();
                         visualData.Range = new Range() { Max = ranges.Max(it => it.Max), Min = ranges.Min(it => it.Min) };
                     }
                 }
@@ -187,7 +187,7 @@ namespace WpfDrawing
                 item.PlotToDc(dc);
             }
         }
-        public override void DataPush(RectVisualContextData data, IList<RectVisualContextData> list)
+        public override void DataPush(ContextData data, IList<ContextData> list)
         {
             base.DataPush(data, list);
         }
@@ -199,11 +199,11 @@ namespace WpfDrawing
         public RectChartGroupContextData InductiveData()
         {
             var index = -1;
-            var list = new List<RectChartContextData>();
-            foreach (SeriesVisual item in Visuals)
+            var list = new List<Chart2DContextData>();
+            foreach (PointsSeriesVisual item in Visuals)
             {
                 index++;
-                if (item.VisualData is RectChartContextData rectData && !rectData.IsEmpty)
+                if (item.VisualData is Chart2DContextData rectData && !rectData.IsEmpty)
                 {
                     rectData.YData.Range = item.GetRange();
                     rectData.ComponentId = item.Id;

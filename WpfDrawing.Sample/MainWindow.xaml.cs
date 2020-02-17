@@ -15,7 +15,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfDrawing.Sample
+namespace HevoDrawing.Sample
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

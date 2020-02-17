@@ -1,28 +1,11 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace WpfDrawing
+namespace HevoDrawing.Interactions
 {
-    /// <summary>
-    /// TODO 这部分可能需要调整
-    /// </summary>
-    public class SeriesData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public Brush Color { get; set; }
-        public IVariable XValue { get; set; }
-        public AxisVisual<IVariable> AxisX { get; set; }
-        public IVariable YValue { get; set; }
-        public AxisVisual<IVariable> AxisY { get; set; }
-    }
     public enum ToolTipBehavior
     {
         FollowLeft,
@@ -92,7 +75,7 @@ namespace WpfDrawing
             }
         }
     }
-    public class ToolTipVisual : InteractionLayer, IToolTipConfiguaration
+    public class ToolTipVisual : InteractionLayer
     {
         private ToolTip _tip = new NormalToolTip();
         public ToolTip Tip
@@ -221,7 +204,6 @@ namespace WpfDrawing
             {
                 ParentCanvas.Children.Remove(Tip);
             }
-
         }
     }
 }

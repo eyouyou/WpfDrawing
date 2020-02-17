@@ -1,19 +1,38 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
-namespace WpfDrawing.Abstraction
+namespace HevoDrawing
 {
     /// <summary>
     /// scatter\line
     /// </summary>
     public abstract class PointsSeriesVisual : SeriesVisual
     {
+        /// <summary>
+        /// 对外接口 计算range
+        /// </summary>
+        public Func<Chart2DContextData, Range> RangeCalculator { get; set; }
+
+        /// <summary>
+        /// 独立获取range
+        /// </summary>
+        /// <returns></returns>
+        public Range GetRange()
+        {
+            if (!(VisualData is Chart2DContextData data))
+            {
+                return default;
+            }
+            if (RangeCalculator != null)
+            {
+                return RangeCalculator(data);
+            }
+            return data.YData.Range;
+        }
+        public override ContextData DefaultData => Chart2DContextData.Empty;
+
         /// <summary>
         /// TODO 所有点都需要固定
         /// </summary>
@@ -25,7 +44,7 @@ namespace WpfDrawing.Abstraction
             get
             {
                 var list = new List<Point>();
-                var vData = VisualData.TransformVisualData<RectChartContextData>();
+                var vData = VisualData.TransformVisualData<Chart2DContextData>();
                 if (vData.IsBad)
                 {
                     return list;

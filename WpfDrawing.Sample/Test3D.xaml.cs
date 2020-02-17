@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 
-namespace WpfDrawing.Sample
+namespace HevoDrawing.Sample
 {
     /// <summary>
     /// Interaction logic for Test3D.xaml

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WpfDrawing.Winform.Sample.Properties
+namespace HevoDrawing.Winform.Sample.Properties
 {
 
 

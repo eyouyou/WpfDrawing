@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using WpfDrawing.Abstraction;
+using HevoDrawing.Abstractions;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public static class LineSeriesVisualExtension
     {
@@ -29,7 +29,7 @@ namespace WpfDrawing
     }
     public abstract class LineSeriesVisual : PointsSeriesVisual
     {
-        public override RectVisualContextData DefaultData => RectChartContextData.Empty;
+        public override ContextData DefaultData => Chart2DContextData.Empty;
 
         public LineSeriesVisual()
         {

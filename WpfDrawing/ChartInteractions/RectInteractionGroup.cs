@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using HevoDrawing.Abstractions;
 
-namespace WpfDrawing
+namespace HevoDrawing.Interactions
 {
     /// <summary>
     /// 在此基础上可以做多个图表的操作

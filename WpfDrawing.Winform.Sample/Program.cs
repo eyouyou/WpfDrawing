@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WpfDrawing.Winform.Sample
+namespace HevoDrawing.Winform.Sample
 {
     static class Program
     {

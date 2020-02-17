@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace WpfDrawing
+namespace HevoDrawing.Interactions
 {
-
     public class CrossVisual : InteractionLayer, ICrossConfiguaration
     {
         /// <summary>
@@ -40,7 +40,7 @@ namespace WpfDrawing
         Dictionary<ComponentKey, AxisVisual> AxisVisuals = new Dictionary<ComponentKey, AxisVisual>();
         public override void PlotToParent(Point point, EventMessage @event)
         {
-            var vdata = VisualData.TransformVisualData<RectVisualContextData>();
+            var vdata = VisualData.TransformVisualData<ContextData>();
             if (vdata.IsBad)
             {
                 return;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public class RectDrawingCanvas : Canvas, ILocatable
     {

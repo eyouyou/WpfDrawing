@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace WpfDrawing
+namespace HevoDrawing.Abstractions
 {
     public interface ICrossConfiguaration
     {
@@ -16,11 +16,6 @@ namespace WpfDrawing
         bool IsLabelShow { get; set; }
         Line X { get; }
         Line Y { get; }
-    }
-    public interface IToolTipConfiguaration
-    {
-        bool IsToolTipShow { get; set; }
-        ToolTip Tip { get; set; }
     }
 
     public delegate void IntersectChangedHandler(Dictionary<string, SeriesData> data);

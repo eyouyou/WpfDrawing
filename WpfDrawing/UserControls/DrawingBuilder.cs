@@ -6,19 +6,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
-    public partial class DrawingFactory
-    {
-
-    }
     public class RectangleBuilder
     {
         public Point Start { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
         public double Angle { get; set; }
-
     }
     public class LineBuilder : IDrawingBuilder
     {

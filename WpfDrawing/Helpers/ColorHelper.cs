@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     /// <summary>
     /// provides functionality relating to types <see cref="Brush"/>, <see cref="SolidColorBrush"/> and <see cref="Color"/>

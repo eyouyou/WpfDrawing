@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace WpfDrawing.Abstraction
+namespace HevoDrawing.Abstractions
 {
     public abstract class HitElement
     {
@@ -29,39 +29,11 @@ namespace WpfDrawing.Abstraction
     /// </summary>
     public abstract class SeriesVisual : SubRectDrawingVisual
     {
-        public override RectVisualContextData DefaultData => RectChartContextData.Empty;
         public int XAxisId { get; set; } = 0;
-        public SeriesVisual()
-        {
-        }
         /// <summary>
         /// tip 使用
         /// </summary>
         public abstract Brush Color { get; }
-        
-        /// <summary>
-        /// 对外接口 计算range
-        /// </summary>
-        public Func<RectChartContextData, Range> RangeCalculator { get; set; }
-
-        /// <summary>
-        /// 独立获取range
-        /// </summary>
-        /// <returns></returns>
-        public Range GetRange()
-        {
-            if (!(VisualData is RectChartContextData data))
-            {
-                return default;
-            }
-            if (RangeCalculator != null)
-            {
-                return RangeCalculator(data);
-            }
-            return data.YData.Range;
-        }
-
-
     }
 
 }

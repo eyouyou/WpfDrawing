@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing.Abstractions
 {
     public interface ILocatable
     {
@@ -20,7 +20,7 @@ namespace WpfDrawing
     }
     public abstract class RectDrawingVisual : DrawingVisual, ILocatable, IVisualControllable
     {
-        public abstract RectVisualContextData DefaultData { get; }
+        public abstract ContextData DefaultData { get; }
         /// <summary>
         /// 屏蔽父visual的<see cref="VisualData"/>
         /// </summary>
@@ -114,8 +114,8 @@ namespace WpfDrawing
 
             return HitTestResultBehavior.Stop;
         }
-        private RectVisualContextData visual_data = null;
-        public virtual RectVisualContextData VisualData
+        private ContextData visual_data = null;
+        public virtual ContextData VisualData
         {
             get
             {
@@ -129,7 +129,7 @@ namespace WpfDrawing
                 RePlot();
             }
         }
-        public virtual void VisualDataSetupTidily(RectVisualContextData data)
+        public virtual void VisualDataSetupTidily(ContextData data)
         {
             visual_data = data;
         }

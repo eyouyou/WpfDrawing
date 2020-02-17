@@ -15,7 +15,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WpfDrawing.Sample
+namespace HevoDrawing.Sample
 {
     public class Poly : DrawingVisual
     {

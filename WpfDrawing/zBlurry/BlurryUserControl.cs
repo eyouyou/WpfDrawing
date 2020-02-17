@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     /// <summary>
     /// enum which enlists additional cursors </summary>
@@ -21,10 +21,13 @@ namespace WpfDrawing
         Grabbing
     }
 
+    /// <see cref="https://github.com/ConfusedHorse/BlurryControls"/> 
     /// <summary>
     ///     UserControl which appears blurry over a given <see cref="BlurContainer" />
     /// </summary>
+
     //based on: https://stackoverflow.com/a/27447817/6649611 (2017/12)
+
     public class BlurryUserControl : UserControl
     {
         #region Fields
@@ -139,7 +142,7 @@ namespace WpfDrawing
         public BlurryUserControl()
         {
             Loaded += OnLoaded;
-            
+
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)

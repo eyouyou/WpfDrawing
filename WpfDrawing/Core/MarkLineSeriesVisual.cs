@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawing.Abstraction
+namespace HevoDrawing
 {
     /// <summary>
     /// 依附series的数据 二维
@@ -23,6 +24,8 @@ namespace WpfDrawing.Abstraction
         public List<Point> Croods { get; set; } = new List<Point>();
         public Pen LinePen { get; set; } = new Pen(Brushes.Black, 1);
         public override Brush Color => LinePen.Brush;
+
+        public override ContextData DefaultData => Chart2DContextData.Empty;
 
         public override void PlotToDc(DrawingContext dc)
         {
@@ -41,7 +44,7 @@ namespace WpfDrawing.Abstraction
                 }
             }
             //按照数据定位
-            else if (VisualData is RectChartContextData data && !data.IsEmpty)
+            else if (VisualData is Chart2DContextData data && !data.IsEmpty)
             {
 
             }

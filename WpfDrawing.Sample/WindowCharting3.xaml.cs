@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HevoDrawing;
+using HevoDrawing.Abstractions;
+using HevoDrawing.Interactions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,7 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace WpfDrawing.Sample
+namespace HevoDrawing.Sample
 {
     /// <summary>
     /// WindowCharting3.xaml 的交互逻辑
@@ -57,9 +60,6 @@ namespace WpfDrawing.Sample
             grid.Children.Add(container);
             canvasContainer.Canvas.Visuals.Add(CreateDrawingImage());
 
-            //chart..IsLabelShow = false;
-            //chart.CrossOptCrossOptionion.IsXShow = false;
-
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
             b.BlurContainer = canvasContainer;
             b.Magnification = 0.25;
@@ -74,9 +74,6 @@ namespace WpfDrawing.Sample
             interaction.Tip.Foreground = Brushes.White;
             //interaction.Tip.Border.BorderBrush = Brushes.White;
             //interaction.Tip.Border.BorderThickness = new Thickness(2);
-            //chart.ToolTipOption.Tip.Border.BorderBrush = Brushes.White;
-            //chart.ToolTipOption.Tip.Background = Brushes.Black;
-            //chart.ToolTipOption.Tip.Opacity = 0.5;
             Content = grid;
             IsVisibleChanged += WindowCharting3_IsVisibleChanged;
             SizeChanged += WindowCharting3_SizeChanged;

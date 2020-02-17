@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing.Abstractions
 {
     /// <summary>
     /// 交互、控件展示层
@@ -15,7 +15,7 @@ namespace WpfDrawing
     public abstract class InteractionCanvas : Canvas
     {
         public Dictionary<int, RectDrawingVisualDataSource> DataSources { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
-        public abstract RectVisualContextData DefaultData { get; }
+        public abstract ContextData DefaultData { get; }
         public InteractionCanvas()
         {
             Background = Brushes.Transparent;
@@ -31,8 +31,8 @@ namespace WpfDrawing
 
         public Dictionary<int, RectDrawingCanvas> DependencyCanvas { get; } = new Dictionary<int, RectDrawingCanvas>();
 
-        private RectVisualContextData _visualData = null;
-        public RectVisualContextData VisualData
+        private ContextData _visualData = null;
+        public ContextData VisualData
         {
             get
             {
@@ -62,8 +62,8 @@ namespace WpfDrawing
         }
         public InteractionCanvas ParentCanvas { get; set; }
 
-        private RectVisualContextData _visualData;
-        public RectVisualContextData VisualData
+        private ContextData _visualData;
+        public ContextData VisualData
         {
             get => _visualData;
             set

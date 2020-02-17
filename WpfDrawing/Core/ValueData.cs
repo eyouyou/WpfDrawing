@@ -1,17 +1,18 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public static class DataExtension
     {
-        public static RectVisualContextData ToVisualData<X>(this Dictionary<X, double> dic)
+        public static ContextData ToVisualData<X>(this Dictionary<X, double> dic)
             where X : IFormattable, IComparable
         {
-            return new RectChartContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
+            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
         }
         public static IVariable ToVisualData<T>(this T t)
             where T : IFormattable, IComparable
@@ -26,7 +27,7 @@ namespace WpfDrawing
             }
             return value.IsBad;
         }
-        public static bool IsEmpty(this RectVisualContextData data)
+        public static bool IsEmpty(this ContextData data)
         {
             if (data == null)
             {
@@ -90,7 +91,7 @@ namespace WpfDrawing
 
 
     }
-    public class ListContextData<T> : RectVisualContextData
+    public class ListContextData<T> : ContextData
     {
         public ListContextData(List<T> list)
         {
@@ -98,12 +99,12 @@ namespace WpfDrawing
         }
         public List<T> Value { get; set; }
 
-        public static RectVisualContextData Empty => throw new NotImplementedException();
+        public static ContextData Empty => throw new NotImplementedException();
 
         public override bool IsEmpty => throw new NotImplementedException();
 
 
-        public override RectVisualContextData Copy()
+        public override ContextData Copy()
         {
             return new ListContextData<T>(Value);
         }

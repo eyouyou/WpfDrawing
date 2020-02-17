@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public abstract class RectDrawingCanvasContainer : UserControl
     {

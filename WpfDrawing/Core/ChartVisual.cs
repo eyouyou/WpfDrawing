@@ -9,107 +9,33 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using WpfDrawing.Abstraction;
+using HevoDrawing.Abstractions;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
-    public class RectChartGroupContextData : RectVisualContextData
+    public class RectChartGroupContextData : ContextData
     {
-        public List<RectVisualContextData> Data { get; } = new List<RectVisualContextData>();
-        public List<RectVisualContextData> XData { get; } = new List<RectVisualContextData>();
-        public List<RectVisualContextData> YData { get; } = new List<RectVisualContextData>();
+        public List<ContextData> Data { get; } = new List<ContextData>();
+        public List<ContextData> XData { get; } = new List<ContextData>();
+        public List<ContextData> YData { get; } = new List<ContextData>();
 
-        public RectChartGroupContextData(List<RectChartContextData> data)
+        public RectChartGroupContextData(List<Chart2DContextData> data)
         {
-            Data = data.Select(it => (RectVisualContextData)it).ToList();
-            XData = data.Select(it => (RectVisualContextData)it.XData).ToList();
-            YData = data.Select(it => (RectVisualContextData)it.YData).ToList();
+            Data = data.Select(it => (ContextData)it).ToList();
+            XData = data.Select(it => (ContextData)it.XData).ToList();
+            YData = data.Select(it => (ContextData)it.YData).ToList();
         }
-        public RectChartGroupContextData(List<RectVisualContextData> data) : this(data.Select(it => it as RectChartContextData).ToList())
+        public RectChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as Chart2DContextData).ToList())
         {
 
         }
         public override bool IsEmpty => Data.Count == 0 || Data.Any(it => it.IsEmpty);
-        public static RectChartGroupContextData Empty => new RectChartGroupContextData(new List<RectChartContextData>());
-        public override RectVisualContextData Copy()
+        public static RectChartGroupContextData Empty => new RectChartGroupContextData(new List<Chart2DContextData>());
+        public override ContextData Copy()
         {
             return new RectChartGroupContextData(Data.Select(it => it.Copy()).ToList());
         }
     }
-
-    public class RectChartContextData : RectVisualContextData
-    {
-        public RectChartContextData(double max, double min, DiscreteAxisContextData xs)
-            : this(new Value<double>(max), new Value<double>(min), xs)
-        {
-        }
-        public RectChartContextData(Value<double> max, Value<double> min, List<IVariable> xs)
-            : this(max, min, new DiscreteAxisContextData(xs))
-        {
-        }
-        public RectChartContextData(Value<double> max, Value<double> min, DiscreteAxisContextData xs)
-            : this(new Range() { Max = max, Min = min }, xs)
-        {
-        }
-
-        public RectChartContextData(Range range, DiscreteAxisContextData xs)
-            : this(new Dictionary<IVariable, Value<double>>(), new ContinuousAxisContextData(range), xs)
-        {
-        }
-        public RectChartContextData(RectChartContextData axisVisualData)
-            : this(axisVisualData.Data, axisVisualData.YData, axisVisualData.XData)
-        {
-        }
-        public RectChartContextData(Dictionary<IVariable, Value<double>> data)
-        {
-            Data = data;
-            XData = new DiscreteAxisContextData(Data.Keys.ToList());
-            var ydata = Data.Values.ToList();
-            YData = new ContinuousAxisContextData(ydata);
-        }
-        private RectChartContextData(Dictionary<IVariable, Value<double>> data, ContinuousAxisContextData ydata, DiscreteAxisContextData xdata)
-        {
-            Data = data;
-            YData = ydata;
-            XData = xdata;
-            XData.Items = Items;
-            YData.Items = Items;
-        }
-        public RectChartContextData(List<IVariable> xData, List<double> yData)
-        {
-            if (xData.Count != yData.Count)
-            {
-                throw new ArgumentException($"{nameof(xData.Count)} != {nameof(yData.Count)}");
-            }
-            Data = new Dictionary<IVariable, Value<double>>();
-            var index = 0;
-            foreach (var item in xData)
-            {
-                Data.Add(item, new Value<double>(yData[index]));
-                index++;
-            }
-            XData = new DiscreteAxisContextData(xData);
-            YData = new ContinuousAxisContextData(yData);
-            XData.Items = Items;
-            YData.Items = Items;
-        }
-        public Dictionary<IVariable, Value<double>> Data { get; set; }
-        public DiscreteAxisContextData XData { get; set; }
-        public ContinuousAxisContextData YData { get; set; }
-
-        public override bool IsEmpty => XData.Data.Count == 0 || YData.Range.IsEmpty;
-
-        public static RectChartContextData Empty => new RectChartContextData(new Range(), DiscreteAxisContextData.Empty);
-
-        public override RectVisualContextData Copy()
-        {
-            var data = new RectChartContextData(YData.Range.Max, YData.Range.Min, XData.Data.ToList());
-            data.Data = Data;
-            data.Items = new Dictionary<ContextDataItem, object>(Items);
-            return data;
-        }
-    }
-
     /// <summary>
     /// 2d chart
     /// 假定x轴都是离散的 y轴都是连续的double
@@ -131,7 +57,7 @@ namespace WpfDrawing
         {
             IntersectChanged?.Invoke(data);
         }
-        public override RectVisualContextData DefaultData => RectChartGroupContextData.Empty;
+        public override ContextData DefaultData => RectChartGroupContextData.Empty;
         public ChartVisual()
         {
             Data = new ChartDataSource(this);

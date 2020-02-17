@@ -13,7 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WpfDrawing.Sample
+namespace HevoDrawing.Sample
 {
     /// <summary>
     /// Interaction logic for Write.xaml

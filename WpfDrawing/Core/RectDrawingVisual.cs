@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
 
     public class TestVisual : RectDrawingVisual
@@ -20,7 +21,7 @@ namespace WpfDrawing
 
         }
 
-        public override RectVisualContextData DefaultData => null;
+        public override ContextData DefaultData => null;
 
         public override void Plot()
         {

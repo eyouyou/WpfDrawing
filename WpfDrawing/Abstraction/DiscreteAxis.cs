@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing.Abstractions
 {
-    public class DiscreteAxisContextData : RectVisualContextData
+    public class DiscreteAxisContextData : ContextData
     {
         public static DiscreteAxisContextData Empty => new DiscreteAxisContextData(new List<IVariable>());
 
@@ -21,7 +21,7 @@ namespace WpfDrawing
 
         public override bool IsEmpty => Data.Count == 0;
 
-        public override RectVisualContextData Copy()
+        public override ContextData Copy()
         {
             return new DiscreteAxisContextData(Data);
         }
@@ -33,7 +33,7 @@ namespace WpfDrawing
         {
             Position = position;
         }
-        public override RectVisualContextData DefaultData => DiscreteAxisContextData.Empty;
+        public override ContextData DefaultData => DiscreteAxisContextData.Empty;
         /// <summary>
         /// 是否区间
         /// </summary>
@@ -237,7 +237,7 @@ namespace WpfDrawing
             VisualData.Items.Add(ContextDataItem.SortedSplitPoints, points);
             VisualData.Items.Add(ContextDataItem.Ratios, splitRatios);
             VisualData.Items.Add(ContextDataItem.IsInterregional, isInterregional);
-            VisualData.Items.Add(ContextDataItem.SplitValues, splitValue);
+            VisualData.Items.Add(ContextDataItem.SplitValues, splitValue); 
         }
         public override void PlotToDc(DrawingContext dc)
         {

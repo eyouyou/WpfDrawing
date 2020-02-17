@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using HevoDrawing.Abstractions;
+using HevoDrawing.Interactions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WpfDrawing.Sample
+namespace HevoDrawing.Sample
 {
     /// <summary>
     /// MultiChartings.xaml 的交互逻辑
@@ -36,8 +38,8 @@ namespace WpfDrawing.Sample
             //container.Background = Brushes.LightGreen;
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
             b.BlurContainer = container.DrawingGrid;
-            b.Magnification = 0.25;
-            b.BlurRadius = 20;
+            b.Magnification = 0.15;
+            b.BlurRadius = 25;
 
             interaction.Tip.TextContainer.Margin = new Thickness(10);
             interaction.Tip.Layers.Children.Insert(0, b);

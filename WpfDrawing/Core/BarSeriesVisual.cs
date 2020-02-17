@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Windows;
 using System.Windows.Media;
-using WpfDrawing.Abstraction;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public class BarSeriesVisual : PointsSeriesVisual
     {

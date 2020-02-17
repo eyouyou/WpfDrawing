@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
-    public class ContinuousAxisContextData : RectVisualContextData
+    public class ContinuousAxisContextData : ContextData
     {
         public Range Range { get; set; }
 
@@ -31,7 +32,7 @@ namespace WpfDrawing
         {
             Range = new Range() { Max = values.Max(), Min = values.Min() };
         }
-        public override RectVisualContextData Copy()
+        public override ContextData Copy()
         {
             return new ContinuousAxisContextData(Range);
         }
@@ -58,7 +59,7 @@ namespace WpfDrawing
         public double Base { get; set; }
         public int SplitNum { get; set; }
 
-        public override RectVisualContextData DefaultData => ContinuousAxisContextData.Empty;
+        public override ContextData DefaultData => ContinuousAxisContextData.Empty;
 
         public override IFormatProvider FormatProvider => null;
 

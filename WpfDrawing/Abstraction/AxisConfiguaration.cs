@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace WpfDrawing
+namespace HevoDrawing.Abstractions
 {
     public enum AxisPosition
     {

@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Shapes;
-using WpfDrawing.Abstraction;
+using HevoDrawing.Abstractions;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public class EllipseSolidHitElement : HitElement
     {

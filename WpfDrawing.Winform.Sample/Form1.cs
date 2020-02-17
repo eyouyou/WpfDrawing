@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WpfDrawing.Winform.Sample
+namespace HevoDrawing.Winform.Sample
 {
     public partial class Form1 : Form
     {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using WpfDrawing.Abstraction;
+using HevoDrawing.Abstractions;
 
-namespace WpfDrawing
+namespace HevoDrawing.Interactions
 {
     /// <summary>
     /// 取消所有外部plot
@@ -80,7 +80,7 @@ namespace WpfDrawing
         public CrossVisual Cross { get; private set; }
         public ToolTipVisual DataToolTip { get; private set; }
 
-        public override RectVisualContextData DefaultData => RectChartContextData.Empty;
+        public override ContextData DefaultData => Chart2DContextData.Empty;
 
         public ToolTip Tip { get => DataToolTip.Tip; set => DataToolTip.Tip = value; }
 
@@ -89,7 +89,7 @@ namespace WpfDrawing
         List<double> NearestYs = new List<double>();
         public override void Plot(Point point, EventMessage @event)
         {
-            var vdata = VisualData.TransformVisualData<RectVisualContextData>();
+            var vdata = VisualData.TransformVisualData<ContextData>();
             if (vdata.IsBad)
             {
                 return;
@@ -143,7 +143,7 @@ namespace WpfDrawing
                             if (!value.IsBad() &&
                                 series_plot.Contains(currentPoint)
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
-                                    && series_item.VisualData is RectChartContextData series_data
+                                    && series_item.VisualData is Chart2DContextData series_data
                                     && series_data.Data.ContainsKey(value))
                             {
                                 //获取当前值对应的x、y 进行十字轴的定位

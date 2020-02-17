@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace WpfDrawing
+namespace HevoDrawing
 {
     public class Candle : UserControl
     {

@@ -57,8 +57,8 @@ namespace WpfDrawing.Sample
             grid.Children.Add(container);
             canvasContainer.Canvas.Visuals.Add(CreateDrawingImage());
 
-            //chart.CrossOption.IsLabelShow = false;
-            //chart.CrossOption.IsXShow = false;
+            //chart..IsLabelShow = false;
+            //chart.CrossOptCrossOptionion.IsXShow = false;
 
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
             b.BlurContainer = canvasContainer;

@@ -184,6 +184,7 @@ namespace HevoDrawing
             }
             return vData;
         }
+
         public static void AddChild(this DockPanel panel, UIElement element, Dock dock)
         {
             DockPanel.SetDock(element, dock);

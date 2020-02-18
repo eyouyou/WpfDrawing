@@ -103,7 +103,7 @@ namespace HevoDrawing
 
 
         }
-        public void InductiveData(RectChartGroupContextData data)
+        public void InductiveData(ChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
@@ -156,7 +156,7 @@ namespace HevoDrawing
 
             }
         }
-        public void InductiveData(RectChartGroupContextData data)
+        public void InductiveData(ChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
@@ -196,10 +196,10 @@ namespace HevoDrawing
         /// 临时方案 可以用分组或分治算法进行优化
         /// </summary>
         /// <returns></returns>
-        public RectChartGroupContextData InductiveData()
+        public ChartGroupContextData InductiveData()
         {
             var index = -1;
-            var list = new List<Chart2DContextData>();
+            var list = new List<TwoDimensionalContextData>();
             foreach (PointsSeriesVisual item in Visuals)
             {
                 index++;
@@ -213,9 +213,9 @@ namespace HevoDrawing
             }
             if (list.Count == 0)
             {
-                return RectChartGroupContextData.Empty;
+                return ChartGroupContextData.Empty;
             }
-            RectChartGroupContextData data = new RectChartGroupContextData(list);
+            ChartGroupContextData data = new ChartGroupContextData(list);
             return data;
         }
 

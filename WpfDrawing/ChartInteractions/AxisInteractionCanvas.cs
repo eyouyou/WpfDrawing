@@ -143,14 +143,22 @@ namespace HevoDrawing.Interactions
                             if (!value.IsBad() &&
                                 series_plot.Contains(currentPoint)
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
-                                    && series_item.VisualData is Chart2DContextData series_data
-                                    && series_data.Data.ContainsKey(value))
+                                    && series_item.VisualData is TwoDimensionalContextData series_data
+                                    && series_data.ContainsX(value, out var yValue))
                             {
                                 //获取当前值对应的x、y 进行十字轴的定位
                                 var x = xAxis.GetPosition(value).X + xAxis.Start.X + offset.X;
-                                var y = yAxis.GetPosition(series_data.Data[value]).Y + xAxis.Start.Y + offset.Y;
-                                hitSeriesDatas.Add(new SeriesData() { Color = series_item.Color, Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = series_data.Data[value], AxisX = xAxis, AxisY = (AxisVisual<IVariable>)yAxis });
-
+                                var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y + offset.Y;
+                                hitSeriesDatas.Add(new SeriesData()
+                                {
+                                    Color = series_item.Color,
+                                    Id = series_item.Id,
+                                    Name = series_item.Name,
+                                    XValue = value,
+                                    YValue = yValue,
+                                    AxisX = xAxis,
+                                    AxisY = yAxis
+                                });
                                 nearestX = x;
 
                                 if (Cross.IsYDataAttract)

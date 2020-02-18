@@ -44,7 +44,7 @@ namespace HevoDrawing
             get
             {
                 var list = new List<Point>();
-                var vData = VisualData.TransformVisualData<Chart2DContextData>();
+                var vData = VisualData.TransformVisualData<TwoDimensionalContextData>();
                 if (vData.IsBad)
                 {
                     return list;
@@ -69,9 +69,9 @@ namespace HevoDrawing
                 var offsetx = x.Start.X;
                 var offsety = x.Start.Y;
                 var index = 0;
-                foreach (var item in vData.Value.Data)
+                foreach (var item in vData.Value.ChartCroods)
                 {
-                    var current = new Point(offsetx + x.GetPosition(item.Key.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Value).Y);
+                    var current = new Point(offsetx + x.GetPosition(item.X.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Y).Y);
                     list.Add(current);
                     index++;
                 }

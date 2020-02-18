@@ -13,27 +13,28 @@ using HevoDrawing.Abstractions;
 
 namespace HevoDrawing
 {
-    public class RectChartGroupContextData : ContextData
+    public class ChartGroupContextData : ContextData
     {
-        public List<ContextData> Data { get; } = new List<ContextData>();
-        public List<ContextData> XData { get; } = new List<ContextData>();
-        public List<ContextData> YData { get; } = new List<ContextData>();
+        public List<TwoDimensionalContextData> Data { get; } = new List<TwoDimensionalContextData>();
+        public List<DiscreteAxisContextData> XData { get; } = new List<DiscreteAxisContextData>();
+        public List<ContinuousAxisContextData> YData { get; } = new List<ContinuousAxisContextData>();
 
-        public RectChartGroupContextData(List<Chart2DContextData> data)
-        {
-            Data = data.Select(it => (ContextData)it).ToList();
-            XData = data.Select(it => (ContextData)it.XData).ToList();
-            YData = data.Select(it => (ContextData)it.YData).ToList();
-        }
-        public RectChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as Chart2DContextData).ToList())
+        public ChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as TwoDimensionalContextData).ToList())
         {
 
         }
+        public ChartGroupContextData(List<TwoDimensionalContextData> data)
+        {
+            Data = data;
+            XData = data.Select(it => it.XContextData).ToList();
+            YData = data.Select(it => it.YContextData).ToList();
+        }
+
         public override bool IsEmpty => Data.Count == 0 || Data.Any(it => it.IsEmpty);
-        public static RectChartGroupContextData Empty => new RectChartGroupContextData(new List<Chart2DContextData>());
+        public static ChartGroupContextData Empty => new ChartGroupContextData(new List<TwoDimensionalContextData>());
         public override ContextData Copy()
         {
-            return new RectChartGroupContextData(Data.Select(it => it.Copy()).ToList());
+            return new ChartGroupContextData(Data.Select(it => it.Copy()).ToList());
         }
     }
     /// <summary>
@@ -57,7 +58,7 @@ namespace HevoDrawing
         {
             IntersectChanged?.Invoke(data);
         }
-        public override ContextData DefaultData => RectChartGroupContextData.Empty;
+        public override ContextData DefaultData => ChartGroupContextData.Empty;
         public ChartVisual()
         {
             Data = new ChartDataSource(this);
@@ -109,7 +110,7 @@ namespace HevoDrawing
                 return;
             }
 
-            var data = VisualData.TransformVisualData<RectChartGroupContextData>();
+            var data = VisualData.TransformVisualData<ChartGroupContextData>();
             //从seriesvisual里面取值画坐标轴
             if (data.IsBad)
             {
@@ -124,7 +125,7 @@ namespace HevoDrawing
                 VisualDataSetupTidily(dataMade);
             }
 
-            SeriesVisuals.DataPush(data.Value, data.Value.Data);
+            SeriesVisuals.DataPush(data.Value, data.Value.Data.Select(it=>it.));
             AxisXVisuals.DataPush(data.Value, data.Value.XData);
             AxisYVisuals.DataPush(data.Value, data.Value.YData);
 

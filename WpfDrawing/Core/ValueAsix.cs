@@ -43,11 +43,11 @@ namespace HevoDrawing
     /// </summary>
     public class Range
     {
-        public Value<double> Min { get; set; } = new Value<double>(double.NaN);
-        public Value<double> Max { get; set; } = new Value<double>(double.NaN);
+        public Value<double> Min { get; set; } = Value<double>.Bad;
+        public Value<double> Max { get; set; } = Value<double>.Bad;
         public double Sum => Max.Data - Min.Data;
 
-        public bool IsEmpty => double.IsNaN(Min.Data) || double.IsNaN(Max.Data);
+        public bool IsEmpty => Min.IsBad || Max.IsBad;
     }
     /// <summary>
     /// 连续 是否需要再进行抽象？

@@ -46,14 +46,38 @@ namespace HevoDrawing
         Func<string, object> ValueData { get; set; }
     }
 
+    public class Value : IVariable
+    {
+        public bool IsBad { get; protected set; } = true;
+
+        public virtual Func<string, object> ValueData { get; set; }
+
+        public virtual int CompareTo(object obj)
+        {
+            return 0;
+        }
+
+        public virtual string ToString(string format, IFormatProvider formatProvider)
+        {
+            return string.Empty;
+        }
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+    }
     /// <summary>
     /// 可以继承 获取更多数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Value<T> : IVariable
+    public class Value<T> : Value, IVariable
         where T : IFormattable, IComparable
     {
-        public bool IsBad { get; private set; } = true;
+        public static Value<T> Bad = new Value<T>() { };
+        private Value()
+        {
+
+        }
         public Value(T value)
         {
             Data = value;
@@ -61,13 +85,13 @@ namespace HevoDrawing
             ValueData = (str) => this;
         }
         public T Data { get; set; }
-        public Func<string, object> ValueData { get; set; }
+        public override Func<string, object> ValueData { get; set; }
 
-        public string ToString(string format, IFormatProvider formatProvider)
+        public override string ToString(string format, IFormatProvider formatProvider)
         {
             return Data.ToString(format, formatProvider);
         }
-        public int CompareTo(object obj)
+        public override int CompareTo(object obj)
         {
             if (obj is Value<T> value)
             {

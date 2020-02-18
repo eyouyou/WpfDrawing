@@ -40,10 +40,7 @@ namespace HevoDrawing.Sample
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
             //axisY.Range = new Range() { Max = new Value<double>(5000000), Min = new Value<double>(40000) };
-            chart.Offsets.Left = new GridLength(60);
-            chart.Offsets.Buttom = new GridLength(20);
-            chart.Offsets.Right = new GridLength(10);
-            chart.Offsets.Top = new GridLength(20);
+            chart.Offsets = new PaddingOffset(60, 20, 10, 20);
 
             canvasContainer.Canvas.AddChild(chart);
             canvasContainer.Canvas.DataSource = chart.DataSource;

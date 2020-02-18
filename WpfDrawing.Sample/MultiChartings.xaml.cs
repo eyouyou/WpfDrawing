@@ -81,10 +81,7 @@ namespace HevoDrawing.Sample
 
             chart.IntersectChanged += Chart_IntersectChanged;
 
-            chart.Offsets.Left = new GridLength(20);
-            chart.Offsets.Buttom = new GridLength(20);
-            chart.Offsets.Right = new GridLength(20);
-            chart.Offsets.Top = new GridLength(20);
+            chart.Offsets = new PaddingOffset(20);
 
             axisX.IsInterregional = false;
 
@@ -240,10 +237,7 @@ namespace HevoDrawing.Sample
 
             chart.IntersectChanged += Chart_IntersectChanged;
 
-            chart.Offsets.Left = new GridLength(20);
-            chart.Offsets.Buttom = new GridLength(20);
-            chart.Offsets.Right = new GridLength(20);
-            chart.Offsets.Top = new GridLength(20);
+            chart.Offsets = new PaddingOffset(20);
 
             axisX.IsInterregional = false;
 

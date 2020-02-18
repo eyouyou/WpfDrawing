@@ -38,14 +38,13 @@ namespace HevoDrawing.Sample
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1) };
             ContinuousAxis axisY2 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Purple, 1) };
             ContinuousAxis axisY3 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.DarkKhaki, 1) };
-            axisY3.Offsets.Right = new GridLength(50);
+            axisY3.Offsets = new PaddingOffset(0, 0, 50, 100);
             var ratios = new List<double>() { 0.2, 0.3, 0.3, 0.2 };
             ratios.Insert(0, 0);
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { ValueFormat = "yyyyMMdd", Ratios = ratios };
             axisX.IsInterregional = false;
             DiscreteAxis axisX2 = new DateTimeAxis(AxisPosition.Top) { ValueFormat = "yyyyMMdd", Ratios = ratios };
             DiscreteAxis axisX3 = new DateTimeAxis(AxisPosition.Buttom) { ValueFormat = "yyyyMMdd", Ratios = ratios };
-            axisX3.Offsets.Buttom = new GridLength(100);
             axisX.AxisPen = new Pen(Brushes.Red, 1);
             axisX2.AxisPen = new Pen(Brushes.PeachPuff, 1);
             axisX3.AxisPen = new Pen(Brushes.DarkCyan, 1);
@@ -73,10 +72,8 @@ namespace HevoDrawing.Sample
             //asix.PaddingOffset.Top = new GridLength(0.1, GridUnitType.Star);
             //asix.PaddingOffset.Right = new GridLength(0.1, GridUnitType.Star);
             //asix.PaddingOffset.Buttom = new GridLength(0.1, GridUnitType.Star);
-            chart.Offsets.Left = new GridLength(50);
-            chart.Offsets.Top = new GridLength(50);
-            chart.Offsets.Right = new GridLength(50);
-            chart.Offsets.Buttom = new GridLength(50);
+            chart.Offsets = new PaddingOffset(50);
+
             var now = DateTime.Now;
             Random random = new Random();
             var max = 1000;

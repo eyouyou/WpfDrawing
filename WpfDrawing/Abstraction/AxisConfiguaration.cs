@@ -20,13 +20,31 @@ namespace HevoDrawing.Abstractions
     public class PaddingOffset
     {
         public static PaddingOffset Default => new PaddingOffset();
-
         public GridLength Top { get; set; } = GridLength.Auto;
         public GridLength Left { get; set; } = GridLength.Auto;
         public GridLength Right { get; set; } = GridLength.Auto;
         public GridLength Buttom { get; set; } = GridLength.Auto;
         public Size Parent { get; set; } = new Size();
 
+        public PaddingOffset()
+        {
+
+        }
+        public PaddingOffset(double offset) : this(offset, offset, offset, offset)
+        {
+
+        }
+        public PaddingOffset(double left, double top, double right, double buttom)
+            : this(new GridLength(left), new GridLength(top), new GridLength(right), new GridLength(buttom))
+        {
+        }
+        public PaddingOffset(GridLength left, GridLength top, GridLength right, GridLength buttom)
+        {
+            Top = top;
+            Left = left;
+            Right = right;
+            Buttom = buttom;
+        }
         public double TopOffset
         {
             get

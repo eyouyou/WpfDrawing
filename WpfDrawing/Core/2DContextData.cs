@@ -18,8 +18,9 @@ namespace HevoDrawing
     /// <summary>
     /// x不允许不同数据
     /// 查询速度快
+    /// 调用请直接使用<see cref="TwoDimensionalContextData"/>
     /// </summary>
-    public class Chart2DContextData : TwoDimensionalContextData
+    internal class Chart2DContextData : TwoDimensionalContextData
     {
         public Chart2DContextData(Chart2DContextData axisVisualData)
             : this(axisVisualData.Data, axisVisualData.YData, axisVisualData.XData)
@@ -101,8 +102,9 @@ namespace HevoDrawing
     /// <summary>
     /// 查询速度慢 list
     /// 但是可以重复key
+    /// 调用请直接使用<see cref="TwoDimensionalContextData"/>
     /// </summary>
-    public class Chart2DContextData2 : TwoDimensionalContextData
+    internal class Chart2DContextData2 : TwoDimensionalContextData
     {
         public Chart2DContextData2(double max, double min, DiscreteAxisContextData xs)
             : this(new Value<double>(max), new Value<double>(min), xs)

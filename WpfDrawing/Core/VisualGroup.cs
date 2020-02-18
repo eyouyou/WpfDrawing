@@ -148,7 +148,7 @@ namespace HevoDrawing
                     if (DataSource is ChartDataSource coms)
                     {
                         var series = coms.GetMappingSeries(item.Id);
-                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as Chart2DContextData).YData.Range).ToList();
+                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as TwoDimensionalContextData).YContextData.Range).ToList();
                         visualData.Range = new Range() { Max = ranges.Max(it => it.Max), Min = ranges.Min(it => it.Min) };
                     }
                 }
@@ -203,11 +203,11 @@ namespace HevoDrawing
             foreach (PointsSeriesVisual item in Visuals)
             {
                 index++;
-                if (item.VisualData is Chart2DContextData rectData && !rectData.IsEmpty)
+                if (item.VisualData is TwoDimensionalContextData rectData && !rectData.IsEmpty)
                 {
-                    rectData.YData.Range = item.GetRange();
+                    rectData.YContextData.Range = item.GetRange();
                     rectData.ComponentId = item.Id;
-                    rectData.XData.ComponentId = item.XAxisId;
+                    rectData.XContextData.ComponentId = item.XAxisId;
                     list.Add(rectData);
                 }
             }

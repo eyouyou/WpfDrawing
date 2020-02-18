@@ -13,7 +13,7 @@ namespace HevoDrawing
         /// <summary>
         /// 对外接口 计算range
         /// </summary>
-        public Func<Chart2DContextData, Range> RangeCalculator { get; set; }
+        public Func<TwoDimensionalContextData, Range> RangeCalculator { get; set; }
 
         /// <summary>
         /// 独立获取range
@@ -21,7 +21,7 @@ namespace HevoDrawing
         /// <returns></returns>
         public Range GetRange()
         {
-            if (!(VisualData is Chart2DContextData data))
+            if (!(VisualData is TwoDimensionalContextData data))
             {
                 return default;
             }
@@ -29,7 +29,7 @@ namespace HevoDrawing
             {
                 return RangeCalculator(data);
             }
-            return data.YData.Range;
+            return data.YContextData.Range;
         }
         public override ContextData DefaultData => Chart2DContextData.Empty;
 

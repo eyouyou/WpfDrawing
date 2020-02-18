@@ -21,23 +21,6 @@ namespace HevoDrawing
     /// </summary>
     public class Chart2DContextData : TwoDimensionalContextData
     {
-        public Chart2DContextData(double max, double min, DiscreteAxisContextData xs)
-            : this(new Value<double>(max), new Value<double>(min), xs)
-        {
-        }
-        public Chart2DContextData(Value<double> max, Value<double> min, List<IVariable> xs)
-            : this(max, min, new DiscreteAxisContextData(xs))
-        {
-        }
-        public Chart2DContextData(Value<double> max, Value<double> min, DiscreteAxisContextData xs)
-            : this(new Range() { Max = max, Min = min }, xs)
-        {
-        }
-
-        public Chart2DContextData(Range range, DiscreteAxisContextData xs)
-            : this(new Dictionary<IVariable, Value<double>>(), new ContinuousAxisContextData(range), xs)
-        {
-        }
         public Chart2DContextData(Chart2DContextData axisVisualData)
             : this(axisVisualData.Data, axisVisualData.YData, axisVisualData.XData)
         {
@@ -78,13 +61,13 @@ namespace HevoDrawing
             _chartCroods = Data.Select(it => new ChartCrood(it.Key, it.Value)).ToList();
         }
         private List<ChartCrood> _chartCroods = null;
-        public Dictionary<IVariable, Value<double>> Data { get; set; }
-        public DiscreteAxisContextData XData { get; set; }
-        public ContinuousAxisContextData YData { get; set; }
+        public Dictionary<IVariable, Value<double>> Data { get; private set; }
+        public DiscreteAxisContextData XData { get; private set; }
+        public ContinuousAxisContextData YData { get; private set; }
 
         public override bool IsEmpty => XData.Data.Count == 0 || YData.Range.IsEmpty;
 
-        public static Chart2DContextData Empty => new Chart2DContextData(new Range(), DiscreteAxisContextData.Empty);
+        public static Chart2DContextData Empty => new Chart2DContextData(new Dictionary<IVariable, Value<double>>());
 
         public override List<ChartCrood> ChartCroods => _chartCroods;
 
@@ -94,7 +77,7 @@ namespace HevoDrawing
 
         public override ContextData Copy()
         {
-            var data = new Chart2DContextData(YData.Range.Max, YData.Range.Min, XData.Data.ToList());
+            var data = new Chart2DContextData(new Dictionary<IVariable, Value<double>>(Data));
             data.Data = Data;
             data.Items = new Dictionary<ContextDataItem, object>(Items);
             return data;
@@ -115,6 +98,10 @@ namespace HevoDrawing
         }
     }
 
+    /// <summary>
+    /// 查询速度慢 list
+    /// 但是可以重复key
+    /// </summary>
     public class Chart2DContextData2 : TwoDimensionalContextData
     {
         public Chart2DContextData2(double max, double min, DiscreteAxisContextData xs)
@@ -189,7 +176,7 @@ namespace HevoDrawing
 
         public override bool IsEmpty => XData.Data.Count == 0 || YData.Range.IsEmpty;
 
-        public static Chart2DContextData Empty => new Chart2DContextData(new Range(), DiscreteAxisContextData.Empty);
+        public static Chart2DContextData Empty => new Chart2DContextData(new Dictionary<IVariable, Value<double>>());
         public override ContinuousAxisContextData YContextData => YData;
 
         public override DiscreteAxisContextData XContextData => XData;

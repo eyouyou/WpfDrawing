@@ -15,9 +15,9 @@ namespace HevoDrawing
 {
     public class ChartGroupContextData : ContextData
     {
-        public List<TwoDimensionalContextData> Data { get; } = new List<TwoDimensionalContextData>();
-        public List<DiscreteAxisContextData> XData { get; } = new List<DiscreteAxisContextData>();
-        public List<ContinuousAxisContextData> YData { get; } = new List<ContinuousAxisContextData>();
+        public List<ContextData> Data { get; } = new List<ContextData>();
+        public List<ContextData> XData { get; } = new List<ContextData>();
+        public List<ContextData> YData { get; } = new List<ContextData>();
 
         public ChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as TwoDimensionalContextData).ToList())
         {
@@ -25,9 +25,9 @@ namespace HevoDrawing
         }
         public ChartGroupContextData(List<TwoDimensionalContextData> data)
         {
-            Data = data;
-            XData = data.Select(it => it.XContextData).ToList();
-            YData = data.Select(it => it.YContextData).ToList();
+            Data = data.Select(it => (ContextData)it).ToList();
+            XData = data.Select(it => (ContextData)it.XContextData).ToList();
+            YData = data.Select(it => (ContextData)it.YContextData).ToList();
         }
 
         public override bool IsEmpty => Data.Count == 0 || Data.Any(it => it.IsEmpty);
@@ -125,7 +125,7 @@ namespace HevoDrawing
                 VisualDataSetupTidily(dataMade);
             }
 
-            SeriesVisuals.DataPush(data.Value, data.Value.Data.Select(it=>it.));
+            SeriesVisuals.DataPush(data.Value, data.Value.Data);
             AxisXVisuals.DataPush(data.Value, data.Value.XData);
             AxisYVisuals.DataPush(data.Value, data.Value.YData);
 

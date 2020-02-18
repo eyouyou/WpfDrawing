@@ -11,11 +11,7 @@ namespace HevoDrawing
     /// </summary>
     public enum ContextDataItem : int
     {
-        SortedSplitPoints,
-        SortedSplitRatios,
         //值所在比例
-        ValueRatios,
-        ValueRatioCoordinate,
         SplitValues,
         //
         AxisYSeriesMappings,

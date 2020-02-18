@@ -136,9 +136,9 @@ namespace HevoDrawing
 
             var dc = RenderOpen();
             //画分割线
-            foreach (AxisVisual item in Data.AxisYCollection)
+            foreach (ContinuousAxis item in Data.AxisYCollection)
             {
-                if (item.ShowGridLine && item.VisualData.Items[ContextDataItem.SortedSplitPoints] is List<Point> points)
+                if (item.ShowGridLine && item.SortedSplitPoints is List<Point> points)
                 {
                     foreach (var point in points)
                     {
@@ -150,12 +150,12 @@ namespace HevoDrawing
 
 
             var xCollection = Data.AxisXCollection;
-            foreach (AxisVisual item in xCollection)
+            foreach (DiscreteAxis item in xCollection)
             {
                 bool isXClosed = false;
                 var plotArea = item.PlotArea;
 
-                if (item.ShowGridLine && item.VisualData.Items[ContextDataItem.SortedSplitPoints] is List<Point> points)
+                if (item.ShowGridLine && item.SortedSplitPoints is List<Point> points)
                 {
                     foreach (var point in points)
                     {

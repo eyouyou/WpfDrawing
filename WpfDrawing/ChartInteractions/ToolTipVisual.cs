@@ -27,6 +27,8 @@ namespace HevoDrawing.Interactions
         Grid layers = new Grid();
         public NormalToolTip()
         {
+            
+
             Visibility = Visibility.Collapsed;
             layers.Children.Add(dock);
             border.Child = layers;

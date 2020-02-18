@@ -83,7 +83,7 @@ namespace HevoDrawing
 
             dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), new Point(Start.X, End.Y));
 
-            var points = VisualData.Items[ContextDataItem.SortedSplitPoints] as List<Point>;
+            var points = SortedSplitPoints;
             if (points == null)
             {
                 CalculateRequireData();
@@ -164,6 +164,7 @@ namespace HevoDrawing
             return Vector.Multiply(End - Start, (@double.Data - context.Range.Min.Data) / context.Range.Sum);
         }
 
+        public List<Point> SortedSplitPoints { get; private set; }
         public override void CalculateRequireData()
         {
             if (!(VisualData is ContinuousAxisContextData context))
@@ -179,7 +180,8 @@ namespace HevoDrawing
                 return;
             }
 
-            VisualData.Items.Add(ContextDataItem.SortedSplitPoints, points);
+            SortedSplitPoints = points;
+
             VisualData.Items.Add(ContextDataItem.Ratios, ratios);
         }
 

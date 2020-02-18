@@ -46,7 +46,7 @@ namespace HevoDrawing.Abstractions
         }
         public override Vector GetPosition(IVariable value)
         {
-            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional && VisualData.Items[ContextDataItem.ValueRatios] is List<double> valueRatios))
+            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
             {
                 return new Vector();
             }
@@ -55,13 +55,13 @@ namespace HevoDrawing.Abstractions
             {
                 return new Vector();
             }
-            var ratio = valueRatios[index];
+            var ratio = ValueRatios[index];
             //计算相对比例
             return Vector.Multiply(End - Start, ratio);
         }
         public override IVariable GetValue(double offsetPosition)
         {
-            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional && VisualData.Items[ContextDataItem.ValueRatioCoordinate] is List<double> ratiosCoordinate))
+            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
             {
                 return default;
             }
@@ -75,7 +75,7 @@ namespace HevoDrawing.Abstractions
                 return default;
             }
             //isInterregional 决定往那里靠 默认是isInterregional = true 
-            var blockIndex = Tools.BinaryCompare(ratiosCoordinate, 0, ratiosCoordinate.Count, percent, isInterregional);
+            var blockIndex = Tools.BinaryCompare(ValueRatioCoordinates, 0, ValueRatioCoordinates.Count, percent, isInterregional);
             //var index = (int)Math.Round();
             if (blockIndex < 0)
             {
@@ -216,7 +216,14 @@ namespace HevoDrawing.Abstractions
 
             return true;
         }
+        #region 内部计算项
 
+        public List<double> ValueRatioCoordinates { get; private set; }
+        public List<double> ValueRatios { get; private set; }
+        public List<double> SortedSplitRatios { get; private set; }
+        public List<Point> SortedSplitPoints { get; private set; }
+
+        #endregion
         public override void CalculateRequireData()
         {
             var splitValue = SplitValues;
@@ -231,13 +238,15 @@ namespace HevoDrawing.Abstractions
             }
 
             //区间和点
-            VisualData.Items.Add(ContextDataItem.ValueRatioCoordinate, valueRatioCoordinate);
-            VisualData.Items.Add(ContextDataItem.ValueRatios, valueRatios);
-            VisualData.Items.Add(ContextDataItem.SortedSplitRatios, splitRatioNum);
-            VisualData.Items.Add(ContextDataItem.SortedSplitPoints, points);
+            ValueRatioCoordinates = valueRatioCoordinate;
+            ValueRatios = valueRatios;
+            SortedSplitRatios = splitRatioNum;
+            SortedSplitPoints = points;
+
+            //暂存数据
             VisualData.Items.Add(ContextDataItem.Ratios, splitRatios);
             VisualData.Items.Add(ContextDataItem.IsInterregional, isInterregional);
-            VisualData.Items.Add(ContextDataItem.SplitValues, splitValue); 
+            VisualData.Items.Add(ContextDataItem.SplitValues, splitValue);
         }
         public override void PlotToDc(DrawingContext dc)
         {
@@ -281,14 +290,14 @@ namespace HevoDrawing.Abstractions
             //}
             var point = new Point();
             var index = 0;
-            var points = VisualData.Items[ContextDataItem.SortedSplitPoints] as List<Point>;
+            var points = SortedSplitPoints;
 
             if (points == null)
             {
                 CalculateRequireData();
             }
 
-            var ratios = VisualData.Items[ContextDataItem.SortedSplitRatios] as List<double>;
+            var ratios = SortedSplitRatios;
             var splitValues = VisualData.Items[ContextDataItem.SplitValues] as List<IVariable>;
 
             foreach (var item in points)

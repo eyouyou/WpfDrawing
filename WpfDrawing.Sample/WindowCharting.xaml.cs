@@ -50,7 +50,8 @@ namespace HevoDrawing.Sample
             axisX3.AxisPen = new Pen(Brushes.DarkCyan, 1);
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            chartCanvas.Canvas.AddChild(chart);
+            chartCanvas.Canvas.AddChild(chart); chartCanvas.Canvas.DataSource = chart.DataSource;
+
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
             interaction.Cross.IsCrossShow = true;
             chart.AddAsixX(axisX);

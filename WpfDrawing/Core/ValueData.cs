@@ -7,6 +7,17 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing
 {
+    public class CroodData<X>
+        where X : IFormattable, IComparable
+    {
+        public CroodData(X xdata, double ydata)
+        {
+            XData = xdata;
+            YData = ydata;
+        }
+        public X XData { get; set; }
+        public double YData { get; set; }
+    }
     public static class DataExtension
     {
         public static ContextData ToVisualData<X>(this Dictionary<X, double> dic)
@@ -14,6 +25,17 @@ namespace HevoDrawing
         {
             return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
         }
+        public static ContextData ToVisualData<X>(this List<CroodData<X>> croods)
+            where X : IFormattable, IComparable
+        {
+            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
+        }
+        public static ContextData ToVisualData<X>(this IEnumerable<CroodData<X>> croods)
+            where X : IFormattable, IComparable
+        {
+            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
+        }
+
         public static IVariable ToVisualData<T>(this T t)
             where T : IFormattable, IComparable
         {

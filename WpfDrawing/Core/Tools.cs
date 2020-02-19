@@ -12,6 +12,11 @@ namespace HevoDrawing
 {
     public static class Tools
     {
+        public static Vector BadVector => new Vector(double.NaN, double.NaN);
+        public static bool IsBad(this Vector v)
+        {
+            return double.IsNaN(v.X) || double.IsNaN(v.Y);
+        }
         public static List<double> GetAverageRatiosWithZero(int segements)
         {
             var ratio = 1.00 / segements;

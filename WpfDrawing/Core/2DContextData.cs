@@ -142,7 +142,7 @@ namespace HevoDrawing
             XData.Items = Items;
             YData.Items = Items;
         }
-        public Chart2DContextData2(List<IVariable> xData, List<double> yData)
+        private Chart2DContextData2(List<IVariable> xData, List<double> yData)
         {
             if (xData.Count != yData.Count)
             {

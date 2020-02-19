@@ -167,10 +167,15 @@ namespace HevoDrawing.Abstractions
         public Pen AxisPen { get; set; } = new Pen(Brushes.Black, 1);
 
         public double ChartFontSize { get; set; } = 12;
-
+        /// <summary>
+        /// 不输入则平均
+        /// </summary>
         public List<double> Ratios { get; set; } = null;
+        /// <summary>
+        /// 不输入按照ratios和data来
+        /// </summary>
         public List<IVariable> SplitValues { get; set; }
-
+        public bool IsDataFull { get; set; } = true;
         public Brush SplitForeColor { get; set; } = Brushes.Black;
         public int SplitFontSize { get; set; } = 12;
         public bool ShowGridLine { get; set; } = false;

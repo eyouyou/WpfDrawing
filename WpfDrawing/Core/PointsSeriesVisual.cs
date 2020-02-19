@@ -71,7 +71,12 @@ namespace HevoDrawing
                 var index = 0;
                 foreach (var item in vData.Value.ChartCroods)
                 {
-                    var current = new Point(offsetx + x.GetPosition(item.X.ValueData(Name) as IVariable).X, offsety + y.GetPosition(item.Y).Y);
+                    var vector = x.GetPosition(item.X.ValueData(Name) as IVariable);
+                    if (vector.IsBad())
+                    {
+                        continue;
+                    }
+                    var current = new Point(offsetx + vector.X, offsety + y.GetPosition(item.Y).Y);
                     list.Add(current);
                     index++;
                 }

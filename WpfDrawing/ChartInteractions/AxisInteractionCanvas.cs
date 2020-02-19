@@ -77,6 +77,11 @@ namespace HevoDrawing.Interactions
                 _isToolTipShow = value;
             }
         }
+
+        /// <summary>
+        /// 是否独立/公用
+        /// </summary>
+        public bool IsStandalone { get; set; } = true;
         public CrossVisual Cross { get; private set; }
         public ToolTipVisual DataToolTip { get; private set; }
 
@@ -225,7 +230,7 @@ namespace HevoDrawing.Interactions
 
             //记录触点坐标
             //TODO 日后需要多chart公用大十字线
-            var hitPoint = new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());
+            var hitPoint = IsStandalone ? new Point(nearestX, nearestY) : new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());
             VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
 
             if (IsCrossShow)

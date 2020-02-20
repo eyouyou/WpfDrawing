@@ -17,16 +17,30 @@ namespace HevoDrawing
 
         public override double IntervalPositioning(Section section, IVariable variable)
         {
-            var data = (DateTime)variable.ValueData("");
+            var data = (variable.ValueData("") as Value<DateTime>).Data;
 
-            var left = (DateTime)section.Left.ValueData("");
-            var right = (DateTime)section.Right.ValueData("");
+            var left = (section.Left.ValueData("") as Value<DateTime>).Data;
+            var right = (section.Right.ValueData("") as Value<DateTime>).Data;
 
             if (data < left || data > right)
             {
                 return double.NaN;
             }
-            return (data - left).TotalMilliseconds / (right - left).TotalMilliseconds;
+            var total = GetExceptSections(section);
+            var totalExceptMilliseconds = 0.0;
+            foreach (var item in total)
+            {
+                if (item.Contains(variable))
+                {
+                    return double.NaN;
+                }
+                var left_except = (item.Left.ValueData("") as Value<DateTime>).Data;
+                var right_except = (item.Right.ValueData("") as Value<DateTime>).Data;
+
+                totalExceptMilliseconds += (right_except - left_except).TotalMilliseconds;
+            }
+
+            return (data - left).TotalMilliseconds / ((right - left).TotalMilliseconds - totalExceptMilliseconds);
         }
     }
 }

@@ -43,6 +43,24 @@ namespace HevoDrawing.Abstractions
         {
             return value.ToString(ValueFormat, FormatProvider);
         }
+
+        /// <summary>
+        /// 必须区间互相独立
+        /// </summary>
+        public List<Section> ExceptSections { get; set; }
+
+        public List<Section> GetExceptSections(Section section)
+        {
+            var total = new List<Section>();
+            if (ExceptSections != null && ExceptSections.Count > 0)
+            {
+                foreach (var item in ExceptSections)
+                {
+                    section.Merge(item);
+                }
+            }
+            return total;
+        }
         public override Vector GetPosition(IVariable value)
         {
             if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
@@ -163,7 +181,7 @@ namespace HevoDrawing.Abstractions
                         var list = new List<IVariable>();
                         foreach (var item in Data)
                         {
-                            if (!IsDataFull && !range_split.In(item))
+                            if (!IsDataFull && !range_split.Contains(item))
                             {
                                 continue;
                             }
@@ -201,7 +219,7 @@ namespace HevoDrawing.Abstractions
                         isStartWithZero = true;
                         if (dataRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
                         {
-                            dataRatios = Tools.GetAverageRatios(dataRatios, 1, isStartWithZero);
+                            dataRatios = Tools.GetAverageRatios(dataRatios, 1);
                         }
 
                         foreach (var item in dataRatios)
@@ -220,7 +238,11 @@ namespace HevoDrawing.Abstractions
                     }
                     else
                     {
+                        /*
+                         * splitRatios和splitValues共同作用
+                         */
                         var splitRatiosCrood = new List<double>();
+
 
                         var sum = splitRatios.Sum();
                         if (sum > 1)
@@ -241,26 +263,51 @@ namespace HevoDrawing.Abstractions
                             splitRatios.Add(1 - splitRatiosCrood.LastOrDefault());
                         }
 
+                        var sum_ratio2 = 0.0;
+                        foreach (var item in splitRatios)
+                        {
+                            sum_ratio2 += item;
+                            points.Add(Tools.GetPointByRatio(diff, start, sum_ratio2));
+                        }
+
+                        var sections = Tools.ChangeToSections(splitValues, splitRatios);
+
+                        if (sections.Count == 0)
+                        {
+                            return false;
+                        }
+
+                        //List<CroodLocal> Croods = new List<CroodLocal>();
+
+                        ////TODO 现在默认不使用点区间计算 IsInterregional == false
+                        ////Data ordered
+                        //foreach (var item in Data)
+                        //{
+                        //    var index2 = 0;
+                        //    foreach (var section in sections)
+                        //    {
+                        //        if (section.In(item))
+                        //        {
+                        //            var position = IntervalPositioning(section, item) * section.SectionRatio;
+                        //            var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
+
+                        //            var crood = new CroodLocal() { Data = item, ValueCrood = ratioCrood };
+                        //            Croods.Add(crood);
+                        //            valueRatios.Add(ratioCrood);
+                        //            break;
+                        //        }
+                        //        index2++;
+                        //    }
+                        //}
+
+                        //var index_crood = 0;
+                        //foreach (var item in Croods)
+                        //{
+                        //    item.ValueIntervalCrood = item.ValueCrood + (index_crood + 1 < Croods.Count ? Croods[index_crood + 1].ValueCrood - item.ValueCrood : 0) / 2;
+                        //    valueRatioCoordinate.Add(item.ValueIntervalCrood);
+                        //    index_crood++;
+                        //}
                     }
-
-
-                    //if (IsDataFull)
-                    //{
-
-                    //}
-                    //else
-                    //{
-                    //    for (int i = 0; i < ordered_data.Count; i++)
-                    //    {
-                    //        var average = isInterregional ? 1.0 / ordered_data.Count : 1.0 / (ordered_data.Count - 1);
-                    //        double ratio = isInterregional ? 1.0 * (i + 1) / (ordered_data.Count) : 1.0 * i / (ordered_data.Count - 1);
-                    //        var offset = -(average) / 2;
-                    //        var offset2 = (i + 1 < ordered_data.Count ? average : 0) / 2;
-                    //        valueRatios.Add(isInterregional ? ratio + offset : ratio);
-                    //        valueRatioCoordinate.Add(isInterregional ? ratio : ratio + offset2);
-                    //    }
-
-                    //}
 
                 }
                 else
@@ -287,7 +334,7 @@ namespace HevoDrawing.Abstractions
                     //TODO 这个是否一定要均分 存不存在不均分的情况
                     if (splitRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
                     {
-                        splitRatios = Tools.GetAverageRatios(splitRatios, 1, isStartWithZero);
+                        splitRatios = Tools.GetAverageRatios(splitRatios, 1);
                     }
                     if (isStartWithZero)
                     {
@@ -320,39 +367,13 @@ namespace HevoDrawing.Abstractions
                     }
                 }
 
-                //if (splitValues == null)
-                //{
-                //    foreach (var item in dataRatios)
-                //    {
-                //        sum_ratio += item;
-                //        gIndex++;
-                //        splitRatiosCrood.Add(sum_ratio);
-                //        if (isMapping)
-                //        {
-                //            splitValues.Add(data[gIndex]);
-                //            continue;
-                //        }
-                //        //TODO 这个是否需要修正
-                //        var index = (int)Math.Floor(data.Count * sum_ratio);
-                //        if (index != 0)
-                //        {
-                //            index -= 1;
-                //        }
-                //        splitValues.Add(data[index]);
-                //    }
-
-                //}
-                //else
-                //{
-
-                //}
-
             }
             else
             {
                 /*
                  * SplitRatios 通过计算起点和终点百分比均匀分配 
                  * SplitValue 必须外部赋值 
+                 * 该部分计算效率较低 尽量写到if里面
                 */
                 if (splitValues == null || splitValues.Count == 0)
                 {
@@ -361,9 +382,21 @@ namespace HevoDrawing.Abstractions
 
                 if (splitRatios == null || splitRatios.Count == 0)
                 {
-                    splitRatios = Tools.GetAverageRatiosWithZero(splitValues.Count);
+                    splitRatios = Tools.GetAverageRatiosWithZero(splitValues.Count - 1);
+                }                    //TODO 这个是否一定要均分 存不存在不均分的情况
+                if (splitRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
+                {
+                    splitRatios = Tools.GetAverageRatios(splitRatios, 1);
                 }
+
                 splitValues = splitValues.OrderBy(it => it).ToList();
+
+                var sum_ratio = 0.0;
+                foreach (var item in splitRatios)
+                {
+                    sum_ratio += item;
+                    points.Add(Tools.GetPointByRatio(diff, start, sum_ratio));
+                }
 
                 var sections = Tools.ChangeToSections(splitValues, splitRatios);
 
@@ -371,7 +404,6 @@ namespace HevoDrawing.Abstractions
                 {
                     return false;
                 }
-                Dictionary<Section, List<CroodLocal>> IntervalData = new Dictionary<Section, List<CroodLocal>>();
                 List<CroodLocal> Croods = new List<CroodLocal>();
 
                 //TODO 现在默认不使用点区间计算 IsInterregional == false
@@ -381,19 +413,13 @@ namespace HevoDrawing.Abstractions
                     var index2 = 0;
                     foreach (var section in sections)
                     {
-                        if (section.In(item))
+                        if (section.Contains(item))
                         {
-                            if (!IntervalData.ContainsKey(section))
-                            {
-                                IntervalData[section] = new List<CroodLocal>();
-                            }
-
-                            var position = this.IntervalPositioning(section, item) * section.SectionRatio;
+                            var position = IntervalPositioning(section, item) * section.SectionRatio;
                             var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
 
                             var crood = new CroodLocal() { Data = item, ValueCrood = ratioCrood };
                             Croods.Add(crood);
-                            IntervalData[section].Add(crood);
                             valueRatios.Add(ratioCrood);
                             break;
                         }
@@ -409,82 +435,6 @@ namespace HevoDrawing.Abstractions
                     index++;
                 }
             }
-            //数据和x轴能对应上的情况
-            //if (true)
-            //{
-            //    var index2 = 0;
-            //    foreach (var item in splitRatiosCrood)
-            //    {
-            //        var offset = -(index2 < splitRatios.Count ? splitRatios[index2] : 0) / 2;
-            //        var offset2 = (index2 + 1 < splitRatios.Count ? splitRatios[index2 + 1] : 0) / 2;
-            //        valueRatios.Add(isInterregional ? item + offset : item);
-            //        valueRatioCoordinate.Add(isInterregional ? item : item + offset2);
-            //        index2++;
-            //    }
-            //    //一一对应上了
-            //    splitRatiosNum = splitRatiosCrood;
-            //    foreach (var item in splitRatiosCrood)
-            //    {
-            //        points.Add(Tools.GetPointByRatio(diff, start, item));
-            //    }
-            //}
-            //else
-            //{
-            //    if (FollowData)
-            //    {
-            //        for (int i = 0; i < data.Count; i++)
-            //        {
-            //            var average = isInterregional ? 1.0 / data.Count : 1.0 / (data.Count - 1);
-            //            double ratio = isInterregional ? 1.0 * (i + 1) / (data.Count) : 1.0 * i / (data.Count - 1);
-            //            var offset = -(average) / 2;
-            //            var offset2 = (i + 1 < data.Count ? average : 0) / 2;
-            //            valueRatios.Add(isInterregional ? ratio + offset : ratio);
-            //            valueRatioCoordinate.Add(isInterregional ? ratio : ratio + offset2);
-
-            //            if (splitValues.IndexOf(data[i]) >= 0)
-            //            {
-            //                splitRatiosNum.Add(ratio);
-            //                points.Add(Tools.GetPointByRatio(diff, start, ratio));
-            //            }
-            //        }
-            //    }
-            //    //区间均分
-            //    else
-            //    {
-            //        List<Section> sections = new List<Section>();
-            //        for (int i = 0; i < splitValues.Count; i++)
-            //        {
-            //            if (i != 0)
-            //            {
-            //                sections.Add(new Section() { Left = splitValues[i], Right = SplitValues[i + 1] });
-            //            }
-            //        }
-            //        foreach (var item in sections)
-            //        {
-            //            for (int i = 0; i < data.Count; i++)
-            //            {
-            //                if (data[i].CompareTo(item.Left) < 0 && data[i].CompareTo(item.Right) > 0)
-            //                {
-            //                    continue;
-            //                }
-
-            //                var average = isInterregional ? 1.0 / data.Count : 1.0 / (data.Count - 1);
-            //                double ratio = isInterregional ? 1.0 * (i + 1) / (data.Count) : 1.0 * i / (data.Count - 1);
-            //                var offset = -(average) / 2;
-            //                var offset2 = (i + 1 < data.Count ? average : 0) / 2;
-            //                valueRatios.Add(isInterregional ? ratio + offset : ratio);
-            //                valueRatioCoordinate.Add(isInterregional ? ratio : ratio + offset2);
-
-            //                if (splitValues.IndexOf(data[i]) >= 0)
-            //                {
-            //                    splitRatiosNum.Add(ratio);
-            //                    points.Add(Tools.GetPointByRatio(diff, start, ratio));
-            //                }
-            //            }
-
-            //        }
-            //    }
-            //}
 
             return true;
         }
@@ -501,9 +451,12 @@ namespace HevoDrawing.Abstractions
         public List<double> ValueRatios { get; private set; }
         public List<double> SortedSplitRatios { get; private set; }
         public List<Point> SortedSplitPoints { get; private set; }
-
-        public bool FollowData { get; private set; } = true;
         #endregion
+
+        /// <summary>
+        /// 数据跟x轴比例走 根据比例来计算
+        /// </summary>
+        public bool FollowData { get; private set; } = true;
 
         /// <summary>
         /// <see cref="SplitValues"/>\<see cref="Ratios"/>不互斥 存在一定关联 共同作用 优先<see cref="SplitValues"/>
@@ -600,7 +553,13 @@ namespace HevoDrawing.Abstractions
                 {
                     continue;
                 }
-                var offset = GetPosition(splitValues[index].ValueData(Name) as IVariable).X;
+                var position = GetPosition(splitValues[index].ValueData(Name) as IVariable);
+                var offset = position.X;
+                //如果Bad 画就完事
+                if (position.IsBad())
+                {
+                    offset = item.X - Start.X;
+                }
                 FormattedText formatted_text = new FormattedText(
                     $"{splitValues[index].ToString(SplitValueFormat, FormatProvider)}{SplitUnit}",
                     CultureInfo.InvariantCulture,
@@ -643,10 +602,166 @@ namespace HevoDrawing.Abstractions
         public IVariable Left { get; set; }
         public IVariable Right { get; set; }
 
+        public bool LeftLessThan(IVariable variable)
+        {
+            return Left.CompareTo(variable) < 0;
+        }
+        public bool LeftLessThanOrEquals(IVariable variable)
+        {
+            return Left.CompareTo(variable) <= 0;
+        }
+        public bool LeftBiggerThan(IVariable variable)
+        {
+            return Left.CompareTo(variable) > 0;
+        }
+        public bool LeftBiggerThanOrEquals(IVariable variable)
+        {
+            return Left.CompareTo(variable) >= 0;
+        }
+
+        public bool RightBiggerThan(IVariable variable)
+        {
+            return Right.CompareTo(variable) > 0;
+        }
+        public bool RightBiggerThanOrEquals(IVariable variable)
+        {
+            return Right.CompareTo(variable) >= 0;
+        }
+        public bool RightLessThan(IVariable variable)
+        {
+            return Right.CompareTo(variable) < 0;
+        }
+        public bool RightLessThanOrEquals(IVariable variable)
+        {
+            return Right.CompareTo(variable) <= 0;
+        }
+
+        public override int GetHashCode()
+        {
+            return Left.GetHashCode() << 32 ^ Right.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is Section section)
+            {
+                return section.Left.Equals(Left) && section.Right.Equals(Right);
+            }
+            return false;
+        }
         public double SectionRatio { get; set; }
-        public bool In(IVariable variable)
+        public bool Contains(IVariable variable)
         {
             return variable.CompareTo(Left) >= 0 && variable.CompareTo(Right) <= 0;
+        }
+        public List<Section> Merge(Section section)
+        {
+            var sections = new List<Section>();
+            //完全分离
+            if ((section.Right.CompareTo(Left) < 0 && section.Left.CompareTo(Left) < 0) ||
+                (section.Right.CompareTo(Right) > 0 && section.Left.CompareTo(Right) > 0))
+            {
+                sections.Add(section);
+                sections.Add(this);
+                return sections;
+            }
+            var new_section = new Section();
+            sections.Add(new_section);
+
+            if (section.Contains(Left) && section.Contains(Right))
+            {
+                new_section.Left = section.Left;
+                new_section.Right = section.Right;
+            }
+            else if (Contains(section.Left) && Contains(section.Right))
+            {
+                new_section.Left = Left;
+                new_section.Right = Right;
+            }
+            else if (section.Contains(Left) && section.RightLessThanOrEquals(Right))
+            {
+                new_section.Left = section.Left;
+                new_section.Right = Right;
+            }
+            else if (section.Contains(Right) && section.LeftBiggerThanOrEquals(Left))
+            {
+                new_section.Left = section.Left;
+                new_section.Right = section.Right;
+            }
+            return sections;
+        }
+
+        public List<Section> Except(Section section)
+        {
+            var sections = new List<Section>();
+
+            //完全分离
+            if ((section.Right.CompareTo(Left) < 0 && section.Left.CompareTo(Left) < 0) ||
+                (section.Right.CompareTo(Right) > 0 && section.Left.CompareTo(Right) > 0))
+            {
+                sections.Add(this);
+                return sections;
+            }
+
+            var new_section = new Section();
+
+            if (section.Contains(Left) && section.Contains(Right))
+            {
+            }
+            else if (Contains(section.Left) && Contains(section.Right))
+            {
+                sections.Add(new Section() { Left = Left, Right = section.Left });
+                sections.Add(new Section() { Left = section.Right, Right = Right });
+                return sections;
+            }
+            else if (section.Contains(Left) && section.RightLessThanOrEquals(Right))
+            {
+                new_section.Left = section.Right;
+                new_section.Right = Right;
+            }
+            else if (section.Contains(Right) && section.LeftBiggerThanOrEquals(Left))
+            {
+                new_section.Left = Left;
+                new_section.Right = section.Left;
+            }
+            sections.Add(new_section);
+
+            return sections;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sections">各自独立section</param>
+        /// <returns></returns>
+        public List<Section> MergeFrom(List<Section> sections)
+        {
+            var list = new List<Section>();
+            foreach (var item in sections)
+            {
+                var merged = item.Merge(this);
+                merged.RemoveAll(it => it.Equals(this));
+                list.AddRange(merged);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sections">各自独立section</param>
+        /// <returns></returns>
+        public List<Section> ExceptFrom(List<Section> sections)
+        {
+            var list = new List<Section>();
+            foreach (var item in sections)
+            {
+                var excepted = item.Except(this);
+                list.AddRange(excepted);
+            }
+            return list;
+        }
+        public List<Section> Intersect(Section section)
+        {
+            return new List<Section>();
         }
     }
 }

@@ -49,14 +49,14 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public List<Section> ExceptSections { get; set; }
 
-        public List<Section> GetExceptSections(Section section)
+        public List<Section> GetSectionsExcept(Section section)
         {
             var total = new List<Section>();
             if (ExceptSections != null && ExceptSections.Count > 0)
             {
                 foreach (var item in ExceptSections)
                 {
-                    section.Merge(item);
+                    total.AddRange(section.Except(item));
                 }
             }
             return total;

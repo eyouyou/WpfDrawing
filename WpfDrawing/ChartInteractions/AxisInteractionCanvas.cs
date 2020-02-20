@@ -146,52 +146,62 @@ namespace HevoDrawing.Interactions
                             //HoverElement LineSeriesVisual 
                             LineSeriesVisual lineSeries = series_item.GetInterectHoverableLineSeriesVisual();
 
-                            //验证数据是否包含等
-                            if (!value.IsBad() &&
-                                series_plot.Contains(currentPoint)
+                            if (series_plot.Contains(currentPoint))
+                            {
+                                //验证数据是否包含等
+                                if (!value.IsBad()
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
                                     && series_item.VisualData is TwoDimensionalContextData series_data
                                     && series_data.ContainsX(value, out var yValue))
-                            {
-                                //获取当前值对应的x、y 进行十字轴的定位
-                                var x = xAxis.GetPosition(value).X + xAxis.Start.X + offset.X;
-                                var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y + offset.Y;
-                                hitSeriesDatas.Add(new SeriesData()
                                 {
-                                    Color = series_item.Color,
-                                    Id = series_item.Id,
-                                    Name = series_item.Name,
-                                    XValue = value,
-                                    YValue = yValue,
-                                    AxisX = xAxis,
-                                    AxisY = yAxis
-                                });
-                                nearestX = x;
+                                    //获取当前值对应的x、y 进行十字轴的定位
+                                    var x = xAxis.GetPosition(value).X + xAxis.Start.X + offset.X;
+                                    var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y + offset.Y;
+                                    hitSeriesDatas.Add(new SeriesData()
+                                    {
+                                        Color = series_item.Color,
+                                        Id = series_item.Id,
+                                        Name = series_item.Name,
+                                        XValue = value,
+                                        YValue = yValue,
+                                        AxisX = xAxis,
+                                        AxisY = yAxis
+                                    });
+                                    nearestX = x;
 
-                                if (Cross.IsYDataAttract)
-                                {
-                                    nearestY = y;
+                                    if (Cross.IsYDataAttract)
+                                    {
+                                        nearestY = y;
+                                    }
+
+                                    if (lineSeries != null)
+                                    {
+                                        if (!lineSeries.HoverElement.IsAdded)
+                                        {
+                                            AddElement(lineSeries.HoverElement.Content);
+                                            lineSeries.HoverElement.IsAdded = true;
+                                        }
+                                        var leftTop = new Point(x - lineSeries.HoverElement.Width / 2, y - lineSeries.HoverElement.Height / 2);
+
+                                        if (series_plot.Contains(new Point(x, y)))
+                                        {
+                                            SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content, true, leftTop.X, leftTop.Y, lineSeries.HoverElement.ZIndex));
+                                        }
+                                        else
+                                        {
+                                            SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content));
+                                        }
+                                    }
                                 }
-
-                                if (lineSeries != null)
+                                else
                                 {
-                                    if (!lineSeries.HoverElement.IsAdded)
-                                    {
-                                        AddElement(lineSeries.HoverElement.Content);
-                                        lineSeries.HoverElement.IsAdded = true;
-                                    }
-                                    var leftTop = new Point(x - lineSeries.HoverElement.Width / 2, y - lineSeries.HoverElement.Height / 2);
-
-                                    if (series_plot.Contains(new Point(x, y)))
-                                    {
-                                        SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content, true, leftTop.X, leftTop.Y, lineSeries.HoverElement.ZIndex));
-                                    }
-                                    else
+                                    if (lineSeries != null)
                                     {
                                         SeriesHitList.Add(key, new ElementPosition(lineSeries.HoverElement.Content));
                                     }
                                 }
                             }
+
                             else
                             {
                                 if (lineSeries != null)

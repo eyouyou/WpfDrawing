@@ -92,7 +92,7 @@ namespace HevoDrawing
     /// 可以继承 获取更多数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Value<T> : Value, IVariable
+    public class Value<T> : Value, IVariable, IEquatable<Value<T>>
         where T : IFormattable, IComparable
     {
         public static Value<T> Bad = new Value<T>() { };
@@ -135,7 +135,10 @@ namespace HevoDrawing
             return false;
         }
 
-
+        public bool Equals(Value<T> other)
+        {
+            return other.IsBad == IsBad && other.Data.Equals(Data);
+        }
     }
     public class ListContextData<T> : ContextData
     {

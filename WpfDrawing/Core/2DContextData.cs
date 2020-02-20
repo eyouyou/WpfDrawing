@@ -163,8 +163,8 @@ namespace HevoDrawing
 
         public override bool ContainsX(IVariable x, out Value<double> y)
         {
-            var first = Data.FirstOrDefault(it => it.X == x);
-            if (first == null)
+            var first = Data.FirstOrDefault(it => it.X.Equals(x));
+            if (first.IsBad)
             {
                 y = Value<double>.Bad;
                 return false;
@@ -193,13 +193,14 @@ namespace HevoDrawing
             return data;
         }
     }
-    public class ChartCrood
+    public struct ChartCrood
     {
         public ChartCrood(IVariable x, Value<double> y)
         {
             X = x;
             Y = y;
         }
+        public bool IsBad => X == null || Y.IsBad;
         public IVariable X { get; set; }
         public Value<double> Y { get; set; }
     }

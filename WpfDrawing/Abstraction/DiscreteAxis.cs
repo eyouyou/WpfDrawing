@@ -88,6 +88,14 @@ namespace HevoDrawing.Abstractions
         }
 
         /// <summary>
+        /// 区间定位
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        public abstract double IntervalPositioning(Section section, IVariable variable);
+
+        /// <summary>
         /// TODO 需要优化
         /// </summary>
         /// <param name="diff">差</param>
@@ -118,7 +126,7 @@ namespace HevoDrawing.Abstractions
                 List<IVariable> ordered_split = splitValues.OrderBy(it => it).ToList();
                 range_split = new Section() { Left = ordered_split.FirstOrDefault(), Right = ordered_split.LastOrDefault() };
                 //先排除边界
-                if (range_split.Left.CompareTo(range_data.Left) > 0 && range_split.Right.CompareTo(range_data.Right) < 0)
+                if (range_split.Left.CompareTo(range_data.Left) < 0 || range_split.Right.CompareTo(range_data.Right) > 0)
                     FollowData = false;
                 splitValues = ordered_split;
                 Data = ordered_x_data;
@@ -155,7 +163,7 @@ namespace HevoDrawing.Abstractions
                         var list = new List<IVariable>();
                         foreach (var item in Data)
                         {
-                            if (!IsDataFull && (item.CompareTo(range_split.Left) < 0 || item.CompareTo(range_split.Right) > 0))
+                            if (!IsDataFull && !range_split.In(item))
                             {
                                 continue;
                             }
@@ -170,12 +178,25 @@ namespace HevoDrawing.Abstractions
                         var splitIndex = new List<double>();
                         foreach (var item in splitValues)
                         {
-                            splitIndex.Add(ordered_x_data.IndexOf(item));
+                            var value_index = ordered_x_data.IndexOf(item);
+                            if (value_index == -1)
+                            {
+                                for (int i = 0; i < ordered_x_data.Count; i++)
+                                {
+                                    var data = ordered_x_data[i];
+                                    if (data.CompareTo(item) > 0)
+                                    {
+                                        value_index = i;
+                                        ordered_x_data.Insert(value_index, item);
+                                        break;
+                                    }
+                                }
+                            }
+                            splitIndex.Add(value_index);
                         }
 
                         var sum_ratio = 0.0;
-                        var index = 0;
-
+                        var dataratio_index = 0;
                         List<double> dataRatios = Tools.GetAverageRatiosWithZero(ordered_x_data.Count - 1);
                         isStartWithZero = true;
                         if (dataRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
@@ -186,15 +207,15 @@ namespace HevoDrawing.Abstractions
                         foreach (var item in dataRatios)
                         {
                             sum_ratio += item;
-                            if (splitIndex.Contains(index))
+                            if (splitIndex.Contains(dataratio_index))
                             {
                                 splitRatiosNum.Add(sum_ratio);
                                 points.Add(Tools.GetPointByRatio(diff, start, sum_ratio));
                             }
                             valueRatios.Add(sum_ratio);
-                            var coord = sum_ratio + (index + 1 < dataRatios.Count ? dataRatios[index + 1] : 0) / 2;
+                            var coord = sum_ratio + (dataratio_index + 1 < dataRatios.Count ? dataRatios[dataratio_index + 1] : 0) / 2;
                             valueRatioCoordinate.Add(coord);
-                            index++;
+                            dataratio_index++;
                         }
                     }
                     else
@@ -333,9 +354,61 @@ namespace HevoDrawing.Abstractions
                  * SplitRatios 通过计算起点和终点百分比均匀分配 
                  * SplitValue 必须外部赋值 
                 */
+                if (splitValues == null || splitValues.Count == 0)
+                {
+                    throw new ArgumentNullException($"{nameof(SplitValues)}");
+                }
 
+                if (splitRatios == null || splitRatios.Count == 0)
+                {
+                    splitRatios = Tools.GetAverageRatiosWithZero(splitValues.Count);
+                }
+                splitValues = splitValues.OrderBy(it => it).ToList();
+
+                var sections = Tools.ChangeToSections(splitValues, splitRatios);
+
+                if (sections.Count == 0)
+                {
+                    return false;
+                }
+                Dictionary<Section, List<CroodLocal>> IntervalData = new Dictionary<Section, List<CroodLocal>>();
+                List<CroodLocal> Croods = new List<CroodLocal>();
+
+                //TODO 现在默认不使用点区间计算 IsInterregional == false
+                //Data ordered
+                foreach (var item in Data)
+                {
+                    var index2 = 0;
+                    foreach (var section in sections)
+                    {
+                        if (section.In(item))
+                        {
+                            if (!IntervalData.ContainsKey(section))
+                            {
+                                IntervalData[section] = new List<CroodLocal>();
+                            }
+
+                            var position = this.IntervalPositioning(section, item) * section.SectionRatio;
+                            var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
+
+                            var crood = new CroodLocal() { Data = item, ValueCrood = ratioCrood };
+                            Croods.Add(crood);
+                            IntervalData[section].Add(crood);
+                            valueRatios.Add(ratioCrood);
+                            break;
+                        }
+                        index2++;
+                    }
+                }
+                var index = 0;
+
+                foreach (var item in Croods)
+                {
+                    item.ValueIntervalCrood = item.ValueCrood + (index + 1 < Croods.Count ? Croods[index + 1].ValueCrood - item.ValueCrood : 0) / 2;
+                    valueRatioCoordinate.Add(item.ValueIntervalCrood);
+                    index++;
+                }
             }
-
             //数据和x轴能对应上的情况
             //if (true)
             //{
@@ -415,6 +488,13 @@ namespace HevoDrawing.Abstractions
 
             return true;
         }
+        class CroodLocal
+        {
+            public IVariable Data { get; set; }
+            public double ValueCrood { get; set; }
+            public double ValueIntervalCrood { get; set; }
+        }
+
         #region 内部计算项
 
         public List<double> ValueRatioCoordinates { get; private set; }
@@ -562,5 +642,11 @@ namespace HevoDrawing.Abstractions
     {
         public IVariable Left { get; set; }
         public IVariable Right { get; set; }
+
+        public double SectionRatio { get; set; }
+        public bool In(IVariable variable)
+        {
+            return variable.CompareTo(Left) >= 0 && variable.CompareTo(Right) <= 0;
+        }
     }
 }

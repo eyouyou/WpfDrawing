@@ -14,5 +14,19 @@ namespace HevoDrawing
 
         }
         public override IFormatProvider FormatProvider => null;
+
+        public override double IntervalPositioning(Section section, IVariable variable)
+        {
+            var data = (DateTime)variable.ValueData("");
+
+            var left = (DateTime)section.Left.ValueData("");
+            var right = (DateTime)section.Right.ValueData("");
+
+            if (data < left || data > right)
+            {
+                return double.NaN;
+            }
+            return (data - left).TotalMilliseconds / (right - left).TotalMilliseconds;
+        }
     }
 }

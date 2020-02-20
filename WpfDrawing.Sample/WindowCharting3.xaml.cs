@@ -62,8 +62,8 @@ namespace HevoDrawing.Sample
             b.Magnification = 0.25;
             b.BlurRadius = 30;
 
-            interaction.Tip.TextContainer.Margin = new Thickness(10);
             interaction.Tip.Layers.Children.Insert(0, b);
+            interaction.Tip.TextContainer.Margin = new Thickness(10);
             interaction.Tip.FontSize = 11;
             interaction.Tip.Border.BorderThickness = new Thickness(1);
             interaction.Tip.Border.Padding = new Thickness(0);

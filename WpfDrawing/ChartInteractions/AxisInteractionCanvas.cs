@@ -15,6 +15,8 @@ namespace HevoDrawing.Interactions
     /// </summary>
     public class AxisInteractionCanvas : InteractionCanvas
     {
+        ComponentId IdGenerator = new ComponentId();
+
         private Point LastHitPoint;
         public AxisInteractionCanvas()
         {
@@ -224,10 +226,9 @@ namespace HevoDrawing.Interactions
                     //LastHitPoint = hitPoint;
 
                     //这么调用是否合适
-                    (dataSource.ConnectVisual as ChartVisual)?.TriggerIntersectChanged(seriesData.ToDictionary(it => it.Name, it => it));
+                    (dataSource.ConnectVisual as ChartVisual)?.TriggerIntersectChanged(seriesData.ToDictionary(it => it.Name ?? $"{nameof(AxisInteractionCanvas)}_{IdGenerator.GenerateId().ToString()}", it => it));
                 }
             }
-
             //记录触点坐标
             //TODO 日后需要多chart公用大十字线
             var hitPoint = IsStandalone ? new Point(nearestX, nearestY) : new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());

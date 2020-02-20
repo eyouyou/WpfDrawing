@@ -32,7 +32,7 @@ namespace HevoDrawing.Sample
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
             container = new RectInteractionGroup(interaction, 1, 1,
                 new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ }
-                //new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
+                //new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */},
                 //new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ },
                 //new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
                 );

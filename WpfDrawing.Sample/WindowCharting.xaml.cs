@@ -25,34 +25,49 @@ namespace HevoDrawing.Sample
     public partial class WindowCharting : Window
     {
         ChartVisual chart = new ChartVisual();
+        GenericCanvasContainer chartCanvas = new GenericCanvasContainer(true) { };
+
+        ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "F1", SplitValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1) };
+        ContinuousAxis axisY2 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", SplitValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Purple, 1) };
+        ContinuousAxis axisY3 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", SplitValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.DarkKhaki, 1) };
+
+        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyyMMdd" };
+        DiscreteAxis axisX2 = new DateTimeAxis(AxisPosition.Top) { ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyyMMdd" };
+        DiscreteAxis axisX3 = new DateTimeAxis(AxisPosition.Buttom) { ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyyMMdd" };
 
         public WindowCharting()
         {
+            chartCanvas.Background = Brushes.White;
             Timer timer = new Timer(1000);
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
             DockPanel grid = new DockPanel() { };
-            GenericCanvasContainer chartCanvas = new GenericCanvasContainer(true) { };
 
-            ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1) };
-            ContinuousAxis axisY2 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.Purple, 1) };
-            ContinuousAxis axisY3 = new ContinuousAxis(AxisPosition.Right) { ValueFormat = "F1", ShowGridLine = true, AxisPen = new Pen(Brushes.DarkKhaki, 1) };
-            axisY3.Offsets = new PaddingOffset(0, 0, 50, 100);
+            axisY3.Offsets = new PaddingOffset(0, 0, 50, 0);
+            axisX3.Offsets = new PaddingOffset(0, 0, 0, 60);
             var ratios = new List<double>() { 0.2, 0.3, 0.3, 0.2 };
             ratios.Insert(0, 0);
-            DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { ValueFormat = "yyyyMMdd", Ratios = ratios };
+            axisX.Ratios = ratios;
+            axisX2.Ratios = ratios;
+            axisX3.Ratios = ratios;
+
             axisX.IsInterregional = false;
-            DiscreteAxis axisX2 = new DateTimeAxis(AxisPosition.Top) { ValueFormat = "yyyyMMdd", Ratios = ratios };
-            DiscreteAxis axisX3 = new DateTimeAxis(AxisPosition.Buttom) { ValueFormat = "yyyyMMdd", Ratios = ratios };
             axisX.AxisPen = new Pen(Brushes.Red, 1);
             axisX2.AxisPen = new Pen(Brushes.PeachPuff, 1);
             axisX3.AxisPen = new Pen(Brushes.DarkCyan, 1);
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
             chartCanvas.Canvas.AddChild(chart); chartCanvas.Canvas.DataSource = chart.DataSource;
-
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
+
+            BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
+            b.BlurContainer = container.DrawingGrid;
+            b.Magnification = 0.25;
+            b.BlurRadius = 30;
+
+            interaction.Tip.Layers.Children.Insert(0, b);
+
             interaction.Cross.IsCrossShow = true;
             chart.AddAsixX(axisX);
             chart.AddAsixX(axisX2);
@@ -104,6 +119,13 @@ namespace HevoDrawing.Sample
             grid.AddChild(container, Dock.Left);
             //grid.Children.Add(new TextBlock() { Text = "123"});
             Content = grid;
+
+            this.SizeChanged += WindowCharting_SizeChanged;
+        }
+
+        private void WindowCharting_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            chartCanvas.Replot();
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)

@@ -175,6 +175,10 @@ namespace HevoDrawing.Abstractions
         /// 不输入按照ratios和data来
         /// </summary>
         public List<IVariable> SplitValues { get; set; }
+        /// <summary>
+        /// 显示比例 
+        /// </summary>
+        public double ShowRatio { get; set; } = double.NaN;
         public bool IsDataFull { get; set; } = true;
         public Brush SplitForeColor { get; set; } = Brushes.Black;
         public int SplitFontSize { get; set; } = 12;

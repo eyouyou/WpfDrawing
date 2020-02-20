@@ -135,10 +135,8 @@ namespace HevoDrawing.Abstractions
                  * SplitRatios 无需外部传入 
                  * SplitValue 无需外部传入 
                  * 
-                 * SplitValue 不为空的情况下 => 
+                 * SplitValue 不为空的情况下 => 按照数据均分
                  * SplitRatios 每个数据都有分割 对应数据的比例 
-                 * SplitRatios 为空 排除其他数据 包含SplitValue两侧数据
-                 * SplitRatios 不为空 SplitRatios无效 
                  * 对应数据的比例: 获取SplitValue对应的index 获取ratio
                  * IsDataFull 数据全 
                  * 
@@ -148,7 +146,11 @@ namespace HevoDrawing.Abstractions
                 var isStartWithZero = false;
                 if (splitValues != null)
                 {
-                    if ((splitRatios == null || splitRatios.Count == 0))
+                    /*
+                     * SplitRatios 为空 排除其他数据 包含SplitValue两侧数据 总数据平均
+                     * SplitRatios 不为空 区间平均
+                     */
+                    if (splitRatios == null || splitRatios.Count == 0)
                     {
                         var list = new List<IVariable>();
                         foreach (var item in Data)
@@ -165,7 +167,6 @@ namespace HevoDrawing.Abstractions
                         ordered_x_data = ordered_x_data.Distinct().ToList();
                         Data = ordered_x_data;
 
-
                         var splitIndex = new List<double>();
                         foreach (var item in splitValues)
                         {
@@ -177,10 +178,9 @@ namespace HevoDrawing.Abstractions
 
                         List<double> dataRatios = Tools.GetAverageRatiosWithZero(ordered_x_data.Count - 1);
                         isStartWithZero = true;
-                        //TODO 这个是否一定要均分 存不存在不均分的情况
                         if (dataRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
                         {
-                            dataRatios = Tools.GetAverageRatios(dataRatios, isStartWithZero);
+                            dataRatios = Tools.GetAverageRatios(dataRatios, 1, isStartWithZero);
                         }
 
                         foreach (var item in dataRatios)
@@ -192,9 +192,34 @@ namespace HevoDrawing.Abstractions
                                 points.Add(Tools.GetPointByRatio(diff, start, sum_ratio));
                             }
                             valueRatios.Add(sum_ratio);
-                            valueRatioCoordinate.Add(sum_ratio + (index + 1 < dataRatios.Count ? dataRatios[index + 1] : 0) / 2);
+                            var coord = sum_ratio + (index + 1 < dataRatios.Count ? dataRatios[index + 1] : 0) / 2;
+                            valueRatioCoordinate.Add(coord);
                             index++;
                         }
+                    }
+                    else
+                    {
+                        var splitRatiosCrood = new List<double>();
+
+                        var sum = splitRatios.Sum();
+                        if (sum > 1)
+                        {
+                            var sum_ratio = 0.0;
+                            var index = 0;
+                            foreach (var item in splitRatios)
+                            {
+                                sum_ratio += item;
+                                splitRatiosCrood.Add(sum_ratio);
+                                if (sum_ratio > 1)
+                                {
+                                    break;
+                                }
+                                index++;
+                            }
+                            splitRatios = splitRatios.Take(index).ToList();
+                            splitRatios.Add(1 - splitRatiosCrood.LastOrDefault());
+                        }
+
                     }
 
 
@@ -219,6 +244,8 @@ namespace HevoDrawing.Abstractions
                 }
                 else
                 {
+                    var splitRatiosCrood = new List<double>();
+                    splitValues = new List<IVariable>();
                     if (splitRatios == null)
                     {
                         splitRatios = isInterregional ? Tools.GetAverageRatios(ordered_x_data.Count) : Tools.GetAverageRatiosWithZero(ordered_x_data.Count);
@@ -239,11 +266,36 @@ namespace HevoDrawing.Abstractions
                     //TODO 这个是否一定要均分 存不存在不均分的情况
                     if (splitRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
                     {
-                        splitRatios = Tools.GetAverageRatios(splitRatios, isStartWithZero);
+                        splitRatios = Tools.GetAverageRatios(splitRatios, 1, isStartWithZero);
                     }
                     if (isStartWithZero)
                     {
                         isInterregional = false;
+                    }
+                    var sum_ratio = 0.0;
+                    var gIndex = -1;
+                    foreach (var item in splitRatios)
+                    {
+                        sum_ratio += item;
+                        gIndex++;
+                        splitRatiosCrood.Add(sum_ratio);
+                        splitValues.Add(Data[gIndex]);
+                    }
+
+                    var index2 = 0;
+                    foreach (var item in splitRatiosCrood)
+                    {
+                        var offset = -(index2 < splitRatios.Count ? splitRatios[index2] : 0) / 2;
+                        var offset2 = (index2 + 1 < splitRatios.Count ? splitRatios[index2 + 1] : 0) / 2;
+                        valueRatios.Add(isInterregional ? item + offset : item);
+                        valueRatioCoordinate.Add(isInterregional ? item : item + offset2);
+                        index2++;
+                    }
+                    //一一对应上了
+                    splitRatiosNum = splitRatiosCrood;
+                    foreach (var item in splitRatiosCrood)
+                    {
+                        points.Add(Tools.GetPointByRatio(diff, start, item));
                     }
                 }
 
@@ -374,7 +426,7 @@ namespace HevoDrawing.Abstractions
         #endregion
 
         /// <summary>
-        /// <see cref="SplitValues"/>\<see cref="Ratios"/>互斥 优先<see cref="SplitValues"/>
+        /// <see cref="SplitValues"/>\<see cref="Ratios"/>不互斥 存在一定关联 共同作用 优先<see cref="SplitValues"/>
         /// </summary>
         public override void CalculateRequireData()
         {
@@ -382,6 +434,11 @@ namespace HevoDrawing.Abstractions
             var isInterregional = IsInterregional;
 
             var splitRatios = Ratios;
+
+            if (Data == null || Data.Count == 0)
+            {
+                return;
+            }
 
             var isNotSatisfied = CalculateDrawingParams(End - Start, Start, splitRatios, ref isInterregional, ref splitValue,
                 out var splitRatioNum, out var valueRatios, out var valueRatioCoordinate, out var points);
@@ -451,8 +508,12 @@ namespace HevoDrawing.Abstractions
             }
 
             var ratios = SortedSplitRatios;
-            var splitValues = VisualData.Items[ContextDataItem.SplitValues] as List<IVariable>;
+            var splitValues = VisualData.GetVisualDataItem<List<IVariable>>(ContextDataItem.SplitValues);
 
+            if (splitValues == default)
+            {
+                return;
+            }
             foreach (var item in points)
             {
                 if (index >= splitValues.Count)

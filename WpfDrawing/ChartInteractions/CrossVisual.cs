@@ -129,9 +129,77 @@ namespace HevoDrawing.Interactions
                                 Y.Visibility = Visibility.Collapsed;
                             }
                             Canvas.SetLeft(Y, hitPointer.X - interactionVisualArea.Left);
+
+                            //if (IsLabelShow)
+                            //{
+                            //    var nearestX = point.X;
+                            //    var nearestY = point.Y;
+                            //    //var nearestY = point.Y;
+                            //    //找最小距离
+                            //    var axisLabelList = new List<ElementPosition>();
+
+                            //    foreach (DiscreteAxis axis in axisxs)
+                            //    {
+                            //        var value = axis.GetValue(axis.OffsetPostion(point.X));
+                            //        if (!value.IsBad() && axis.IsAxisLabelShow)
+                            //        {
+                            //            var key = new ComponentKey(axis.ParentCanvas.Id, axis.Id);
+                            //            if (!AxisVisuals.ContainsKey(key))
+                            //            {
+                            //                ParentCanvas.AddElement(axis.AxisLabel);
+                            //                AxisVisuals[key] = axis;
+                            //            }
+
+                            //            axis.AxisLabel.Text = axis.GetStringValue(value);
+                            //            var labelData = axis.GetAxisLabelData(value);
+
+                            //            axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left, labelData.Top, axis.AxisLabel.ZIndex));
+                            //        }
+                            //        else
+                            //        {
+                            //            axisLabelList.Add(new ElementPosition(axis.AxisLabel));
+                            //        }
+                            //    }
+                            //    foreach (ContinuousAxis axis in axisys)
+                            //    {
+                            //        var value = axis.GetValue(axis.OffsetPostion(nearestY));
+                            //        if (axis.IsAxisLabelShow)
+                            //        {
+                            //            var key = new ComponentKey(axis.ParentCanvas.Id, axis.Id);
+
+                            //            if (!AxisVisuals.ContainsKey(key))
+                            //            {
+                            //                ParentCanvas.Children.Add(axis.AxisLabel);
+                            //                AxisVisuals[key] = axis;
+                            //            }
+
+                            //            axis.AxisLabel.Text = $"{axis.GetStringValue(value)}{axis.Unit}";
+                            //            var labelData = axis.GetAxisLabelData(value);
+
+                            //            axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left, labelData.Top));
+
+                            //        }
+                            //        else
+                            //        {
+                            //            axisLabelList.Add(new ElementPosition(axis.AxisLabel));
+                            //        }
+                            //    }
+
+                            //    foreach (var labelItem in axisLabelList)
+                            //    {
+                            //        labelItem.Render();
+                            //    }
+
+                            //}
+
                         }
                         else
                         {
+                            foreach (var visual in AxisVisuals)
+                            {
+                                visual.Value.AxisLabel.Visibility = Visibility.Hidden;
+                            }
+
                             X.Visibility = Visibility.Collapsed;
                             Y.Visibility = Visibility.Collapsed;
                         }

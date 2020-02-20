@@ -43,20 +43,28 @@ namespace HevoDrawing
             return list;
         }
         /// <summary>
-        /// 按照当前的比例进行均分
+        /// 按照当前的比例进行均分 实在不行就拿最后一个去调整
         /// </summary>
         /// <param name="ratios"></param>
         /// <returns></returns>
-        public static List<double> GetAverageRatios(List<double> ratios, bool isStartWithZero = false)
+        public static List<double> GetAverageRatios(List<double> ratios, int retry_time = 1, bool isStartWithZero = false)
         {
-            var sum = ratios.Sum();
-            for (int i = 0; i < ratios.Count; i++)
+            for (double sum = ratios.Sum(); retry_time > 0 && sum > 1; retry_time--)
             {
-                if (isStartWithZero && i == 0)
+                for (int i = 0; i < ratios.Count; i++)
                 {
-                    continue;
+                    if (isStartWithZero && i == 0)
+                    {
+                        continue;
+                    }
+                    ratios[i] = ratios[i] / sum;
                 }
-                ratios[i] = ratios[i] / sum;
+            }
+            double sum2 = ratios.Sum();
+            if (sum2 > 1)
+            {
+                var offset = sum2 - 1.0;
+                ratios[ratios.Count - 1] = ratios[ratios.Count - 1] - offset;
             }
             return ratios;
         }

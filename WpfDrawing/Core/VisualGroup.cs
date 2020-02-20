@@ -32,7 +32,7 @@ namespace HevoDrawing
 
             foreach (RectDrawingVisual visual in Visuals)
             {
-                var item = list.FirstOrDefault(it => it.ComponentId == visual.Id);
+                var item = list.FirstOrDefault(it => it.ComponentIds.Contains(visual.Id));
                 if (item != null)
                 {
                     visual.DeliverVisualData(item.Copy());
@@ -93,8 +93,12 @@ namespace HevoDrawing
                     continue;
                 }
                 //TODO 性能
-                var datas = list.Where(it => it is DiscreteAxisContextData && it.ComponentId == item.Id).Select(it => it as DiscreteAxisContextData);
+                var datas = list.Where(it => it is DiscreteAxisContextData && it.ComponentIds.Contains(item.Id)).Select(it => it as DiscreteAxisContextData);
 
+                if (!datas.Any())
+                {
+                    continue;
+                }
                 //针对DiscreteAxis轴 会聚多数据源
                 item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().OrderBy(it => it).ToList();
 
@@ -109,8 +113,12 @@ namespace HevoDrawing
             {
                 foreach (var item in data.XData)
                 {
-                    var component = coms.FindXById(item.ComponentId);
-                    item.ComponentId = component.Id;
+                    if(item.ComponentIds.Contains(0))
+                    {
+                        item.ComponentIds.RemoveAll(it => it == 0);
+                        var ids = coms.AxisXCollection.Select(it => it.Id);
+                        item.ComponentIds.AddRange(ids);
+                    }
                 }
             }
         }
@@ -162,8 +170,12 @@ namespace HevoDrawing
             {
                 foreach (var item in data.YData)
                 {
-                    var component = coms.FindYById(item.ComponentId);
-                    item.ComponentId = component.Id;
+                    if (item.ComponentIds.Contains(0))
+                    {
+                        item.ComponentIds.RemoveAll(it => it == 0);
+                        var ids = coms.AxisYCollection.Select(it => it.Id);
+                        item.ComponentIds.AddRange(ids);
+                    }
                 }
             }
         }
@@ -206,8 +218,8 @@ namespace HevoDrawing
                 if (item.VisualData is TwoDimensionalContextData rectData && !rectData.IsEmpty)
                 {
                     rectData.YContextData.Range = item.GetRange();
-                    rectData.ComponentId = item.Id;
-                    rectData.XContextData.ComponentId = item.XAxisId;
+                    rectData.ComponentIds.Add(item.Id);
+                    rectData.XContextData.ComponentIds.Add(item.XAxisId);
                     list.Add(rectData);
                 }
             }

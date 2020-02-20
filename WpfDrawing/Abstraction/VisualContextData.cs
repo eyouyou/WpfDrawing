@@ -29,7 +29,7 @@ namespace HevoDrawing
 
     public abstract class ContextData
     {
-        public int ComponentId { get; set; }
+        public List<int> ComponentIds { get; } = new List<int>();
         /// <summary>
         /// 适配各种形式的调用
         /// </summary>

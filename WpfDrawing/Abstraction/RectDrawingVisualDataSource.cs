@@ -20,5 +20,6 @@ namespace HevoDrawing.Abstractions
             ConnectVisual = visual ?? throw new ArgumentNullException("please");
         }
         public abstract event VisualChanged VisualChangedHandler;
+        public abstract bool IsDataComplete { get; }
     }
 }

@@ -194,6 +194,9 @@ namespace HevoDrawing.Abstractions
         public AxisLabel AxisLabel { get; set; } = new AxisLabel() { Padding = new Thickness(4), Background = Brushes.DarkBlue, Foreground = Brushes.White, Opacity = 1 };
         public abstract IFormatProvider FormatProvider { get; }
 
+
+        public abstract void CalculateRequireData();
+        public volatile bool IsDataComplete = false;
         public override void Freeze()
         {
             if (AxisPen.CanFreeze)
@@ -212,7 +215,6 @@ namespace HevoDrawing.Abstractions
         public abstract string GetStringValue(T value);
         public abstract Vector GetPosition(T value);
         public abstract T GetValue(double offsetPosition);
-        public abstract void CalculateRequireData();
         public AxisLabelData GetAxisLabelData(T value)
         {
             var position = GetPosition(value);

@@ -1,5 +1,6 @@
 ﻿using HevoDrawing.Abstractions;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HevoDrawing
 {
@@ -120,6 +121,8 @@ namespace HevoDrawing
         public List<SeriesVisual> SeriesCollection => Series.Count == 0 ? new List<SeriesVisual>() : new List<SeriesVisual>(Series);
         public List<AxisVisual> AxisYCollection => AxisYs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisYs);
         public List<AxisVisual> AxisXCollection => AxisXs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisXs);
+
+        public override bool IsDataComplete => AxisYCollection.All(it => it.IsDataComplete) && AxisXCollection.All(it => it.IsDataComplete);
 
         public RectDrawingVisual FindXById(int id)
         {

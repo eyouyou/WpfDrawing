@@ -183,7 +183,7 @@ namespace HevoDrawing
             SeriesVisuals.PlotToDc(dc);
 
             dc.Close();
-
         }
+
     }
 }

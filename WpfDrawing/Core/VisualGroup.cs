@@ -87,6 +87,7 @@ namespace HevoDrawing
 
             foreach (DiscreteAxis item in Visuals)
             {
+                item.IsDataComplete = false;
                 // 这个visualdata 已分发好
                 if (!(item.VisualData is DiscreteAxisContextData visualData))
                 {
@@ -103,6 +104,7 @@ namespace HevoDrawing
                 item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
 
                 item.CalculateRequireData();
+                item.IsDataComplete = true;
             }
 
 
@@ -141,6 +143,7 @@ namespace HevoDrawing
 
             foreach (ContinuousAxis item in Visuals)
             {
+                item.IsDataComplete = false;
                 if (!(item.VisualData is ContinuousAxisContextData visualData))
                 {
                     return;
@@ -161,7 +164,7 @@ namespace HevoDrawing
                     }
                 }
                 item.CalculateRequireData();
-
+                item.IsDataComplete = true;
             }
         }
         public void InductiveData(ChartGroupContextData data)

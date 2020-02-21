@@ -104,6 +104,10 @@ namespace HevoDrawing
     public class FormattableValue<T> : Value<T>
         where T : IFormattable, IComparable
     {
+        public FormattableValue(T t) : base(t)
+        {
+
+        }
         public override string ToString(string format, IFormatProvider formatProvider)
         {
             return Data.ToString(format, formatProvider);

@@ -241,6 +241,7 @@ namespace HevoDrawing.Abstractions
                     {
                         /*
                          * splitRatios和splitValues共同作用
+                         * 这个逻辑之后再写
                          */
                         var splitRatiosCrood = new List<double>();
 

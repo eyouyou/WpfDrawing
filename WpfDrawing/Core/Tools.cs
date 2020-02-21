@@ -257,7 +257,7 @@ namespace HevoDrawing
         public static ContextData ToFormatVisualData<X>(this Dictionary<X, double> dic)
             where X : IFormattable, IComparable
         {
-            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
+            return new Chart2DContextData(dic.ToDictionary(it => new FormattableValue<X>(it.Key) as IVariable, it => new FormattableValue<double>(it.Value) as Value<double>));
         }
         public static ContextData ToVisualData<X>(this Dictionary<X, double> dic)
             where X : IComparable
@@ -268,18 +268,18 @@ namespace HevoDrawing
         public static ContextData ToFormatVisualData<X>(this List<CroodData<X>> croods)
             where X : IFormattable, IComparable
         {
-            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
+            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new FormattableValue<X>(it.XData), new FormattableValue<double>(it.YData))).ToList());
         }
         public static ContextData ToFormatVisualData<X>(this IEnumerable<CroodData<X>> croods)
             where X : IFormattable, IComparable
         {
-            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
+            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new FormattableValue<X>(it.XData), new FormattableValue<double>(it.YData))).ToList());
         }
 
         public static IVariable ToFormatVisualData<T>(this T t)
             where T : IFormattable, IComparable
         {
-            return new Value<T>(t);
+            return new FormattableValue<T>(t);
         }
         public static bool IsBad(this IVariable value)
         {

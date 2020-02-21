@@ -130,6 +130,7 @@ namespace HevoDrawing.Abstractions
         protected bool CalculateDrawingParams(Vector diff, Vector start, List<double> splitRatios, ref bool isInterregional,
             ref List<IVariable> splitValues, out List<double> splitRatiosNum, out List<double> valueRatios, out List<double> valueRatioCoordinate, out List<Point> points)
         {
+            //必须计算出来
             splitRatiosNum = new List<double>();
             points = new List<Point>();
             valueRatios = new List<double>();
@@ -222,7 +223,6 @@ namespace HevoDrawing.Abstractions
                         {
                             dataRatios = Tools.GetAverageRatios(dataRatios, 1);
                         }
-
                         foreach (var item in dataRatios)
                         {
                             sum_ratio += item;
@@ -241,7 +241,7 @@ namespace HevoDrawing.Abstractions
                     {
                         /*
                          * splitRatios和splitValues共同作用
-                         * 这个逻辑之后再写
+                         * 所有数据点根据比例缩小
                          */
                         var splitRatiosCrood = new List<double>();
 
@@ -265,50 +265,94 @@ namespace HevoDrawing.Abstractions
                             splitRatios.Add(1 - splitRatiosCrood.LastOrDefault());
                         }
 
-                        var sum_ratio2 = 0.0;
-                        foreach (var item in splitRatios)
+                        sum = splitRatios.Sum();
+
+                        var startWithZero = splitRatios.IndexOf(0) == 0;
+                        splitRatios.RemoveAll(it => it == 0);
+
+                        /**
+                         * 已有ratio的splitValues 按比例计算
+                         * 没有的按照section比例计算
+                         * IntervalPositioning计算相对splitRatios
+                         */
+
+                        if ((startWithZero && splitValues.Count >= splitRatios.Count + 1)
+                            || (!startWithZero && splitValues.Count >= splitRatios.Count))
                         {
-                            sum_ratio2 += item;
-                            points.Add(Tools.GetPointByRatio(diff, start, sum_ratio2));
+                            var splitRatio2 = new List<double>();
+                            splitRatio2.Add(0);
+                            splitRatiosNum.Add(0);
+                            var sum_ratio = 0.0;
+                            foreach (var item in splitRatios)
+                            {
+                                sum_ratio += item;
+                                splitRatiosNum.Add(sum_ratio);
+                                splitRatio2.Add(item);
+                            }
+
+                            var current_sum = splitRatio2.Sum();
+
+                            var other_index = splitRatio2.Count - 1;
+                            var section = new Section() { Left = splitValues[other_index], Right = splitValues.LastOrDefault() };
+                            var index = 0;
+                            var current_sum_split_ratios = splitRatiosNum.LastOrDefault();
+                            //剩余split的权重
+                            var other_weight = 1 - current_sum_split_ratios;
+                            foreach (var item in splitValues.Skip(other_index + 1))
+                            {
+                                var offset_ratio = IntervalPositioning(section, item) * other_weight;
+                                current_sum_split_ratios += offset_ratio;
+                                splitRatiosNum.Add(current_sum_split_ratios);
+                                splitRatio2.Add(offset_ratio + (index == 0 ? 0 : -splitRatio2.Sum()));
+                                index++;
+                            }
+                            splitRatios = splitRatio2;
+                        }
+                        else
+                        {
+
                         }
 
+                        foreach (var item in splitRatiosNum)
+                        {
+                            points.Add(Tools.GetPointByRatio(diff, start, item));
+                        }
                         var sections = Tools.ChangeToSections(splitValues, splitRatios);
 
                         if (sections.Count == 0)
                         {
                             return false;
                         }
+                        List<CroodLocal> Croods = new List<CroodLocal>();
 
-                        //List<CroodLocal> Croods = new List<CroodLocal>();
+                        //TODO 现在默认不使用点区间计算 IsInterregional == false
+                        //Data ordered
+                        foreach (var item in Data)
+                        {
+                            var index2 = 0;
+                            foreach (var section in sections)
+                            {
+                                if (section.Contains(item))
+                                {
+                                    var position = IntervalPositioning(section, item) * section.SectionRatio;
+                                    var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
 
-                        ////TODO 现在默认不使用点区间计算 IsInterregional == false
-                        ////Data ordered
-                        //foreach (var item in Data)
-                        //{
-                        //    var index2 = 0;
-                        //    foreach (var section in sections)
-                        //    {
-                        //        if (section.In(item))
-                        //        {
-                        //            var position = IntervalPositioning(section, item) * section.SectionRatio;
-                        //            var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
+                                    var crood = new CroodLocal() { Data = item, ValueCrood = ratioCrood };
+                                    Croods.Add(crood);
+                                    valueRatios.Add(ratioCrood);
+                                    break;
+                                }
+                                index2++;
+                            }
+                        }
+                        var index3 = 0;
 
-                        //            var crood = new CroodLocal() { Data = item, ValueCrood = ratioCrood };
-                        //            Croods.Add(crood);
-                        //            valueRatios.Add(ratioCrood);
-                        //            break;
-                        //        }
-                        //        index2++;
-                        //    }
-                        //}
-
-                        //var index_crood = 0;
-                        //foreach (var item in Croods)
-                        //{
-                        //    item.ValueIntervalCrood = item.ValueCrood + (index_crood + 1 < Croods.Count ? Croods[index_crood + 1].ValueCrood - item.ValueCrood : 0) / 2;
-                        //    valueRatioCoordinate.Add(item.ValueIntervalCrood);
-                        //    index_crood++;
-                        //}
+                        foreach (var item in Croods)
+                        {
+                            item.ValueIntervalCrood = item.ValueCrood + (index3 + 1 < Croods.Count ? Croods[index3 + 1].ValueCrood - item.ValueCrood : 0) / 2;
+                            valueRatioCoordinate.Add(item.ValueIntervalCrood);
+                            index3++;
+                        }
                     }
 
                 }
@@ -373,7 +417,7 @@ namespace HevoDrawing.Abstractions
             else
             {
                 /*
-                 * SplitRatios 通过计算起点和终点百分比均匀分配 
+                 * SplitRatios 通过计算起点和终点百分比均匀分配  外部赋值无效
                  * SplitValue 必须外部赋值 
                  * 该部分计算效率较低 尽量写到if里面
                 */
@@ -381,11 +425,9 @@ namespace HevoDrawing.Abstractions
                 {
                     throw new ArgumentNullException($"{nameof(SplitValues)}");
                 }
-
-                if (splitRatios == null || splitRatios.Count == 0)
-                {
-                    splitRatios = Tools.GetAverageRatiosWithZero(splitValues.Count - 1);
-                }                    //TODO 这个是否一定要均分 存不存在不均分的情况
+                //
+                splitRatios = Tools.GetAverageRatiosWithZero(splitValues.Count - 1);
+                //TODO 这个是否一定要均分 存不存在不均分的情况
                 if (splitRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
                 {
                     splitRatios = Tools.GetAverageRatios(splitRatios, 1);
@@ -457,6 +499,7 @@ namespace HevoDrawing.Abstractions
 
         /// <summary>
         /// 数据跟x轴比例走 根据比例来计算
+        /// 数据相对于x轴Splitvalue不全的时候 为false 这个时候必须赋值<see cref="SplitValues"/>，<see cref="Ratios"/>无效
         /// </summary>
         public bool FollowData { get; protected set; } = true;
 

@@ -156,7 +156,7 @@ namespace HevoDrawing.Sample
             all_x.AddRange(dic2.ToList());
             var a = all_x.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).Distinct().OrderBy(it => it).ToList();
             axisX.SplitValues = a.Select(it => it.ToFormatVisualData()).ToList();
-            //axisX.Ratios = new List<double>() { 0, 0.2, 0.4, 0.6, 1 };
+            //axisX.Ratios = new List<double>() { 0.1, 0.1, 0.1 };
 
             lineSeries2.VisualData = dic2.ToFormatVisualData();
             lineSeries.VisualData = dic.ToFormatVisualData();

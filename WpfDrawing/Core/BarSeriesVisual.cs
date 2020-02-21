@@ -33,6 +33,9 @@ namespace HevoDrawing
 
             dc.PushClip(new RectangleGeometry() { Rect = plotArea });
 
+            /*
+             * 如果value
+             */
             foreach (var item in points)
             {
                 var all_width = 0.0;

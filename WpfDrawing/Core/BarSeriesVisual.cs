@@ -30,6 +30,9 @@ namespace HevoDrawing
 
             valuecoords.Insert(0, 0);
             valuecoords.Add(1);
+
+            dc.PushClip(new RectangleGeometry() { Rect = plotArea });
+
             foreach (var item in points)
             {
                 var all_width = 0.0;
@@ -39,13 +42,13 @@ namespace HevoDrawing
                 }
                 var width = BarWidth.GetActualLength(all_width);
 
-                dc.PushClip(new RectangleGeometry() { Rect = plotArea });
 
                 var leftTopX = item.X - width / 2;
                 dc.DrawRectangle(Fill, Pen, new Rect(new Point(leftTopX, item.Y), new Size(width, Math.Abs(item.Y - startx.Y))));
-                dc.Pop();
                 index++;
             }
+            dc.Pop();
+
         }
     }
 }

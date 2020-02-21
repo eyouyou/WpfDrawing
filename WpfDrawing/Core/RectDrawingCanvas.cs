@@ -14,7 +14,7 @@ namespace HevoDrawing
 {
     public class RectDrawingCanvas : Canvas, ILocatable
     {
-        public bool IsPloting { get; set; } = false;
+        public volatile bool IsPloted = false;
         //在container中所在的位置 
         public int Col { get; set; } = -1;
         public int Row { get; set; } = -1;
@@ -158,7 +158,7 @@ namespace HevoDrawing
         /// </summary>
         public void Replot()
         {
-            IsPloting = true;
+            IsPloted = false;
             Reset();
             foreach (Visual item in Visuals)
             {
@@ -169,7 +169,7 @@ namespace HevoDrawing
                     rect.Plot();
                 }
             }
-            IsPloting = false;
+            IsPloted = true;
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace HevoDrawing
         /// </summary>
         public void Plot()
         {
-            IsPloting = true;
+            IsPloted = false;
             Reset();
             foreach (Visual item in Visuals)
             {
@@ -187,7 +187,7 @@ namespace HevoDrawing
                     rect.Plot();
                 }
             }
-            IsPloting = false;
+            IsPloted = true;
         }
         public System.Windows.Media.VisualCollection Visuals { get; set; }
         public Rect PlotArea { get; set; }

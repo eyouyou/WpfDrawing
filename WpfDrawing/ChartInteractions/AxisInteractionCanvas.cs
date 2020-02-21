@@ -126,7 +126,7 @@ namespace HevoDrawing.Interactions
                     var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasPlotArea;
                     var series = dataSource.SeriesCollection;
                     var offset = dataSource.ConnectVisual.ParentCanvas.Offset;
-                    bool canHint = !isHint && plotArea.Contains(currentPoint) && !dataSource.ConnectVisual.ParentCanvas.IsPloting;
+                    bool canHint = !isHint && plotArea.Contains(currentPoint) && dataSource.ConnectVisual.ParentCanvas.IsPloted;
                     //进入当前画布
                     if (canHint)
                     {

@@ -30,11 +30,11 @@ namespace HevoDrawing.Sample
             InitializeComponent();
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 1, 1,
-                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ }
-                //new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */},
-                //new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ },
-                //new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
+            container = new RectInteractionGroup(interaction, 2, 2,
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ },
+                new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */},
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ },
+                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
                 );
             //container.Background = Brushes.LightGreen;
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
@@ -155,11 +155,11 @@ namespace HevoDrawing.Sample
             var all_x = dic.ToList();
             all_x.AddRange(dic2.ToList());
             var a = all_x.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).Distinct().OrderBy(it => it).ToList();
-            axisX.SplitValues = a.Select(it => it.ToVisualData()).ToList();
+            axisX.SplitValues = a.Select(it => it.ToFormatVisualData()).ToList();
             //axisX.Ratios = new List<double>() { 0, 0.2, 0.4, 0.6, 1 };
 
-            lineSeries2.VisualData = dic2.ToVisualData();
-            lineSeries.VisualData = dic.ToVisualData();
+            lineSeries2.VisualData = dic2.ToFormatVisualData();
+            lineSeries.VisualData = dic.ToFormatVisualData();
             Canvas.Replot();
         }
         bool isFirst = true;
@@ -312,10 +312,10 @@ namespace HevoDrawing.Sample
             var group = dic.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList();
             group.AddRange(dic2.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList());
             group = group.Distinct().OrderBy(it => it).ToList();
-            axisX.SplitValues = group.Select(it => it.ToVisualData()).ToList();
+            axisX.SplitValues = group.Select(it => it.ToFormatVisualData()).ToList();
 
-            lineSeries2.VisualData = dic.ToVisualData();
-            lineSeries.VisualData = dic.ToVisualData();
+            lineSeries2.VisualData = dic.ToFormatVisualData();
+            lineSeries.VisualData = dic.ToFormatVisualData();
             Canvas.Replot();
         }
         bool isFirst = true;

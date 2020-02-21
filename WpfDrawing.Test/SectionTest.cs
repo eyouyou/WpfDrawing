@@ -25,8 +25,8 @@ namespace WpfDrawing.Test
             var day5 = tradeDay.AddHours(15);
             var axes = new List<DateTime> { day1, day2, day3, day4, day5 };
 
-            var except_sections = new List<Section>() { new Section() { Left = except_left.ToVisualData(), Right = except_right.ToVisualData() } };
-            var splitValues = axes.Select(it => it.ToVisualData()).ToList();
+            var except_sections = new List<Section>() { new Section() { Left = except_left.ToFormatVisualData(), Right = except_right.ToFormatVisualData() } };
+            var splitValues = axes.Select(it => it.ToFormatVisualData()).ToList();
             var sections = Tools.ChangeToSections(splitValues, Tools.GetAverageRatiosWithZero(4));
 
             foreach (var item in except_sections)

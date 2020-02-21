@@ -105,8 +105,8 @@ namespace HevoDrawing.Sample
             }
 
             lineSeries2.LinePen.Brush = Brushes.Red;
-            lineSeries2.VisualData = dic2.ToVisualData();
-            lineSeries.VisualData = dic.ToVisualData();
+            lineSeries2.VisualData = dic2.ToFormatVisualData();
+            lineSeries.VisualData = dic.ToFormatVisualData();
 
 
             //Dictionary<DateTime, double> dic3 = new Dictionary<DateTime, double>();

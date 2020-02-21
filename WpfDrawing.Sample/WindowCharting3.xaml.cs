@@ -126,10 +126,10 @@ namespace HevoDrawing.Sample
             var group = dic.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList();
             group.AddRange(dic2.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).ToList());
             group = group.Distinct().OrderBy(it => it).ToList();
-            axisX.SplitValues = group.Select(it => it.ToVisualData()).ToList();
+            axisX.SplitValues = group.Select(it => it.ToFormatVisualData()).ToList();
 
-            lineSeries2.VisualData = dic2.ToVisualData();
-            lineSeries.VisualData = dic.ToVisualData();
+            lineSeries2.VisualData = dic2.ToFormatVisualData();
+            lineSeries.VisualData = dic.ToFormatVisualData();
             canvasContainer.Replot();
         }
         public async void StartDataFeed()

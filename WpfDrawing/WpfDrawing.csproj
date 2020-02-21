@@ -50,7 +50,7 @@
     <Compile Include="Abstraction\DiscreteAxis.cs" />
     <Compile Include="Abstraction\InteractionCanvas.cs" />
     <Compile Include="Abstraction\InteractionConfiguaration.cs" />
-    <Compile Include="Abstraction\IntervalPositionAxis.cs" />
+    <Compile Include="Core\CategoryAxis.cs" />
     <Compile Include="Core\PointsSeriesVisual.cs" />
     <Compile Include="Abstraction\RectDrawingVisual.cs" />
     <Compile Include="Abstraction\RectDrawingVisualDataSource.cs" />

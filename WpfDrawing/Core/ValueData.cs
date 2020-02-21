@@ -18,47 +18,6 @@ namespace HevoDrawing
         public X XData { get; set; }
         public double YData { get; set; }
     }
-    public static class DataExtension
-    {
-        public static ContextData ToVisualData<X>(this Dictionary<X, double> dic)
-            where X : IFormattable, IComparable
-        {
-            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
-        }
-        public static ContextData ToVisualData<X>(this List<CroodData<X>> croods)
-            where X : IFormattable, IComparable
-        {
-            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
-        }
-        public static ContextData ToVisualData<X>(this IEnumerable<CroodData<X>> croods)
-            where X : IFormattable, IComparable
-        {
-            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
-        }
-
-        public static IVariable ToVisualData<T>(this T t)
-            where T : IFormattable, IComparable
-        {
-            return new Value<T>(t);
-        }
-        public static bool IsBad(this IVariable value)
-        {
-            if (value == null)
-            {
-                return true;
-            }
-            return value.IsBad;
-        }
-        public static bool IsEmpty(this ContextData data)
-        {
-            if (data == null)
-            {
-                return true;
-            }
-            return data.IsEmpty;
-        }
-
-    }
     /// <summary>
     /// 值限制接口
     /// </summary>
@@ -88,15 +47,16 @@ namespace HevoDrawing
             return 0;
         }
     }
+
     /// <summary>
     /// 可以继承 获取更多数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Value<T> : Value, IVariable, IEquatable<Value<T>>
-        where T : IFormattable, IComparable
+        where T : IComparable
     {
         public static Value<T> Bad = new Value<T>() { };
-        private Value()
+        protected Value()
         {
 
         }
@@ -111,7 +71,7 @@ namespace HevoDrawing
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {
-            return Data.ToString(format, formatProvider);
+            return Data.ToString();
         }
         public override int CompareTo(object obj)
         {
@@ -138,6 +98,15 @@ namespace HevoDrawing
         public bool Equals(Value<T> other)
         {
             return other.IsBad == IsBad && other.Data.Equals(Data);
+        }
+    }
+
+    public class FormattableValue<T> : Value<T>
+        where T : IFormattable, IComparable
+    {
+        public override string ToString(string format, IFormatProvider formatProvider)
+        {
+            return Data.ToString(format, formatProvider);
         }
     }
     public class ListContextData<T> : ContextData

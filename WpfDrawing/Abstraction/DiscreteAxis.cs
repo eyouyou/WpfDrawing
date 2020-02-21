@@ -45,6 +45,7 @@ namespace HevoDrawing.Abstractions
         }
 
         /// <summary>
+        /// 排除区间
         /// 必须区间互相独立
         /// </summary>
         public List<Section> ExceptSections { get; set; }
@@ -126,7 +127,7 @@ namespace HevoDrawing.Abstractions
         /// <param name="valueRatioCoordinate">比例区间</param>
         /// <param name="points">切割点位置</param>
         /// <returns></returns>
-        public bool CalculateDrawingParams(Vector diff, Vector start, List<double> splitRatios, ref bool isInterregional,
+        protected bool CalculateDrawingParams(Vector diff, Vector start, List<double> splitRatios, ref bool isInterregional,
             ref List<IVariable> splitValues, out List<double> splitRatiosNum, out List<double> valueRatios, out List<double> valueRatioCoordinate, out List<Point> points)
         {
             splitRatiosNum = new List<double>();
@@ -447,16 +448,16 @@ namespace HevoDrawing.Abstractions
 
         #region 内部计算项
 
-        public List<double> ValueRatioCoordinates { get; private set; }
-        public List<double> ValueRatios { get; private set; }
-        public List<double> SortedSplitRatios { get; private set; }
-        public List<Point> SortedSplitPoints { get; private set; }
+        public List<double> ValueRatioCoordinates { get; protected set; }
+        public List<double> ValueRatios { get; protected set; }
+        public List<double> SortedSplitRatios { get; protected set; }
+        public List<Point> SortedSplitPoints { get; protected set; }
         #endregion
 
         /// <summary>
         /// 数据跟x轴比例走 根据比例来计算
         /// </summary>
-        public bool FollowData { get; private set; } = true;
+        public bool FollowData { get; protected set; } = true;
 
         /// <summary>
         /// <see cref="SplitValues"/>\<see cref="Ratios"/>不互斥 存在一定关联 共同作用 优先<see cref="SplitValues"/>
@@ -472,7 +473,7 @@ namespace HevoDrawing.Abstractions
             {
                 return;
             }
-
+            Data = Data.OrderBy(it => it).ToList();
             var isNotSatisfied = CalculateDrawingParams(End - Start, Start, splitRatios, ref isInterregional, ref splitValue,
                 out var splitRatioNum, out var valueRatios, out var valueRatioCoordinate, out var points);
             if (!isNotSatisfied)

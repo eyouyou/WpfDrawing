@@ -1,5 +1,6 @@
 ﻿using HevoDrawing.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 
@@ -24,50 +25,23 @@ namespace HevoDrawing
             var x = coms.FindXById(Id) as DiscreteAxis;
             var plotArea = x.PlotArea;
             var startx = x.Start;
-            var endx = x.End;
-            var left = 0.0;
-            var right = 0.0;
             var index = 0;
+            var valuecoords = new List<double>(x.ValueRatioCoordinates);
+
+            valuecoords.Insert(0, 0);
+            valuecoords.Add(1);
             foreach (var item in points)
             {
-                bool isLeftBound = false;
-                bool isRightBound = false;
-                if (index == 0 && item.X == startx.X)
+                var all_width = 0.0;
+                if (index + 1 < valuecoords.Count)
                 {
-                    left = 0;
-                    isLeftBound = true;
+                    all_width = (valuecoords[index + 1] - valuecoords[index]) * plotArea.Width;
                 }
-                else
-                {
-                    left = points[index - 1].X - startx.X;
-                }
-                if (index == points.Count - 1 && item.X == endx.X)
-                {
-                    right = points[index].X - startx.X;
-                    isRightBound = true;
-                }
-                else
-                {
-                    right = points[index + 1].X - startx.X;
-                }
-                var all_width = (right - left) / 2;
                 var width = BarWidth.GetActualLength(all_width);
 
                 dc.PushClip(new RectangleGeometry() { Rect = plotArea });
-                var offset = 0.0;
-                if (isLeftBound)
-                {
-                    offset = 0;
-                }
-                else if (isRightBound)
-                {
-                    offset = width;
-                }
-                else
-                {
-                    offset = width / 2;
-                }
-                var leftTopX = item.X - offset;
+
+                var leftTopX = item.X - width / 2;
                 dc.DrawRectangle(Fill, Pen, new Rect(new Point(leftTopX, item.Y), new Size(width, Math.Abs(item.Y - startx.Y))));
                 dc.Pop();
                 index++;

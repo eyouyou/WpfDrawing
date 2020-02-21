@@ -252,5 +252,52 @@ namespace HevoDrawing
         public bool IsBad { get; set; } = false;
         public T Value { get; set; }
     }
+    public static class DataExtension
+    {
+        public static ContextData ToFormatVisualData<X>(this Dictionary<X, double> dic)
+            where X : IFormattable, IComparable
+        {
+            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
+        }
+        public static ContextData ToVisualData<X>(this Dictionary<X, double> dic)
+            where X : IComparable
+        {
+            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
+        }
+
+        public static ContextData ToVisualData<X>(this List<CroodData<X>> croods)
+            where X : IFormattable, IComparable
+        {
+            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
+        }
+        public static ContextData ToVisualData<X>(this IEnumerable<CroodData<X>> croods)
+            where X : IFormattable, IComparable
+        {
+            return new Chart2DContextData2(croods.Select(it => new ChartCrood(new Value<X>(it.XData), new Value<double>(it.YData))).ToList());
+        }
+
+        public static IVariable ToFormatVisualData<T>(this T t)
+            where T : IFormattable, IComparable
+        {
+            return new Value<T>(t);
+        }
+        public static bool IsBad(this IVariable value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+            return value.IsBad;
+        }
+        public static bool IsEmpty(this ContextData data)
+        {
+            if (data == null)
+            {
+                return true;
+            }
+            return data.IsEmpty;
+        }
+
+    }
 
 }

@@ -100,7 +100,7 @@ namespace HevoDrawing
                     continue;
                 }
                 //针对DiscreteAxis轴 会聚多数据源
-                item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().OrderBy(it => it).ToList();
+                item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
 
                 item.CalculateRequireData();
             }

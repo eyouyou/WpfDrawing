@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
 
 namespace HevoDrawing
 {
@@ -37,8 +38,15 @@ namespace HevoDrawing
         /// TODO 所有点都需要固定
         /// </summary>
         public bool IsPointsFixed { get; set; }
-        List<MarkLineVisual> MarkLineCollection { get; } = new List<MarkLineVisual>();
+        public List<MarkLineVisual> MarkLineCollection { get; } = new List<MarkLineVisual>();
 
+        protected void PlotMarkLineToDc(DrawingContext dc)
+        {
+            foreach (var item in MarkLineCollection)
+            {
+                item.PlotToDc(dc);
+            }
+        }
         public virtual List<Point> Points
         {
             get

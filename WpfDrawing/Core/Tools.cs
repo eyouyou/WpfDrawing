@@ -42,7 +42,7 @@ namespace HevoDrawing
             for (int i = 0; i < splitValues.Count; i++)
             {
                 if (i < splitValues.Count - 1)
-                { 
+                {
                     if (i > splitRatio.Count)
                     {
                         return new List<Section>();
@@ -76,7 +76,7 @@ namespace HevoDrawing
                 isStartWithZero = true;
             }
 
-            for (double sum = ratios.Sum(); retry_time > 0 && sum > 1; retry_time--)
+            for (double sum = ratios.Sum(); retry_time > 0 && (sum > 1 || sum < 0.9999); retry_time--)
             {
                 for (int i = 0; i < ratios.Count; i++)
                 {

@@ -274,6 +274,8 @@ namespace HevoDrawing.Abstractions
                          * 已有ratio的splitValues 按比例计算
                          * 没有的按照section比例计算
                          * IntervalPositioning计算相对splitRatios
+                         * 
+                         * 如果Ratio大 按照比例计算
                          */
 
                         if ((startWithZero && splitValues.Count >= splitRatios.Count + 1)
@@ -310,7 +312,15 @@ namespace HevoDrawing.Abstractions
                         }
                         else
                         {
-
+                            splitRatios = splitRatios.Take(splitValues.Count - 1).ToList();
+                            splitRatios = Tools.GetAverageRatios(splitRatios, 1);
+                            splitRatiosNum.Add(0);
+                            var sum_ratio = 0.0;
+                            foreach (var item in splitRatios)
+                            {
+                                sum_ratio += item;
+                                splitRatiosNum.Add(sum_ratio);
+                            }
                         }
 
                         foreach (var item in splitRatiosNum)

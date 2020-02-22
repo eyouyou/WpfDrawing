@@ -30,11 +30,11 @@ namespace HevoDrawing.Sample
             InitializeComponent();
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 2, 2,
-                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ },
-                new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */},
-                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ },
-                new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
+            container = new RectInteractionGroup(interaction, 2, 2
+                //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ }
+                ,new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
+                //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ }
+                //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
                 );
             //container.Background = Brushes.LightGreen;
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
@@ -222,7 +222,7 @@ namespace HevoDrawing.Sample
         ChartVisual chart = new ChartVisual();
         DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
 
-        StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
+        //StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
         BarSeriesVisual lineSeries2 = new BarSeriesVisual() { Name = "A股平均关注度" };
 
         ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
@@ -246,7 +246,7 @@ namespace HevoDrawing.Sample
             chart.AddAsixY(axisY);
             chart.AddAsixX(axisX);
 
-            chart.AddSeries(lineSeries);
+            //chart.AddSeries(lineSeries);
             chart.AddSeries(lineSeries2);
 
             rectDrawingCanvas.AddChild(chart);
@@ -315,7 +315,7 @@ namespace HevoDrawing.Sample
             axisX.SplitValues = group.Select(it => it.ToFormatVisualData()).ToList();
 
             lineSeries2.VisualData = dic.ToFormatVisualData();
-            lineSeries.VisualData = dic.ToFormatVisualData();
+            //lineSeries.VisualData = dic.ToFormatVisualData();
             Canvas.Replot();
         }
         bool isFirst = true;

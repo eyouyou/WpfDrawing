@@ -93,7 +93,7 @@ namespace HevoDrawing.Abstractions
                 return default;
             }
             //isInterregional 决定往那里靠 默认是isInterregional = true 
-            var blockIndex = Tools.BinaryCompare(ValueRatioCoordinates, 0, ValueRatioCoordinates.Count, percent, isInterregional);
+            var blockIndex = ValueRatioCoordinates.BinarySearch(new RatioSection() { Current = percent });
             //var index = (int)Math.Round();
             if (blockIndex < 0)
             {
@@ -128,13 +128,13 @@ namespace HevoDrawing.Abstractions
         /// <param name="points">切割点位置</param>
         /// <returns></returns>
         protected bool CalculateDrawingParams(Vector diff, Vector start, List<double> splitRatios, ref bool isInterregional,
-            ref List<IVariable> splitValues, out List<double> splitRatiosNum, out List<double> valueRatios, out List<double> valueRatioCoordinate, out List<Point> points)
+            ref List<IVariable> splitValues, out List<double> splitRatiosNum, out List<double> valueRatios, out List<RatioSection> valueRatioCoordinate, out List<Point> points)
         {
             //必须计算出来
             splitRatiosNum = new List<double>();
             points = new List<Point>();
             valueRatios = new List<double>();
-            valueRatioCoordinate = new List<double>();
+            valueRatioCoordinate = new List<RatioSection>();
 
             var ordered_x_data = Data.OrderBy(it => it).ToList();
             var range_data = new Section() { Left = ordered_x_data.FirstOrDefault(), Right = ordered_x_data.LastOrDefault() };
@@ -217,23 +217,16 @@ namespace HevoDrawing.Abstractions
 
                         var sum_ratio = 0.0;
                         var dataratio_index = 0;
-                        List<double> dataRatios = Tools.GetAverageRatiosWithZero(ordered_x_data.Count - 1);
-                        isStartWithZero = true;
-                        if (dataRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
+                        var sections = Tools.GetSectionsFromData(isInterregional, ordered_x_data);
+                        foreach (var item in sections)
                         {
-                            dataRatios = Tools.GetAverageRatios(dataRatios, 1);
-                        }
-                        foreach (var item in dataRatios)
-                        {
-                            sum_ratio += item;
                             if (splitIndex.Contains(dataratio_index))
                             {
                                 splitRatiosNum.Add(sum_ratio);
                                 points.Add(Tools.GetPointByRatio(diff, start, sum_ratio));
                             }
-                            valueRatios.Add(sum_ratio);
-                            var coord = sum_ratio + (dataratio_index + 1 < dataRatios.Count ? dataRatios[dataratio_index + 1] : 0) / 2;
-                            valueRatioCoordinate.Add(coord);
+                            valueRatios.Add(item.Current);
+                            valueRatioCoordinate.Add(item);
                             dataratio_index++;
                         }
                     }
@@ -244,7 +237,6 @@ namespace HevoDrawing.Abstractions
                          * 所有数据点根据比例缩小
                          */
                         var splitRatiosCrood = new List<double>();
-
 
                         var sum = splitRatios.Sum();
                         if (sum > 1)
@@ -501,7 +493,7 @@ namespace HevoDrawing.Abstractions
 
         #region 内部计算项
 
-        public List<double> ValueRatioCoordinates { get; protected set; }
+        public List<RatioSection> ValueRatioCoordinates { get; protected set; }
         public List<double> ValueRatios { get; protected set; }
         public List<double> SortedSplitRatios { get; protected set; }
         public List<Point> SortedSplitPoints { get; protected set; }

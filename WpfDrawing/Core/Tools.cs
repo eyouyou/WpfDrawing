@@ -31,6 +31,34 @@ namespace HevoDrawing
             }
             return list;
         }
+
+        public static List<RatioSection> GetSectionsFromData(bool isInterregional, List<IVariable> data)
+        {
+            var segements = data.Count;
+            List<RatioSection> list = new List<RatioSection>();
+            var sum_ratio = 0.0;
+            double ratio;
+            if (isInterregional)
+            {
+                ratio = 1.00 / segements;
+            }
+            else
+            {
+                ratio = 1.0 / (segements - 1);
+                sum_ratio = -ratio / 2;
+            }
+            for (int i = 0; i < segements; i++)
+            {
+                RatioSection section = new RatioSection();
+                section.Left = sum_ratio;
+                sum_ratio += ratio;
+                section.Right = sum_ratio;
+                section.Current = section.Left + ratio / 2;
+                section.CurrentData = data[i];
+                list.Add(section);
+            }
+            return list;
+        }
         public static List<Section> ChangeToSections(List<IVariable> splitValues, List<double> splitRatio)
         {
             var sections = new List<Section>();
@@ -299,5 +327,30 @@ namespace HevoDrawing
         }
 
     }
+    public class RatioSection : IComparable<RatioSection>
+    {
+        public double Left { get; set; }
+        public double Right { get; set; }
+
+        public double Current { get; set; }
+        public IVariable CurrentData { get; set; }
+        public int CompareTo(RatioSection other)
+        {
+            var current = other.Current;
+            if (Right < current)
+            {
+                return 0;
+            }
+            else if (Left > current)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
 
 }

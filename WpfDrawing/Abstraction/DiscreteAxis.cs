@@ -72,7 +72,7 @@ namespace HevoDrawing.Abstractions
                 return Tools.BadVector;
             }
             var index = Data.BinarySearch(value);
-            if (index == -1)
+            if (index < 0)
             {
                 return Tools.BadVector;
             }

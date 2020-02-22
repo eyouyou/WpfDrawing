@@ -26,31 +26,26 @@ namespace HevoDrawing
             var plotArea = x.PlotArea;
             var startx = x.Start;
             var index = 0;
-            //var valuecoords = new List<double>(x.ValueRatioCoordinates);
+            var valuecoords = x.ValueRatioCoordinates;
 
-            //valuecoords.Insert(0, 0);
-            //valuecoords.Add(1);
+            dc.PushClip(new RectangleGeometry() { Rect = plotArea });
 
-            //dc.PushClip(new RectangleGeometry() { Rect = plotArea });
-
-            ///*
-            // * 如果value
-            // */
-            //foreach (var item in points)
-            //{
-            //    var all_width = 0.0;
-            //    if (index + 1 < valuecoords.Count)
-            //    {
-            //        all_width = (valuecoords[index + 1] - valuecoords[index]) * plotArea.Width;
-            //    }
-            //    var width = BarWidth.GetActualLength(all_width);
+            foreach (var item in points)
+            {
+                var all_width = 0.0;
+                if (index < valuecoords.Count)
+                {
+                    var crood = valuecoords[index];
+                    all_width = (crood.Right - crood.Left) * plotArea.Width;
+                }
+                var width = BarWidth.GetActualLength(all_width);
 
 
-            //    var leftTopX = item.X - width / 2;
-            //    dc.DrawRectangle(Fill, Pen, new Rect(new Point(leftTopX, item.Y), new Size(width, Math.Abs(item.Y - startx.Y))));
-            //    index++;
-            //}
-            //dc.Pop();
+                var leftTopX = item.X - width / 2;
+                dc.DrawRectangle(Fill, Pen, new Rect(new Point(leftTopX, item.Y), new Size(width, Math.Abs(item.Y - startx.Y))));
+                index++;
+            }
+            dc.Pop();
 
         }
     }

@@ -27,6 +27,7 @@ namespace HevoDrawing
             var isInterregional = IsInterregional;
 
             List<double> splitRatios = null;
+            FollowData = true;
 
             if (Data == null || Data.Count == 0)
             {

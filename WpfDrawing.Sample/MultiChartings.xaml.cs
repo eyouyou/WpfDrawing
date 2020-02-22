@@ -32,9 +32,9 @@ namespace HevoDrawing.Sample
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
             container = new RectInteractionGroup(interaction, 2, 2
                 ,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ }
-                , new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
-                ,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ }
-                ,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
+                //, new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
+                //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ }
+                //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
                 );
             //container.Background = Brushes.LightGreen;
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };

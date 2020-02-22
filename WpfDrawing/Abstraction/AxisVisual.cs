@@ -179,7 +179,6 @@ namespace HevoDrawing.Abstractions
         /// 显示比例 
         /// </summary>
         public double ShowRatio { get; set; } = double.NaN;
-        public bool IsDataFull { get; set; } = true;
         public Brush SplitForeColor { get; set; } = Brushes.Black;
         public int SplitFontSize { get; set; } = 12;
         public bool ShowGridLine { get; set; } = false;

@@ -339,11 +339,11 @@ namespace HevoDrawing
             var current = other.Current;
             if (Right < current)
             {
-                return 0;
+                return -1;
             }
             else if (Left > current)
             {
-                return -1;
+                return 1;
             }
             else
             {

@@ -25,6 +25,12 @@ namespace HevoDrawing
     {
         bool IsBad { get; }
         Func<string, object> ValueData { get; set; }
+
+        bool IsBiggerThan(IVariable variable);
+        bool IsBiggerThanOrEquals(IVariable variable);
+        bool IsLessThan(IVariable variable);
+        bool IsLessThanOrEquals(IVariable variable);
+        bool IsEquals(IVariable variable);
     }
 
     public class Value : IVariable
@@ -45,6 +51,31 @@ namespace HevoDrawing
         public override int GetHashCode()
         {
             return 0;
+        }
+
+        public virtual bool IsBiggerThan(IVariable variable)
+        {
+            return true;
+        }
+
+        public virtual bool IsBiggerThanOrEquals(IVariable variable)
+        {
+            return true;
+        }
+
+        public virtual bool IsLessThan(IVariable variable)
+        {
+            return true;
+        }
+
+        public virtual bool IsLessThanOrEquals(IVariable variable)
+        {
+            return true;
+        }
+
+        public virtual bool IsEquals(IVariable variable)
+        {
+            return true;
         }
     }
 
@@ -98,6 +129,26 @@ namespace HevoDrawing
         public bool Equals(Value<T> other)
         {
             return other.IsBad == IsBad && other.Data.Equals(Data);
+        }
+        public override bool IsBiggerThan(IVariable variable)
+        {
+            return CompareTo(variable) > 0;
+        }
+        public override bool IsBiggerThanOrEquals(IVariable variable)
+        {
+            return CompareTo(variable) >= 0;
+        }
+        public override bool IsEquals(IVariable variable)
+        {
+            return CompareTo(variable) == 0;
+        }
+        public override bool IsLessThan(IVariable variable)
+        {
+            return CompareTo(variable) < 0;
+        }
+        public override bool IsLessThanOrEquals(IVariable variable)
+        {
+            return CompareTo(variable) <= 0;
         }
     }
 

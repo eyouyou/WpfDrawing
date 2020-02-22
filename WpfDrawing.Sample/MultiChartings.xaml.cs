@@ -30,9 +30,9 @@ namespace HevoDrawing.Sample
             InitializeComponent();
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 2, 2
+            container = new RectInteractionGroup(interaction, 1, 1
                 //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ }
-                ,new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
+                , new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
                 //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ }
                 //,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
                 );
@@ -248,6 +248,7 @@ namespace HevoDrawing.Sample
 
             //chart.AddSeries(lineSeries);
             chart.AddSeries(lineSeries2);
+            lineSeries2.BarWidth = new GridLength(0.5, GridUnitType.Star);
 
             rectDrawingCanvas.AddChild(chart);
 

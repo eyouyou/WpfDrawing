@@ -53,7 +53,12 @@ namespace HevoDrawing
                 section.Left = sum_ratio;
                 sum_ratio += ratio;
                 section.Right = sum_ratio;
-                section.Current = section.Left + ratio / 2;
+                var current = section.Left + ratio / 2;
+                if (current > 1)
+                {
+                    current = 1;
+                }
+                section.Current = current;
                 section.CurrentData = data[i];
                 list.Add(section);
             }

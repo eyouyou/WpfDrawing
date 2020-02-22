@@ -53,6 +53,11 @@ namespace HevoDrawing.Abstractions
         /// 包含区间 优先级大于排除区间
         /// </summary>
         public List<Section> ContainsSections { get; set; }
+        /// <summary>
+        /// 数据显示全 忽略x轴SplitValue的区间限制
+        /// </summary>
+        public bool IsDataFull { get; set; } = true;
+
         public List<Section> GetSectionsExcept(Section section)
         {
             var total = new List<Section>();
@@ -167,15 +172,18 @@ namespace HevoDrawing.Abstractions
                 }
 
                 //排除数据
-                foreach (var item in ordered_x_data)
+                if (!IsDataFull)
                 {
-                    if (!range_split.Contains(item))
+                    foreach (var item in ordered_x_data)
                     {
-                        continue;
+                        if (!range_split.Contains(item))
+                        {
+                            continue;
+                        }
+                        list.Add(item);
                     }
-                    list.Add(item);
+                    ordered_x_data = list;
                 }
-                ordered_x_data = list;
                 //ordered_x_data.Insert(0, range_split.Left);
                 //ordered_x_data.Add(range_split.Right);
                 ordered_x_data = ordered_x_data.Distinct().ToList();

@@ -119,6 +119,7 @@ namespace HevoDrawing.Abstractions
 
         /// <summary>
         /// TODO 需要优化
+        /// TODO 还有部分followdata未实现
         /// </summary>
         /// <param name="diff">差</param>
         /// <param name="start">起点</param>
@@ -175,8 +176,8 @@ namespace HevoDrawing.Abstractions
                     list.Add(item);
                 }
                 ordered_x_data = list;
-                ordered_x_data.Insert(0, range_split.Left);
-                ordered_x_data.Add(range_split.Right);
+                //ordered_x_data.Insert(0, range_split.Left);
+                //ordered_x_data.Add(range_split.Right);
                 ordered_x_data = ordered_x_data.Distinct().ToList();
                 Data = ordered_x_data;
 
@@ -379,7 +380,7 @@ namespace HevoDrawing.Abstractions
                 splitValues = new List<IVariable>();
                 if (splitRatios == null)
                 {
-                    splitRatios = isInterregional ? Tools.GetAverageRatios(ordered_x_data.Count) : Tools.GetAverageRatiosWithZero(ordered_x_data.Count);
+                    splitRatios = isInterregional ? Tools.GetAverageRatios(ordered_x_data.Count - 1) : Tools.GetAverageRatiosWithZero(ordered_x_data.Count);
                 }
                 //没有Ratios传入的时候使用计算的range 计算逻辑在别处
                 //坐标轴平移，平分坐标轴

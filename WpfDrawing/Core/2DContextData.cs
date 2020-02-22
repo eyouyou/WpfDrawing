@@ -93,7 +93,7 @@ namespace HevoDrawing
             }
             else
             {
-                y = Value<double>.Bad;
+                y = Value<double>.BadT;
                 return false;
             }
         }
@@ -166,7 +166,7 @@ namespace HevoDrawing
             var first = Data.FirstOrDefault(it => it.X.Equals(x));
             if (first.IsBad)
             {
-                y = Value<double>.Bad;
+                y = Value<double>.BadT;
                 return false;
             }
             y = first.Y;

@@ -43,8 +43,8 @@ namespace HevoDrawing
     /// </summary>
     public class Range
     {
-        public Value<double> Min { get; set; } = Value<double>.Bad;
-        public Value<double> Max { get; set; } = Value<double>.Bad;
+        public Value<double> Min { get; set; } = Value<double>.BadT;
+        public Value<double> Max { get; set; } = Value<double>.BadT;
         public double Sum => Max.Data - Min.Data;
 
         public bool IsEmpty => Min.IsBad || Max.IsBad;

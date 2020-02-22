@@ -59,15 +59,95 @@ namespace HevoDrawing
             }
             return list;
         }
-        public static List<RatioSection> GetSectionsFromRatioCrood(bool isInterregional, List<double> data)
+        public static List<RatioSection> GetSectionsFromData(bool isInterregional, DiscreteAxis xAxis, List<Section> sections, List<IVariable> data)
+        {
+            List<RatioSection> list = new List<RatioSection>();
+
+            var valueRatios = new List<double>();
+            foreach (var item in data)
+            {
+                var index2 = 0;
+                foreach (var section in sections)
+                {
+                    if (section.Contains(item))
+                    {
+                        var position = xAxis.IntervalPositioning(section, item) * section.SectionRatio;
+                        var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
+                        valueRatios.Add(ratioCrood);
+                        break;
+                    }
+                    index2++;
+                }
+            }
+
+            if (isInterregional)
+            {
+                valueRatios.Insert(0, 1);
+                for (int i = 0; i < valueRatios.Count - 1; i++)
+                {
+                    var item = valueRatios[i];
+                    RatioSection section = new RatioSection();
+                    section.Left = item;
+                    section.Right = valueRatios[i + 1];
+                    section.Current = section.Left + section.Right - section.Left / 2;
+                    section.CurrentData = i < data.Count ? data[i] : Value.Bad;
+                    list.Add(section);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < valueRatios.Count; i++)
+                {
+                    var item = valueRatios[i];
+                    RatioSection ratio_section = new RatioSection();
+
+                    ratio_section.Current = valueRatios[i];// section.Left + section.Right - section.Left / 2;
+                    ratio_section.CurrentData = i < data.Count ? data[i] : Value.Bad;
+                    ratio_section.Left = i - 1 > 0 ? (valueRatios[i - 1] + item) / 2 : item - valueRatios[i + 1] / 2;
+                    ratio_section.Right = i + 1 < valueRatios.Count ? (valueRatios[i + 1] + item) / 2 : item + valueRatios[i - 1] / 2;
+                    list.Add(ratio_section);
+                }
+            }
+            return list;
+        }
+        /// <summary>
+        /// 该方法是否通用？
+        /// </summary>
+        /// <param name="isInterregional"></param>
+        /// <param name="ratios"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static List<RatioSection> GetSectionsFromRatioCrood(bool isInterregional, List<double> ratios, List<IVariable> data)
         {
             List<RatioSection> list = new List<RatioSection>();
             if (isInterregional)
             {
-
+                ratios.Insert(0, 1);
+                for (int i = 0; i < ratios.Count - 1; i++)
+                {
+                    var item = ratios[i];
+                    RatioSection section = new RatioSection();
+                    section.Left = item;
+                    section.Right = ratios[i + 1];
+                    section.Current = section.Left + section.Right - section.Left / 2;
+                    section.CurrentData = i < data.Count ? data[i] : Value.Bad;
+                    list.Add(section);
+                }
             }
             else
             {
+                for (int i = 0; i < ratios.Count; i++)
+                {
+                    var item = ratios[i];
+
+                    RatioSection section = new RatioSection();
+                    section.Current = item;// section.Left + section.Right - section.Left / 2;
+                    section.CurrentData = i < data.Count ? data[i] : Value.Bad;
+
+                    section.Left = i - 1 > 0 ? (ratios[i - 1] + item) / 2 : item - ratios[i + 1] / 2;
+                    section.Right = i + 1 < ratios.Count ? (ratios[i + 1] + item) / 2 : item + ratios[i - 1] / 2;
+                    list.Add(section);
+                }
             }
             return list;
         }

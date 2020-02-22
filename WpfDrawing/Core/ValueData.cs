@@ -35,6 +35,8 @@ namespace HevoDrawing
 
     public class Value : IVariable
     {
+        public static Value Bad => new Value() { };
+
         public bool IsBad { get; protected set; } = true;
 
         public virtual Func<string, object> ValueData { get; set; }
@@ -86,7 +88,8 @@ namespace HevoDrawing
     public class Value<T> : Value, IVariable, IEquatable<Value<T>>
         where T : IComparable
     {
-        public static Value<T> Bad = new Value<T>() { };
+        public static Value<T> BadT => new Value<T>() { };
+
         protected Value()
         {
 

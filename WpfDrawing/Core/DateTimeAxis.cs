@@ -26,7 +26,7 @@ namespace HevoDrawing
             {
                 return double.NaN;
             }
-            var total = GetSectionsExcept(section);
+            List<Section> total = ContainsSections != null && ContainsSections.Count >= 1 ? ContainsSections : GetSectionsExcept(section);
             var totalMilliseconds = 0.0;
             var index = 0;
             var data_index = -1;
@@ -58,7 +58,7 @@ namespace HevoDrawing
                 var current_left = (total[data_index].Left.ValueData("") as Value<DateTime>).Data;
                 var current_right = (total[data_index].Right.ValueData("") as Value<DateTime>).Data;
 
-                return (data - current_left).TotalMilliseconds / (current_right - current_left).TotalMilliseconds + sum;
+                return (data - current_left).TotalMilliseconds / totalMilliseconds + sum;
             }
         }
     }

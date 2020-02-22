@@ -45,11 +45,14 @@ namespace HevoDrawing.Abstractions
         }
 
         /// <summary>
-        /// 排除区间
+        /// 排除区间 排除不了边界
         /// 必须区间互相独立
         /// </summary>
         public List<Section> ExceptSections { get; set; }
-
+        /// <summary>
+        /// 包含区间 优先级大于排除区间
+        /// </summary>
+        public List<Section> ContainsSections { get; set; }
         public List<Section> GetSectionsExcept(Section section)
         {
             var total = new List<Section>();
@@ -229,10 +232,20 @@ namespace HevoDrawing.Abstractions
 
                     if (splitRatios == null || splitRatios.Count == 0)
                     {
-                        foreach (var item in splitValues)
+                        var valueRatioCroods2 = new List<double>();
+                        foreach (var item in ordered_x_data)
                         {
-                            
+                            //range的相对比例
+                            var rangeValueRatio = IntervalPositioning(range_split, item);
+                            if (rangeValueRatio > 1)
+                            {
+
+                            }
+                            valueRatioCroods2.Add(rangeValueRatio);
                         }
+
+                        var sections = Tools.GetSectionsFromRatioCrood(isInterregional, valueRatioCroods2);
+
                     }
                     else
                     {

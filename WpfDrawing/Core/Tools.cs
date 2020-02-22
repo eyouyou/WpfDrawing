@@ -59,6 +59,18 @@ namespace HevoDrawing
             }
             return list;
         }
+        public static List<RatioSection> GetSectionsFromRatioCrood(bool isInterregional, List<double> data)
+        {
+            List<RatioSection> list = new List<RatioSection>();
+            if (isInterregional)
+            {
+
+            }
+            else
+            {
+            }
+            return list;
+        }
         public static List<Section> ChangeToSections(List<IVariable> splitValues, List<double> splitRatio)
         {
             var sections = new List<Section>();

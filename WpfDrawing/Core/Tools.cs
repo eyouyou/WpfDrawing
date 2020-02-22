@@ -127,14 +127,14 @@ namespace HevoDrawing
             List<RatioSection> list = new List<RatioSection>();
             if (isInterregional)
             {
-                ratios.Insert(0, 1);
+                ratios.Insert(0, 0);
                 for (int i = 0; i < ratios.Count - 1; i++)
                 {
                     var item = ratios[i];
                     RatioSection section = new RatioSection();
                     section.Left = item;
                     section.Right = ratios[i + 1];
-                    section.Current = section.Left + section.Right - section.Left / 2;
+                    section.Current = (section.Left + section.Right) / 2;
                     section.CurrentData = i < data.Count ? data[i] : Value.Bad;
                     list.Add(section);
                 }

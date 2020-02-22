@@ -378,9 +378,11 @@ namespace HevoDrawing.Abstractions
             {
                 var splitRatiosCrood = new List<double>();
                 splitValues = new List<IVariable>();
+                var isStartWithZero = false;
                 if (splitRatios == null)
                 {
-                    splitRatios = isInterregional ? Tools.GetAverageRatios(ordered_x_data.Count - 1) : Tools.GetAverageRatiosWithZero(ordered_x_data.Count);
+                    splitRatios = isInterregional ? Tools.GetAverageRatios(ordered_x_data.Count) : Tools.GetAverageRatiosWithZero(ordered_x_data.Count);
+                    isStartWithZero = isInterregional ? false : true;
                 }
                 //没有Ratios传入的时候使用计算的range 计算逻辑在别处
                 //坐标轴平移，平分坐标轴
@@ -392,12 +394,18 @@ namespace HevoDrawing.Abstractions
                     temp.RemoveAll(it => it == 0.0);
                     temp.Insert(0, 0.0);
                     splitRatios = temp;
+                    isStartWithZero = true;
                 }
                 //TODO 这个是否一定要均分 存不存在不均分的情况
                 if (splitRatios.Sum() is double sum && (sum < 0.9999 || sum > 1))
                 {
                     splitRatios = Tools.GetAverageRatios(splitRatios, 1);
                 }
+                if (isStartWithZero)
+                {
+                    isInterregional = false;
+                }
+
                 var sum_ratio = 0.0;
                 var gIndex = -1;
                 foreach (var item in splitRatios)
@@ -407,6 +415,7 @@ namespace HevoDrawing.Abstractions
                     splitRatiosCrood.Add(sum_ratio);
                     splitValues.Add(Data[gIndex]);
                 }
+
 
                 var sections = Tools.GetSectionsFromRatioCrood(isInterregional, splitRatiosCrood, ordered_x_data);
                 var dataratio_index = 0;

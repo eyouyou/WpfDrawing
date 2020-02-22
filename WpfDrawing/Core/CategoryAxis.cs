@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace HevoDrawing
@@ -49,6 +50,21 @@ namespace HevoDrawing
             VisualData.Items.Add(ContextDataItem.Ratios, splitRatios);
             VisualData.Items.Add(ContextDataItem.IsInterregional, isInterregional);
             VisualData.Items.Add(ContextDataItem.SplitValues, splitValue);
+        }
+        public override Vector GetPosition(IVariable value)
+        {
+            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
+            {
+                return Tools.BadVector;
+            }
+            var index = Data.IndexOf(value);
+            if (index < 0)
+            {
+                return Tools.BadVector;
+            }
+            var ratio = ValueRatios[index];
+            //计算相对比例
+            return Vector.Multiply(End - Start, ratio);
         }
     }
 }

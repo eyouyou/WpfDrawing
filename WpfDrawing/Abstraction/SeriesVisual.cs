@@ -33,7 +33,7 @@ namespace HevoDrawing.Abstractions
         /// <summary>
         /// tip 使用
         /// </summary>
-        public abstract Brush Color { get; }
+        public abstract Func<IVariable, Brush> Color { get; set; }
     }
 
 }

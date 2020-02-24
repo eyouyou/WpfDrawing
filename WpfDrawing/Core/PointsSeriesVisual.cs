@@ -16,6 +16,12 @@ namespace HevoDrawing
         /// </summary>
         public Func<TwoDimensionalContextData, Range> RangeCalculator { get; set; }
 
+        public override Func<IVariable, Brush> Color
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 独立获取range
         /// </summary>
@@ -47,11 +53,11 @@ namespace HevoDrawing
                 item.PlotToDc(dc);
             }
         }
-        public virtual List<Point> Points
+        public virtual List<ChartCrood> Croods
         {
             get
             {
-                var list = new List<Point>();
+                var list = new List<ChartCrood>();
                 var vData = VisualData.TransformVisualData<TwoDimensionalContextData>();
                 if (vData.IsBad)
                 {
@@ -85,7 +91,8 @@ namespace HevoDrawing
                         continue;
                     }
                     var current = new Point(offsetx + vector.X, offsety + y.GetPosition(item.Y).Y);
-                    list.Add(current);
+                    var crood = new ChartCrood(item.X, item.Y, current);
+                    list.Add(crood);
                     index++;
                 }
                 return list;

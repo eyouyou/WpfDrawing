@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HevoDrawing
 {
@@ -199,9 +200,17 @@ namespace HevoDrawing
         {
             X = x;
             Y = y;
+            Point = new Point();
+        }
+        public ChartCrood(IVariable x, Value<double> y, Point point)
+        {
+            X = x;
+            Y = y;
+            Point = point;
         }
         public bool IsBad => X == null || Y.IsBad;
         public IVariable X { get; set; }
         public Value<double> Y { get; set; }
+        public Point Point { get; set; }
     }
 }

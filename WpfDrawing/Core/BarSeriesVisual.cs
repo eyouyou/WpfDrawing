@@ -9,13 +9,28 @@ namespace HevoDrawing
     public class BarSeriesVisual : PointsSeriesVisual
     {
         public Pen Pen { get; set; } = new Pen();
-        public Brush Fill { get; set; } = Brushes.Black;
+        public Func<IVariable, Brush> Fill { get; set; }
         public GridLength BarWidth { get; set; } = new GridLength(1, GridUnitType.Star);
-        public override Brush Color => Brushes.Black;
+        public override Func<IVariable, Brush> Color
+        {
+            get
+            {
+                if (base.Color != null)
+                {
+                    return base.Color;
+                }
+                if (Fill != null)
+                {
+                    return data => Fill(data);
+                }
+                return data => Brushes.Black;
+            }
+            set => base.Color = value;
+        }
 
         public override void PlotToDc(DrawingContext dc)
         {
-            var points = Points;
+            var points = Croods;
             if (points.Count == 0)
             {
                 return;
@@ -41,8 +56,8 @@ namespace HevoDrawing
                 var width = BarWidth.GetActualLength(all_width);
 
 
-                var leftTopX = item.X - width / 2;
-                dc.DrawRectangle(Fill, Pen, new Rect(new Point(leftTopX, item.Y), new Size(width, Math.Abs(item.Y - startx.Y))));
+                var leftTopX = item.Point.X - width / 2;
+                dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, item.Point.Y), new Size(width, Math.Abs(item.Point.Y - startx.Y))));
                 index++;
             }
             dc.Pop();

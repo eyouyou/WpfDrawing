@@ -56,14 +56,17 @@ namespace HevoDrawing
     {
         public Pen LinePen { get; set; } = new Pen(Brushes.Blue, 1);
 
-        public override Brush Color
+        public override Func<IVariable, Brush> Color
         {
-            get => LinePen.Brush;
+            get
+            {
+                return base.Color ?? (data => LinePen.Brush);
+            }
+            set => base.Color = value;
         }
-
         public override void PlotToDc(DrawingContext dc)
         {
-            var points = Points;
+            var points = Croods;
             if (points.Count == 0)
             {
                 return;
@@ -71,8 +74,8 @@ namespace HevoDrawing
             var stream = new StreamGeometry();
             using (var sgc = stream.Open())
             {
-                sgc.BeginFigure(points[0], false, false);
-                sgc.PolyLineTo(points.Skip(0).ToList(), true, true);
+                sgc.BeginFigure(points[0].Point, false, false);
+                sgc.PolyLineTo(points.Skip(0).Select(it => it.Point).ToList(), true, true);
             }
             var plotArea = PlotArea;
             dc.PushClip(new RectangleGeometry() { Rect = plotArea });
@@ -84,15 +87,18 @@ namespace HevoDrawing
     public class BezierLineSeriesVisual : LineSeriesVisual
     {
         public Pen LinePen { get; } = new Pen(Brushes.Blue, 1);
-
-        public override Brush Color
+        public override Func<IVariable, Brush> Color
         {
-            get => LinePen.Brush;
+            get
+            {
+                return base.Color ?? (data => LinePen.Brush);
+            }
+            set => base.Color = value;
         }
 
         public override void PlotToDc(DrawingContext dc)
         {
-            var points = Points;
+            var points = Croods;
             if (points.Count == 0)
             {
                 return;
@@ -107,12 +113,12 @@ namespace HevoDrawing
                 {
                     if (index >= 1)
                     {
-                        var center = GetCenterPoint(lasted, item);
+                        var center = GetCenterPoint(lasted, item.Point);
                         sgc.BeginFigure(lasted, false, false);
-                        sgc.BezierTo(new Point(center.X, lasted.Y), new Point(center.X, item.Y), item, true, false);
+                        sgc.BezierTo(new Point(center.X, lasted.Y), new Point(center.X, item.Point.Y), item.Point, true, false);
                         points.Add(item);
                     }
-                    lasted = item;
+                    lasted = item.Point;
 
                     index++;
 

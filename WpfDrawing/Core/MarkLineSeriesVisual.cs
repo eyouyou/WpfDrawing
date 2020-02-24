@@ -23,9 +23,11 @@ namespace HevoDrawing
         /// </summary>
         public List<Point> Croods { get; set; } = new List<Point>();
         public Pen LinePen { get; set; } = new Pen(Brushes.Black, 1);
-        public override Brush Color => LinePen.Brush;
 
         public override ContextData DefaultData => Chart2DContextData.Empty;
+
+
+        public override Func<IVariable, Brush> Color { get; set; }
 
         public override void PlotToDc(DrawingContext dc)
         {

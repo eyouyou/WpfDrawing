@@ -160,7 +160,7 @@ namespace HevoDrawing.Interactions
                                     var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y + offset.Y;
                                     hitSeriesDatas.Add(new SeriesData()
                                     {
-                                        Color = series_item.Color,
+                                        Color = series_item.Color(value),
                                         Id = series_item.Id,
                                         Name = series_item.Name,
                                         XValue = value,

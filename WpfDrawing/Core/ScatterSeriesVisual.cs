@@ -8,12 +8,18 @@ using HevoDrawing.Abstractions;
 
 namespace HevoDrawing
 {
-    public class ScatterSeriesVisual : SeriesVisual
+    public class ScatterSeriesVisual : PointsSeriesVisual
     {
-        public override Brush Color => Brushes.Red;
-
         public override ContextData DefaultData => throw new NotImplementedException();
 
+        public override Func<IVariable, Brush> Color
+        {
+            get
+            {
+                return base.Color ?? (data => Brushes.Red);
+            }
+            set => base.Color = value;
+        }
         public override void PlotToDc(DrawingContext dc)
         {
         }

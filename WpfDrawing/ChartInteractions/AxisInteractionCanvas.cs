@@ -117,7 +117,7 @@ namespace HevoDrawing.Interactions
 
             //一个hit到了其他的都不要了
             var isHint = false;
-
+            var isHintData = false;
             foreach (var item in DataSources)
             {
                 var seriesData = new List<SeriesData>();
@@ -154,7 +154,7 @@ namespace HevoDrawing.Interactions
                                     && series_item.VisualData is TwoDimensionalContextData series_data
                                     && series_data.ContainsX(value, out var yValue))
                                 {
-
+                                    isHintData = true;
                                     //获取当前值对应的x、y 进行十字轴的定位
                                     var x = xAxis.GetPosition(value).X + xAxis.Start.X + offset.X;
                                     var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y + offset.Y;
@@ -245,7 +245,7 @@ namespace HevoDrawing.Interactions
             //TODO 日后需要多chart公用大十字线
             var hitPoint = IsStandalone ? new Point(nearestX, nearestY) : new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());
             VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
-            VisualData.Items[ContextDataItem.IsHintData] = isHint;
+            VisualData.Items[ContextDataItem.IsHintData] = isHintData;
 
             if (IsCrossShow)
             {

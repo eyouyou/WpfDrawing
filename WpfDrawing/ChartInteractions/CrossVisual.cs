@@ -59,7 +59,11 @@ namespace HevoDrawing.Interactions
                 ParentCanvas.Plot(point, @event);
             }
             var hitPointer = (Point)data.Current.Items[ContextDataItem.HitPointer];
-
+            var is_hit_data = (bool)data.Current.Items[ContextDataItem.IsHintData];
+            if (!is_hit_data)
+            {
+                return;
+            }
             //优化 是否无效
             //bool isXInvariant = false;
             //bool isYInvariant = false;

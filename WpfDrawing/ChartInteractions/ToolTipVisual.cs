@@ -27,8 +27,6 @@ namespace HevoDrawing.Interactions
         Grid layers = new Grid();
         public NormalToolTip()
         {
-            
-
             Visibility = Visibility.Collapsed;
             layers.Children.Add(dock);
             border.Child = layers;
@@ -60,7 +58,6 @@ namespace HevoDrawing.Interactions
         public override void PushData(List<SeriesData> series)
         {
             dock_content.Children.Clear();
-
             //TODO 这部分后续需要支持多轴
             if (series == null || series.Count <= 0)
             {
@@ -75,6 +72,9 @@ namespace HevoDrawing.Interactions
             {
                 dock_content.AddChild(MakeValueText(item), Dock.Top);
             }
+            //dock_content.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            //Layers.Width = dock_content.DesiredSize.Width + dock.Margin.Left + dock.Margin.Right /*+ border.Padding.Left + border.Padding.Right*/;
+            //Layers.Height = dock_content.DesiredSize.Height + dock.Margin.Top + dock.Margin.Bottom /*+ border.Padding.Top + border.Padding.Bottom*/;
         }
     }
     public class ToolTipVisual : InteractionLayer
@@ -141,12 +141,15 @@ namespace HevoDrawing.Interactions
             LastPoint = hitPointer;
 
             bool isHint = false;
+
+            var is_hit_data = (bool)VisualData.Current.Items[ContextDataItem.IsHintData];
+
             foreach (var item in DataSources)
             {
                 if (item.Value is ChartDataSource dataSource)
                 {
                     var area = dataSource.ConnectVisual.InteractionPlotArea;
-                    if (isHint)
+                    if (isHint || !is_hit_data)
                     {
                         continue;
                     }

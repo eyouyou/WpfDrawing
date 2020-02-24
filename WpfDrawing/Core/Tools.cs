@@ -68,7 +68,7 @@ namespace HevoDrawing
         {
             List<RatioSection> list = new List<RatioSection>();
 
-            var valueRatios = new List<double>();
+            var valueCroodRatios = new List<double>();
             foreach (var item in data)
             {
                 var index2 = 0;
@@ -78,7 +78,7 @@ namespace HevoDrawing
                     {
                         var position = xAxis.IntervalPositioning(section, item) * section.SectionRatio;
                         var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
-                        valueRatios.Add(ratioCrood);
+                        valueCroodRatios.Add(ratioCrood);
                         break;
                     }
                     index2++;
@@ -87,13 +87,13 @@ namespace HevoDrawing
 
             if (isInterregional)
             {
-                valueRatios.Insert(0, 1);
-                for (int i = 0; i < valueRatios.Count - 1; i++)
+                valueCroodRatios.Insert(0, 1);
+                for (int i = 0; i < valueCroodRatios.Count - 1; i++)
                 {
-                    var item = valueRatios[i];
+                    var item = valueCroodRatios[i];
                     RatioSection section = new RatioSection();
                     section.Left = item;
-                    section.Right = valueRatios[i + 1];
+                    section.Right = valueCroodRatios[i + 1];
                     section.Current = section.Left + section.Right - section.Left / 2;
                     section.CurrentData = i < data.Count ? data[i] : Value.Bad;
                     list.Add(section);
@@ -101,15 +101,15 @@ namespace HevoDrawing
             }
             else
             {
-                for (int i = 0; i < valueRatios.Count; i++)
+                for (int i = 0; i < valueCroodRatios.Count; i++)
                 {
-                    var item = valueRatios[i];
+                    var item = valueCroodRatios[i];
                     RatioSection ratio_section = new RatioSection();
 
-                    ratio_section.Current = valueRatios[i];// section.Left + section.Right - section.Left / 2;
+                    ratio_section.Current = valueCroodRatios[i];// section.Left + section.Right - section.Left / 2;
                     ratio_section.CurrentData = i < data.Count ? data[i] : Value.Bad;
-                    ratio_section.Left = i - 1 > 0 ? (valueRatios[i - 1] + item) / 2 : item - valueRatios[i + 1] / 2;
-                    ratio_section.Right = i + 1 < valueRatios.Count ? (valueRatios[i + 1] + item) / 2 : item + valueRatios[i - 1] / 2;
+                    ratio_section.Left = i > 0 ? (valueCroodRatios[i - 1] + item) / 2 : item - valueCroodRatios[i + 1] / 2;
+                    ratio_section.Right = i + 1 < valueCroodRatios.Count ? (valueCroodRatios[i + 1] + item) / 2 : item * 1.5 - valueCroodRatios[i - 1] / 2;
                     list.Add(ratio_section);
                 }
             }

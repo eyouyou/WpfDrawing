@@ -96,7 +96,7 @@ namespace HevoDrawing.Abstractions
                 return default;
             }
             var percent = offsetPosition / (End - Start).Length;
-            if (percent > 1 || percent < 0)
+            if (isInterregional && (percent > 1 || percent < 0))
             {
                 return default;
             }
@@ -466,7 +466,7 @@ namespace HevoDrawing.Abstractions
         #endregion
 
         /// <summary>
-        /// 数据跟x轴比例走 根据比例来计算 支持外部传入
+        /// x轴 跟数据比例走 根据比例来计算 支持外部传入
         /// 数据相对于x轴Splitvalue不全的时候 为false 这个时候必须赋值<see cref="SplitValues"/>，<see cref="Ratios"/>无效
         /// </summary>
         public bool FollowData { get; set; } = true;

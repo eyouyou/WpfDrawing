@@ -23,6 +23,7 @@ namespace HevoDrawing
         //
         Pointer,
         HitPointer,
+        IsHintData,
         SeriesData,
     }
 

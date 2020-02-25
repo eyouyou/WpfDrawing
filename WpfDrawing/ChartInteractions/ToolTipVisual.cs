@@ -1,5 +1,6 @@
 ﻿using HevoDrawing.Abstractions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
@@ -208,6 +209,69 @@ namespace HevoDrawing.Interactions
             if (ParentCanvas.Children.Contains(Tip))
             {
                 ParentCanvas.Children.Remove(Tip);
+            }
+        }
+
+        public override void PlotToParentStandalone(Point point, EventMessage @event)
+        {
+            var data = VisualData.GetMainVisualDataItem<List<SeriesData>>(ContextDataItem.SeriesData);
+            if (data == null)
+            {
+                return;
+            }
+            if (!IsToolTipShow)
+            {
+                Tip.Visibility = Visibility.Collapsed;
+                return;
+            }
+            //优化
+            var hitPointer = (Point)VisualData.Current.Items[ContextDataItem.HitPointer];
+            bool isXInvariant = false;
+            if (hitPointer.X == LastPoint.X)
+            {
+                isXInvariant = true;
+            }
+            LastPoint = hitPointer;
+
+            var coms = DataSources.ElementAt(0).Value as ChartDataSource;
+            var area = coms.ConnectVisual.PlotArea;
+
+            if (!area.Contains(point))
+            {
+                Tip.Visibility = Visibility.Collapsed;
+                return;
+            }
+            if (!isXInvariant)
+            {
+                Tip.PushData(data);
+            }
+            Tip.Visibility = Visibility.Visible;
+
+            switch (Tip.Behavior)
+            {
+                case ToolTipBehavior.FollowLeft:
+                    {
+                        Tip.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+                        var offsetLeftTopPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y);
+                        var offsetLeftButtomPoint = new Point(point.X - Tip.DesiredSize.Width, point.Y + Tip.DesiredSize.Height);
+                        var offsetRightButtomPoint = new Point(point.X, point.Y + Tip.DesiredSize.Height);
+                        var offsetRightTopPoint = new Point(point.X, point.Y);
+                        if (!area.Contains(offsetLeftTopPoint) && !area.Contains(offsetLeftButtomPoint))
+                        {
+                            offsetLeftTopPoint.X += Tip.DesiredSize.Width;
+                        }
+                        if (!area.Contains(offsetRightButtomPoint) && !area.Contains(offsetLeftButtomPoint))
+                        {
+                            offsetLeftTopPoint.Y -= Tip.DesiredSize.Height;
+                        }
+
+                        Canvas.SetTop(Tip, offsetLeftTopPoint.Y);
+                        Canvas.SetLeft(Tip, offsetLeftTopPoint.X);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

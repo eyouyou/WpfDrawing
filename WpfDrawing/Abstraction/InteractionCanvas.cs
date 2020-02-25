@@ -11,10 +11,12 @@ namespace HevoDrawing.Abstractions
 {
     /// <summary>
     /// 交互、控件展示层
+    /// 多图的情况下 <see cref="InteractionCanvas"/> 依赖于 <see cref="RectDrawingCanvas"/> 或 <see cref="RectDrawingCanvasContainer"/>
+    /// [<see cref="RectDrawingCanvas"/>: <see cref="InteractionCanvas"/>存在于<see cref="RectInteractionGroup"/>的顶层]
+    /// [<see cref="RectDrawingCanvasContainer"/>：<see cref="InteractionCanvas"/>存在于 <see cref="RectDrawingCanvasContainer"/>的顶层]
     /// </summary>
     public abstract class InteractionCanvas : Canvas
     {
-        public Dictionary<int, RectDrawingVisualDataSource> DataSources { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
         public abstract ContextData DefaultData { get; }
         public InteractionCanvas()
         {
@@ -29,7 +31,16 @@ namespace HevoDrawing.Abstractions
             Children.Remove(element);
         }
 
-        public Dictionary<int, RectDrawingCanvas> DependencyCanvas { get; } = new Dictionary<int, RectDrawingCanvas>();
+        /// <summary>
+        /// 多个数据源
+        /// </summary>
+        public Dictionary<int, RectDrawingVisualDataSource> DataSources { get; } = new Dictionary<int, RectDrawingVisualDataSource>();
+        /// <summary>
+        /// 依赖的container 独立的话1个
+        /// 复用的话多个
+        /// </summary>
+        public Dictionary<int, RectDrawingCanvasContainer> DependencyContainers { get; } = new Dictionary<int, RectDrawingCanvasContainer>();
+        public RectDrawingCanvasContainer UniqueDependencyContainer => DependencyContainers.Count == 1 ? DependencyContainers.ElementAt(0).Value : null;
 
         private ContextData _visualData = null;
         public ContextData VisualData
@@ -47,9 +58,11 @@ namespace HevoDrawing.Abstractions
                 _visualData = value;
             }
         }
+        public bool Standalone => DependencyContainers.Count == 1 && DependencyContainers.ElementAt(0).Value.InteractionCanvas != null;
         public abstract void Hide();
         public UIElement ParentElement { get; set; }
         public abstract void Plot(Point point, EventMessage @event);
+        public abstract void PlotStandalone(Point point, EventMessage @event);
     }
     public abstract class InteractionLayer : IVisualControllable
     {
@@ -91,6 +104,8 @@ namespace HevoDrawing.Abstractions
         public abstract void Clear();
         public abstract void Hide();
         public abstract void PlotToParent(Point point, EventMessage @event);
+        public abstract void PlotToParentStandalone(Point point, EventMessage @event);
+
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using HevoDrawing.Abstractions;
+﻿using HevoDrawing;
+using HevoDrawing.Abstractions;
 using HevoDrawing.Interactions;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,46 +18,35 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace HevoDrawing.Sample
+namespace WpfDrawing.Sample
 {
     /// <summary>
-    /// MultiChartings.xaml 的交互逻辑
+    /// MultiChartings2.xaml 的交互逻辑
     /// </summary>
-    public partial class MultiChartings : Window
+    public partial class MultiChartings2 : Window
     {
         RectInteractionGroup container;
-        public MultiChartings()
+        public MultiChartings2()
         {
             InitializeComponent();
 
-            AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 2, 2
-                , new ChartItem() { /*Background = Brushes.LightPink *//*Background = Brushes.LightGreen */ }
-                , new ChartItem2() {/* Background = Brushes.LightPink*//*Background = Brushes.LightPink  */}
-                , new ChartItem() { /*Background = Brushes.LightPink *//*Background = Brushes.LightSalmon*/ }
-                , new ChartItem() { /*Background = Brushes.LightPink *//*Background = Brushes.LightGreen */ }
+            container = new RectInteractionGroup(null, 2, 2
+                , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */ }
+                , new ChartItem2() {/*Background = Brushes.LightPink*//*Background = Brushes.LightPink  */}
+                , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightSalmon*/ }
+                , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */}
                 );
-            BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            b.BlurContainer = container.ContainerGrid;
-            b.Magnification = 0.15;
-            b.BlurRadius = 25;
-
-            interaction.Tip.TextContainer.Margin = new Thickness(10);
-            interaction.Tip.Layers.Children.Insert(0, b);
-            interaction.Tip.FontSize = 11;
-            interaction.Tip.Border.BorderThickness = new Thickness(1);
-            interaction.Tip.Border.Padding = new Thickness(0);
-            interaction.Tip.Border.BorderBrush = Brushes.Black;
-            interaction.Tip.Foreground = Brushes.White;
 
             Content = container;
 
             SizeChanged += MultiChartings_SizeChanged;
         }
+
         private void MultiChartings_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             container.Replot();
         }
+
 
         public class ChartItem : RectDrawingCanvasContainer
         {
@@ -73,8 +63,22 @@ namespace HevoDrawing.Sample
             TextBlock text1 = new TextBlock();
             TextBlock text2 = new TextBlock();
 
+            AxisInteractionCanvas interaction = new AxisInteractionCanvas();
             public ChartItem()
             {
+                BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
+                b.BlurContainer = rectDrawingCanvas;
+                b.Magnification = 0.15;
+                b.BlurRadius = 25;
+
+                interaction.Tip.TextContainer.Margin = new Thickness(10);
+                interaction.Tip.Layers.Children.Insert(0, b);
+                interaction.Tip.FontSize = 11;
+                interaction.Tip.Border.BorderThickness = new Thickness(1);
+                interaction.Tip.Border.Padding = new Thickness(0);
+                interaction.Tip.Border.BorderBrush = Brushes.Black;
+                interaction.Tip.Foreground = Brushes.White;
+
                 BorderThickness = new Thickness(1);
                 BorderBrush = Brushes.Black;
 
@@ -105,6 +109,7 @@ namespace HevoDrawing.Sample
                 title.AddChild(text2, Dock.Right);
                 dock.AddChild(title, Dock.Top);
                 dock.AddChild(DrawingCanvasArea, Dock.Top);
+
                 Content = dock;
             }
 
@@ -134,7 +139,7 @@ namespace HevoDrawing.Sample
 
             public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
 
-            public override InteractionCanvas InteractionCanvas => null;
+            public override InteractionCanvas InteractionCanvas => interaction;
 
             private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
             {
@@ -232,8 +237,23 @@ namespace HevoDrawing.Sample
             TextBlock text1 = new TextBlock();
             TextBlock text2 = new TextBlock();
 
+            AxisInteractionCanvas interaction = new AxisInteractionCanvas();
+
             public ChartItem2()
             {
+                BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
+                b.BlurContainer = DrawingCanvas;
+                b.Magnification = 0.15;
+                b.BlurRadius = 25;
+
+                interaction.Tip.TextContainer.Margin = new Thickness(10);
+                interaction.Tip.Layers.Children.Insert(0, b);
+                interaction.Tip.FontSize = 11;
+                interaction.Tip.Border.BorderThickness = new Thickness(1);
+                interaction.Tip.Border.Padding = new Thickness(0);
+                interaction.Tip.Border.BorderBrush = Brushes.Black;
+                interaction.Tip.Foreground = Brushes.White;
+
                 BorderThickness = new Thickness(1);
                 BorderBrush = Brushes.Black;
 
@@ -265,6 +285,7 @@ namespace HevoDrawing.Sample
                 title.AddChild(text2, Dock.Right);
                 dock.AddChild(title, Dock.Top);
                 dock.AddChild(DrawingCanvasArea, Dock.Top);
+
                 Content = dock;
             }
 
@@ -294,7 +315,7 @@ namespace HevoDrawing.Sample
 
             public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
 
-            public override InteractionCanvas InteractionCanvas => throw new NotImplementedException();
+            public override InteractionCanvas InteractionCanvas => interaction;
 
             private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
             {
@@ -375,7 +396,5 @@ namespace HevoDrawing.Sample
             }
 
         }
-
     }
-
 }

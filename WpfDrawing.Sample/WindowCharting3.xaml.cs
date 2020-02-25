@@ -42,8 +42,8 @@ namespace HevoDrawing.Sample
             //axisY.Range = new Range() { Max = new Value<double>(5000000), Min = new Value<double>(40000) };
             chart.Offsets = new PaddingOffset(60, 20, 10, 20);
 
-            canvasContainer.Canvas.AddChild(chart);
-            canvasContainer.Canvas.DataSource = chart.DataSource;
+            canvasContainer.DrawingCanvas.AddChild(chart);
+            canvasContainer.DrawingCanvas.DataSource = chart.DataSource;
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
 
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, canvasContainer);
@@ -55,7 +55,7 @@ namespace HevoDrawing.Sample
             chart.AddSeries(lineSeries2);
 
             grid.Children.Add(container);
-            canvasContainer.Canvas.Visuals.Add(CreateDrawingImage());
+            canvasContainer.DrawingCanvas.Visuals.Add(CreateDrawingImage());
 
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
             b.BlurContainer = canvasContainer;

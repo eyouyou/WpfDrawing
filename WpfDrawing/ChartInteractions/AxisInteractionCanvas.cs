@@ -36,12 +36,23 @@ namespace HevoDrawing.Interactions
                 return;
             }
             var point = e.GetPosition(this);
-            Plot(point, EventMessage.MouseOn);
 
             Cross.VisualData = VisualData;
             DataToolTip.VisualData = VisualData;
-            Cross.PlotToParent(point, EventMessage.MouseOn);
-            DataToolTip.PlotToParent(point, EventMessage.MouseOn);
+
+            if (!Standalone)
+            {
+                Plot(point, EventMessage.MouseOn);
+                Cross.PlotToParent(point, EventMessage.MouseOn);
+                DataToolTip.PlotToParent(point, EventMessage.MouseOn);
+            }
+            else
+            {
+                PlotStandalone(point, EventMessage.MouseOn);
+                Cross.PlotToParentStandalone(point, EventMessage.MouseOn);
+                DataToolTip.PlotToParentStandalone(point, EventMessage.MouseOn);
+            }
+
         }
 
         private bool _isCrossShow = false;
@@ -83,7 +94,6 @@ namespace HevoDrawing.Interactions
         /// <summary>
         /// 是否独立/公用
         /// </summary>
-        public bool IsStandalone { get; set; } = true;
         public CrossVisual Cross { get; private set; }
         public ToolTipVisual DataToolTip { get; private set; }
 
@@ -243,7 +253,7 @@ namespace HevoDrawing.Interactions
             }
             //记录触点坐标
             //TODO 日后需要多chart公用大十字线
-            var hitPoint = IsStandalone ? new Point(nearestX, nearestY) : new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());
+            var hitPoint = Standalone ? new Point(nearestX, nearestY) : new Point(NearestXs.OrderBy(it => it - currentPoint.X).FirstOrDefault(), NearestYs.OrderBy(it => it - currentPoint.X).FirstOrDefault());
             VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
             VisualData.Items[ContextDataItem.IsHintData] = isHintData;
 
@@ -268,6 +278,128 @@ namespace HevoDrawing.Interactions
             {
                 item.Value.Render(true);
             }
+        }
+
+        public override void PlotStandalone(Point point, EventMessage @event)
+        {
+            var vdata = VisualData.TransformVisualData<ContextData>();
+            if (vdata.IsBad)
+            {
+                return;
+            }
+            //series上的悬浮控件 标记当前位置
+            SeriesHitList = new Dictionary<ComponentKey, ElementPosition>();
+
+            var seriesDatas = new List<SeriesData>();
+
+            VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
+
+            var coms = DataSources.ElementAt(0).Value as ChartDataSource;
+
+            var currentPoint = point;
+
+            var nearestX = currentPoint.X;
+            var nearestY = currentPoint.Y;
+
+            var plotArea = coms.ConnectVisual.PlotArea;
+
+            var series = coms.SeriesCollection;
+            if (plotArea.Contains(currentPoint))
+            {
+                foreach (SeriesVisual series_item in series)
+                {
+                    var key = new ComponentKey(series_item.ParentCanvas.Id, series_item.Id);
+
+                    if (!series_item.IsVisualEnable)
+                    {
+                        continue;
+                    }
+                    var series_plot = series_item.PlotArea;
+                    var xAxis = coms.FindXById(series_item.XAxisId) as DiscreteAxis;
+                    var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X));
+                    if (value.IsBad())
+                    {
+                        continue;
+                    }
+
+                    var line_series_item = series_item.GetInterectHoverableLineSeriesVisual();
+
+                    if (coms.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
+                        && series_item.VisualData is TwoDimensionalContextData series_data
+                        && series_data.ContainsX(value, out var yValue))
+                    {
+                        var x = xAxis.GetPosition(value).X + xAxis.Start.X;
+                        var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y;
+                        seriesDatas.Add(new SeriesData() { Color = series_item.Color(value), Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = yValue, AxisX = xAxis, AxisY = yAxis });
+                        //获取y坐标
+
+                        nearestX = x;
+
+                        if (line_series_item != null)
+                        {
+                            if (!line_series_item.HoverElement.IsAdded)
+                            {
+                                AddElement(line_series_item.HoverElement.Content);
+                                line_series_item.HoverElement.IsAdded = true;
+                            }
+                            var leftTop = new Point(x - line_series_item.HoverElement.Width / 2, y - line_series_item.HoverElement.Height / 2);
+
+                            if (series_plot.Contains(new Point(x, y)))
+                            {
+                                SeriesHitList.Add(key, new ElementPosition(line_series_item.HoverElement.Content, true, leftTop.X, leftTop.Y, line_series_item.HoverElement.ZIndex));
+                            }
+                            else
+                            {
+                                SeriesHitList.Add(key, new ElementPosition(line_series_item.HoverElement.Content));
+                            }
+                        }
+
+                        if (Cross.IsYDataAttract)
+                        {
+                            nearestY = y;
+                        }
+                    }
+                    else
+                    {
+                        if (line_series_item != null)
+                        {
+                            SeriesHitList.Add(key, new ElementPosition(line_series_item.HoverElement.Content));
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                foreach (SeriesVisual series_item in series)
+                {
+                    var line_series_item = series_item.GetInterectHoverableLineSeriesVisual();
+                    if (line_series_item != null)
+                    {
+                        var key = new ComponentKey(series_item.ParentCanvas.Id, series_item.Id);
+                        SeriesHitList.Add(key, new ElementPosition(line_series_item.HoverElement.Content));
+                    }
+                }
+            }
+
+            var hitPoint = new Point(nearestX, nearestY);
+            VisualData.Items[ContextDataItem.HitPointer] = hitPoint;
+            //优化
+            if (LastHitPoint.X == nearestX)
+            {
+                return;
+            }
+            LastHitPoint = hitPoint;
+
+            if (IsCrossShow)
+            {
+                foreach (var item in SeriesHitList)
+                {
+                    item.Value.Render();
+                }
+            }
+            (coms.ConnectVisual as ChartVisual)?.TriggerIntersectChanged(seriesDatas.ToDictionary(it => it.Name ?? $"{nameof(AxisInteractionCanvas)}_{IdGenerator.GenerateId().ToString()}", it => it));
+
         }
     }
 }

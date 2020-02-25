@@ -15,7 +15,7 @@ namespace HevoDrawing.Interactions
     /// </summary>
     public class RectInteractionGroup : Grid
     {
-        public Grid DrawingGrid = new Grid();
+        public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
         List<RectDrawingCanvasContainer> Containers;
         ComponentId IdGenerater = new ComponentId();
@@ -23,7 +23,7 @@ namespace HevoDrawing.Interactions
         double RowPercentage = 0.0;
         public RectInteractionGroup(AxisInteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvasContainer[] canvas)
         {
-            InteractionVisuals = new List<AxisInteractionCanvas>();
+            InteractionVisuals = new List<InteractionCanvas>();
             Containers = new List<RectDrawingCanvasContainer>();
             if (interaction != null)
             {
@@ -34,19 +34,19 @@ namespace HevoDrawing.Interactions
             ColPercentage = 1.0 / col;
             for (int i = 0; i < col; i++)
             {
-                DrawingGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
+                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
             }
 
             RowPercentage = 1.0 / row;
             for (int i = 0; i < row; i++)
             {
-                DrawingGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
+                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
             }
             var index = 0;
             foreach (var item in canvas)
             {
-                var c = item.Canvas;
-                DrawingGrid.Children.Add(item);
+                var c = item.DrawingCanvas;
+                ContainerGrid.Children.Add(item);
                 Containers.Add(item);
                 c.Col = index % col;
                 c.Row = index / col;
@@ -59,25 +59,26 @@ namespace HevoDrawing.Interactions
                 if (interaction != null)
                 {
                     interaction.DataSources.Add(c.Id, c.DataSource);
+                    interaction.DependencyContainers.Add(c.Id, item);
                     c.InteractionCanvas = interaction;
                 }
                 else
                 {
                     // 送默认AxisInteractionCanvas
-                    var interaction2 = new AxisInteractionCanvas();
-                    SetColumn(interaction2, c.Col);
-                    SetRow(interaction2, c.Row);
-                    SetColumnSpan(interaction2, 1);
-                    SetRowSpan(interaction2, 1);
-
-                    interaction2.DataSources.Add(c.Id, c.DataSource);
-                    InteractionVisuals.Add(interaction2);
-                    interaction2.ParentElement = item;
-                    c.InteractionCanvas = interaction2;
+                    var interaction2 = item.InteractionCanvas;
+                    if (interaction2 != null)
+                    {
+                        interaction2.DependencyContainers.Add(c.Id, item);
+                        interaction2.DataSources.Add(c.Id, c.DataSource);
+                        interaction2.ParentElement = item;
+                        c.InteractionCanvas = interaction2;
+                        item.EnableInteraction();
+                        InteractionVisuals.Add(interaction2);
+                    }
                 }
                 index++;
             }
-            if(interaction != null)
+            if (interaction != null)
             {
                 SetColumn(interaction, 0);
                 SetRow(interaction, 0);
@@ -87,11 +88,11 @@ namespace HevoDrawing.Interactions
             }
             else
             {
-                SizeChanged += RectInteractionGroup_SizeChanged;
+                SizeChanged += RectInteractionGroup_SizeChanged2;
             }
-            Canvas = canvas.ToDictionary(it => it.Canvas.Id, it => it.Canvas);
+            Canvas = canvas.ToDictionary(it => it.DrawingCanvas.Id, it => it.DrawingCanvas);
 
-            Children.Add(DrawingGrid);
+            Children.Add(ContainerGrid);
 
             EnableInteraction = true;
         }
@@ -100,19 +101,19 @@ namespace HevoDrawing.Interactions
             ColPercentage = 1.0 / col;
             for (int i = 0; i < col; i++)
             {
-                DrawingGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
+                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
             }
 
             RowPercentage = 1.0 / row;
             for (int i = 0; i < row; i++)
             {
-                DrawingGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
+                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
             }
             var index = 0;
             foreach (var item in canvas)
             {
-                var c = item.Canvas;
-                DrawingGrid.Children.Add(item);
+                var c = item.DrawingCanvas;
+                ContainerGrid.Children.Add(item);
                 c.Col = index % col;
                 c.Row = index / col;
                 SetColumn(item, c.Col);
@@ -123,9 +124,9 @@ namespace HevoDrawing.Interactions
                 }
                 index++;
             }
-            Canvas = canvas.ToDictionary(it => it.Canvas.Id, it => it.Canvas);
+            Canvas = canvas.ToDictionary(it => it.DrawingCanvas.Id, it => it.DrawingCanvas);
 
-            Children.Add(DrawingGrid);
+            Children.Add(ContainerGrid);
 
 
             SizeChanged += RectInteractionGroup_SizeChanged;
@@ -153,7 +154,7 @@ namespace HevoDrawing.Interactions
                 var index = 0;
                 foreach (var item in Containers)
                 {
-                    var canvas = item.Canvas;
+                    var canvas = item.DrawingCanvas;
                     canvas.InteractionCanvas.Hide();
                     var point = canvas.TranslatePoint(new Point(0, 0), item);
 
@@ -176,14 +177,20 @@ namespace HevoDrawing.Interactions
                     {
                         foreach (var item in InteractionVisuals)
                         {
-                            Children.Add(item);
+                            if (!item.Standalone)
+                            {
+                                Children.Add(item);
+                            }
                         }
                     }
                     else if (!value && _enableInteraction)
                     {
                         foreach (var item in InteractionVisuals)
                         {
-                            Children.Remove(item);
+                            if (!item.Standalone)
+                            {
+                                Children.Remove(item);
+                            }
                         }
                     }
                 }
@@ -202,6 +209,6 @@ namespace HevoDrawing.Interactions
         /// <summary>
         /// 可空 调用时需要判断
         /// </summary>
-        public List<AxisInteractionCanvas> InteractionVisuals { get; } = null;
+        public List<InteractionCanvas> InteractionVisuals { get; } = null;
     }
 }

@@ -58,11 +58,11 @@ namespace HevoDrawing.Sample
             axisX3.AxisPen = new Pen(Brushes.DarkCyan, 1);
 
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            chartCanvas.Canvas.AddChild(chart); chartCanvas.Canvas.DataSource = chart.DataSource;
+            chartCanvas.DrawingCanvas.AddChild(chart); chartCanvas.DrawingCanvas.DataSource = chart.DataSource;
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, chartCanvas);
 
             BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            b.BlurContainer = container.DrawingGrid;
+            b.BlurContainer = container.ContainerGrid;
             b.Magnification = 0.25;
             b.BlurRadius = 30;
 

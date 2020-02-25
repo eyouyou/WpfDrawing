@@ -66,6 +66,9 @@
     <Compile Include="MultiChartings.xaml.cs">
       <DependentUpon>MultiChartings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MultiChartings2.xaml.cs">
+      <DependentUpon>MultiChartings2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
@@ -132,6 +135,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MultiChartings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MultiChartings2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -94,11 +94,21 @@ namespace HevoDrawing
         {
 
         }
+
         public Value(T value)
         {
             Data = value;
             IsBad = false;
             ValueData = (str) => this;
+        }
+        /// <summary>
+        /// 保持类型一致
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual Value<T> GenerateNewValue(T value)
+        {
+            return new Value<T>(value);
         }
         public T Data { get; set; }
         public override Func<string, object> ValueData { get; set; }
@@ -161,6 +171,10 @@ namespace HevoDrawing
         public FormattableValue(T t) : base(t)
         {
 
+        }
+        public override Value<T> GenerateNewValue(T value)
+        {
+            return new FormattableValue<T>(value);
         }
         public override string ToString(string format, IFormatProvider formatProvider)
         {

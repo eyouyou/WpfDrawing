@@ -95,7 +95,7 @@ namespace HevoDrawing
                 var value = GetValue(Math.Abs(height - Start.Y));
 
                 FormattedText formatted_text = new FormattedText(
-                    $"{value.ToString(SplitValueFormat, null)}",
+                    $"{value.ToString(SplitValueFormat, FormatProvider)}",
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
                     new Typeface("Microsoft YaHei"),
@@ -143,7 +143,7 @@ namespace HevoDrawing
             }
 
             var length = (End - Start).Length;
-            return new Value<double>(offsetPosition / length * context.Range.Sum + context.Range.Min.Data);
+            return context.Range.Min.GenerateNewValue(offsetPosition / length * context.Range.Sum + context.Range.Min.Data);
         }
 
         public override string GetStringValue(IVariable value)

@@ -387,7 +387,7 @@ namespace HevoDrawing
         public static ContextData ToVisualData<X>(this Dictionary<X, double> dic)
             where X : IComparable
         {
-            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new Value<double>(it.Value)));
+            return new Chart2DContextData(dic.ToDictionary(it => new Value<X>(it.Key) as IVariable, it => new FormattableValue<double>(it.Value) as Value<double>));
         }
 
         public static ContextData ToFormatVisualData<X>(this List<CroodData<X>> croods)

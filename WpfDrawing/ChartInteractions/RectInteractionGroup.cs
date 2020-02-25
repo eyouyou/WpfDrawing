@@ -71,7 +71,7 @@ namespace HevoDrawing.Interactions
             }
 
             var index = 0;
-
+            ContainerGrid.Children.Clear();
             foreach (var item in Containers)
             {
                 var c = item.DrawingCanvas;

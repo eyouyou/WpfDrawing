@@ -29,26 +29,30 @@ namespace HevoDrawing.Sample
         {
             InitializeComponent();
 
-            AxisInteractionCanvas interaction = new AxisInteractionCanvas();
-            container = new RectInteractionGroup(interaction, 2, 2
+            //AxisInteractionCanvas interaction = new AxisInteractionCanvas();
+            container = new RectInteractionGroup(null, 2, 2
                 ,new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */ }
                 , new ChartItem2() { Background = Brushes.LightPink/*Background = Brushes.LightPink  */}
                 , new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightSalmon*/ }
                 , new ChartItem() { Background = Brushes.LightPink/*Background = Brushes.LightGreen */}
                 );
             //container.Background = Brushes.LightGreen;
-            BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-            b.BlurContainer = container.DrawingGrid;
-            b.Magnification = 0.15;
-            b.BlurRadius = 25;
 
-            interaction.Tip.TextContainer.Margin = new Thickness(10);
-            interaction.Tip.Layers.Children.Insert(0, b);
-            interaction.Tip.FontSize = 11;
-            interaction.Tip.Border.BorderThickness = new Thickness(1);
-            interaction.Tip.Border.Padding = new Thickness(0);
-            interaction.Tip.Border.BorderBrush = Brushes.Black;
-            interaction.Tip.Foreground = Brushes.White;
+            foreach (var item in container.InteractionVisuals)
+            {
+                BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
+                b.BlurContainer = container.DrawingGrid;
+                b.Magnification = 0.15;
+                b.BlurRadius = 25;
+
+                item.Tip.TextContainer.Margin = new Thickness(10);
+                item.Tip.Layers.Children.Insert(0, b);
+                item.Tip.FontSize = 11;
+                item.Tip.Border.BorderThickness = new Thickness(1);
+                item.Tip.Border.Padding = new Thickness(0);
+                item.Tip.Border.BorderBrush = Brushes.Black;
+                item.Tip.Foreground = Brushes.White;
+            }
 
             Content = container;
 

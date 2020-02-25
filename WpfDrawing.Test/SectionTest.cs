@@ -37,7 +37,7 @@ namespace WpfDrawing.Test
         [TestMethod]
         public void TestMethod2()
         {
-            var sections = Tools.GetSectionsFromData(true, 100);
+            //var sections = Tools.GetSectionsFromData(true, 100);
         }
     }
 }

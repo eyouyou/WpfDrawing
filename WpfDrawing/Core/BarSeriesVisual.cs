@@ -9,7 +9,7 @@ namespace HevoDrawing
     public class BarSeriesVisual : PointsSeriesVisual
     {
         public Pen Pen { get; set; } = new Pen();
-        public Func<IVariable, Brush> Fill { get; set; }
+        public Func<IVariable, Brush> Fill { get; set; } = data => Brushes.Black;
         public GridLength BarWidth { get; set; } = new GridLength(1, GridUnitType.Star);
         public override Func<IVariable, Brush> Color
         {

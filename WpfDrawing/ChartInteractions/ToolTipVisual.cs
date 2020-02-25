@@ -73,8 +73,8 @@ namespace HevoDrawing.Interactions
                 dock_content.AddChild(MakeValueText(item), Dock.Top);
             }
             //dock_content.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            //Layers.Width = dock_content.DesiredSize.Width + dock.Margin.Left + dock.Margin.Right /*+ border.Padding.Left + border.Padding.Right*/;
-            //Layers.Height = dock_content.DesiredSize.Height + dock.Margin.Top + dock.Margin.Bottom /*+ border.Padding.Top + border.Padding.Bottom*/;
+            //Layers.Width = dock_content.DesiredSize.Width + dock.Margin.Left + dock.Margin.Right + border.Padding.Left + border.Padding.Right + TextContainer.Margin.Left + TextContainer.Margin.Right;
+            //Layers.Height = dock_content.DesiredSize.Height + dock.Margin.Top + dock.Margin.Bottom + border.Padding.Top + border.Padding.Bottom + TextContainer.Margin.Top + TextContainer.Margin.Bottom;
         }
     }
     public class ToolTipVisual : InteractionLayer

@@ -174,7 +174,7 @@ namespace HevoDrawing
 
 
             var renderSize = new Size(RenderSize.Width * _scaleX, RenderSize.Height * _scaleY);
-            Console.WriteLine($"{renderSize.Width}, {renderSize.Height}");
+            //Console.WriteLine($"{renderSize.Width}, {renderSize.Height}");
             Brush.Viewbox = new Rect(_difference, renderSize);
 
             _containerSize = BlurContainer.RenderSize;

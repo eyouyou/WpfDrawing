@@ -1,6 +1,7 @@
 ﻿using HevoDrawing.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -75,6 +76,13 @@ namespace HevoDrawing
             Visuals = new System.Windows.Media.VisualCollection(this);
             SizeChanged += RectCanvas_SizeChanged;
             MouseMove += Value_MouseMove;
+
+            Loaded += RectDrawingCanvas_Loaded;
+        }
+
+        private void RectDrawingCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
+            Replot();
         }
 
         private void Value_MouseMove(object sender, MouseEventArgs e)
@@ -103,7 +111,7 @@ namespace HevoDrawing
             //{
             //    (result.VisualHit as RectVisual).HitTest(pointResult.PointHit, EventMessage.MouseOn);
             //}
-            Console.WriteLine(result.VisualHit.GetType());
+            //Console.WriteLine(result.VisualHit.GetType());
             return HitTestResultBehavior.Stop;
         }
 
@@ -142,6 +150,9 @@ namespace HevoDrawing
 
         public void Reset()
         {
+            string stackInfo = new StackTrace().ToString();
+            Console.WriteLine(stackInfo);
+            Console.WriteLine($"{ActualWidth}, {ActualHeight}");
             PlotArea = new Rect(PlotArea.Location, new Size(ActualWidth, ActualHeight));
 
             foreach (Visual item in Visuals)
@@ -159,7 +170,7 @@ namespace HevoDrawing
         public void Replot()
         {
             IsPloted = false;
-            Reset();
+            Reset(); 
             foreach (Visual item in Visuals)
             {
                 if (item is RectDrawingVisual rect)

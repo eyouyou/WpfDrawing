@@ -18,14 +18,19 @@ namespace HevoDrawing.Interactions
         public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
         List<RectDrawingCanvasContainer> Containers;
+        List<RectDrawingCanvasContainer> ContainersUsed;
+        List<RectDrawingCanvasContainer> ContainersUnused;
         ComponentId IdGenerater = new ComponentId();
-        double ColPercentage = 0.0;
-        double RowPercentage = 0.0;
+        int Col = -1;
+        int Row = -1;
         InteractionCanvas GlobalInteraction = null;
         public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvasContainer[] canvas)
         {
             InteractionVisuals = new List<InteractionCanvas>();
             Containers = canvas.ToList();
+            ContainersUsed = new List<RectDrawingCanvasContainer>(Containers);
+            ContainersUnused = new List<RectDrawingCanvasContainer>();
+            Containers.ForEach(it => ContainerGrid.Children.Add(it));
             GlobalInteraction = interaction;
             if (interaction != null)
             {
@@ -49,20 +54,30 @@ namespace HevoDrawing.Interactions
         }
         public void Resize(int col, int row)
         {
-            ColPercentage = 1.0 / col;
+            if (Col == col && Row == row)
+            {
+                return;
+            }
+            else
+            {
+                Col = col;
+                Row = row;
+            }
+            var col_percent = 1.0 / col;
             ContainerGrid.ColumnDefinitions.Clear();
+            var total = col * row;
             for (int i = 0; i < col; i++)
             {
-                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
+                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(col_percent, GridUnitType.Star) });
             }
 
-            RowPercentage = 1.0 / row;
+            var row_percent = 1.0 / row;
             ContainerGrid.RowDefinitions.Clear();
             for (int i = 0; i < row; i++)
             {
-                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
+                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(row_percent, GridUnitType.Star) });
             }
-
+            ContainerGrid.UpdateLayout();
             InteractionVisuals.Clear();
             if (GlobalInteraction != null)
             {
@@ -71,15 +86,23 @@ namespace HevoDrawing.Interactions
             }
 
             var index = 0;
-            ContainerGrid.Children.Clear();
+            ContainersUsed.Clear();
+            ContainersUnused.Clear();
             foreach (var item in Containers)
             {
+                if (index >= total)
+                {
+                    ContainersUnused.Add(item);
+                    continue;
+                }
                 var c = item.DrawingCanvas;
-                ContainerGrid.Children.Add(item);
+                ContainersUsed.Add(item);
                 c.Col = index % col;
                 c.Row = index / col;
                 SetColumn(item, c.Col);
                 SetRow(item, c.Row);
+                SetColumnSpan(item, 1);
+                SetRowSpan(item, 1);
                 if (c.Id == -1)
                 {
                     c.Id = IdGenerater.GenerateId();
@@ -115,22 +138,21 @@ namespace HevoDrawing.Interactions
         }
         public RectInteractionGroup(int col = 1, int row = 1, params RectDrawingCanvasContainer[] canvas)
         {
-            ColPercentage = 1.0 / col;
+            var col_percent = 1.0 / col;
             for (int i = 0; i < col; i++)
             {
-                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ColPercentage, GridUnitType.Star) });
+                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(col_percent, GridUnitType.Star) });
             }
 
-            RowPercentage = 1.0 / row;
+            var row_percent = 1.0 / row;
             for (int i = 0; i < row; i++)
             {
-                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(RowPercentage, GridUnitType.Star) });
+                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(row_percent, GridUnitType.Star) });
             }
             var index = 0;
             foreach (var item in canvas)
             {
                 var c = item.DrawingCanvas;
-                ContainerGrid.Children.Add(item);
                 c.Col = index % col;
                 c.Row = index / col;
                 SetColumn(item, c.Col);
@@ -144,7 +166,6 @@ namespace HevoDrawing.Interactions
             Canvas = canvas.ToDictionary(it => it.DrawingCanvas.Id, it => it.DrawingCanvas);
 
             Children.Add(ContainerGrid);
-
 
             SizeChanged += RectInteractionGroup_SizeChanged;
         }
@@ -218,9 +239,24 @@ namespace HevoDrawing.Interactions
 
         public void Replot()
         {
-            foreach (var item in Canvas)
+            foreach (var item in ContainersUnused)
             {
-                item.Value.Replot();
+                if (item.IsVisible)
+                {
+                    item.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            foreach (var item in ContainersUsed)
+            {
+                if (!item.IsVisible)
+                {
+                    item.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    item.DrawingCanvas.Replot();
+                }
             }
         }
         /// <summary>

@@ -56,7 +56,7 @@ namespace HevoDrawing.Abstractions
         /// <summary>
         /// 数据显示全 忽略x轴SplitValue的区间限制
         /// </summary>
-        public bool IsDataFull { get; set; } = true;
+        public bool IsDataFull { get; set; } = false;
 
         public List<Section> GetSectionsExcept(Section section)
         {
@@ -476,10 +476,10 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public override void CalculateRequireData()
         {
-            var splitValue = SplitValues;
+            var splitValue = new List<IVariable>(SplitValues);
             var isInterregional = IsInterregional;
 
-            var splitRatios = Ratios;
+            var splitRatios = new List<double>(Ratios);
 
             if (Data == null || Data.Count == 0)
             {

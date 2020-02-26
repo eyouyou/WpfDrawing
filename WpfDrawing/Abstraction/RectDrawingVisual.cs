@@ -103,7 +103,7 @@ namespace HevoDrawing.Abstractions
         }
         private HitTestResultBehavior MyCallback(HitTestResult result)
         {
-            Console.WriteLine(result.VisualHit.GetType());
+            //Console.WriteLine(result.VisualHit.GetType());
             foreach (RectDrawingVisual item in Visuals)
             {
                 if (result.VisualHit == item)

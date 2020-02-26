@@ -14,7 +14,7 @@ namespace HevoDrawing
         /// <summary>
         /// 放置<see cref="InteractionCanvas"/> 的容器
         /// </summary>
-        protected Grid DrawingCanvasArea { get; } = new Grid();
+        public Grid DrawingCanvasArea { get; } = new Grid();
 
         /// <summary>
         /// 已加入 <see cref="DrawingCanvasArea"/>
@@ -24,6 +24,11 @@ namespace HevoDrawing
         public RectDrawingCanvasContainer()
         {
             DrawingCanvasArea.Children.Add(DrawingCanvas);
+        }
+        public void Arrange()
+        {
+            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            ArrangeCore(new Rect(DesiredSize));
         }
         /// <summary>
         /// 如果该值为空，
@@ -36,7 +41,7 @@ namespace HevoDrawing
         {
             if (InteractionCanvas != null)
             {
-                DrawingCanvasArea.Children.Add(InteractionCanvas);
+                DrawingCanvasArea.Children.Insert(1, InteractionCanvas);
                 Grid.SetColumn(InteractionCanvas, 0);
                 Grid.SetRow(InteractionCanvas, 0);
             }

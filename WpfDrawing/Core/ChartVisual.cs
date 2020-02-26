@@ -104,9 +104,8 @@ namespace HevoDrawing
         public override void Plot()
         {
             var mainArea = PlotArea;
-            if (mainArea.Size.Height < 0 || mainArea.Size.Width < 0)
+            if (mainArea.Size.Height <= 0 || mainArea.Size.Width <= 0)
             {
-                ParentCanvas.Plot();
                 return;
             }
 

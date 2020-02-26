@@ -41,9 +41,19 @@ namespace WpfDrawing.Sample
 
             SizeChanged += MultiChartings_SizeChanged;
         }
-
+        int minHeight = 150;
+        int minWidth = 600;
+        int max_col_count = 3;
+        int max_row_count = 2;
         private void MultiChartings_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            var act_wid = e.NewSize.Width;
+            var act_hei = e.NewSize.Height;
+            var col_count = (int)(act_wid / minWidth) >= max_col_count ? max_col_count : (int)(act_wid / minWidth);
+            col_count = col_count <= 1 ? 1 : col_count;
+            var row_count = (int)(act_hei / minHeight) >= max_row_count ? max_row_count : (int)(act_hei / minHeight);
+            row_count = row_count <= 1 ? 1 : row_count;
+            container.Resize(col_count, row_count);
             container.Replot();
         }
 
@@ -111,6 +121,8 @@ namespace WpfDrawing.Sample
                 dock.AddChild(DrawingCanvasArea, Dock.Top);
 
                 Content = dock;
+
+
             }
 
             private void Chart_IntersectChanged(Dictionary<string, SeriesData> data)

@@ -479,7 +479,11 @@ namespace HevoDrawing.Abstractions
             var splitValue = new List<IVariable>(SplitValues);
             var isInterregional = IsInterregional;
 
-            var splitRatios = new List<double>(Ratios);
+            List<double> splitRatios = new List<double>();
+            if (Ratios != null)
+            {
+                splitRatios = new List<double>(Ratios);
+            }
 
             if (Data == null || Data.Count == 0)
             {

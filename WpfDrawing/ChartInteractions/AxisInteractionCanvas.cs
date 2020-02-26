@@ -25,8 +25,27 @@ namespace HevoDrawing.Interactions
             DataToolTip = new ToolTipVisual(this);
 
             MouseMove += AxisInteractionVisual_MouseMove;
+            MouseLeave += AxisInteractionCanvas_MouseLeave;
             IsCrossShow = true;
             IsToolTipShow = true;
+        }
+
+        private void AxisInteractionCanvas_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var point = new Point(double.NegativeInfinity, double.NegativeInfinity);
+            if (!Standalone)
+            {
+                Plot(point, EventMessage.MouseOn);
+                Cross.PlotToParent(point, EventMessage.MouseOn);
+                DataToolTip.PlotToParent(point, EventMessage.MouseOn);
+            }
+            else
+            {
+                PlotStandalone(point, EventMessage.MouseOn);
+                Cross.PlotToParentStandalone(point, EventMessage.MouseOn);
+                DataToolTip.PlotToParentStandalone(point, EventMessage.MouseOn);
+            }
+
         }
 
         private void AxisInteractionVisual_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

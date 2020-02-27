@@ -67,8 +67,8 @@ namespace HevoDrawing
         }
         private List<ChartCrood> _chartCroods = null;
         public Dictionary<IVariable, Value<double>> Data { get; private set; }
-        private DiscreteAxisContextData XData { get; set; }
-        private ContinuousAxisContextData YData { get; set; }
+        private DiscreteAxisContextData XData { get; set; } = DiscreteAxisContextData.Empty;
+        private ContinuousAxisContextData YData { get; set; } = ContinuousAxisContextData.Empty;
 
         public override bool IsEmpty => XData.Data.Count == 0 || YData.Range.IsEmpty;
 

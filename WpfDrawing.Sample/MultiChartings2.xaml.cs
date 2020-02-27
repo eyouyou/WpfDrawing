@@ -26,9 +26,9 @@ namespace WpfDrawing.Sample
 
             container = new RectInteractionGroup(null, 2, 2
                 //, new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */ }
-                , new ChartItem2() {/*Background = Brushes.LightPink*//*Background = Brushes.LightPink  */}
-                //, new Strength() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightSalmon*/ }
-               // , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */}
+                //, new ChartItem2() {/*Background = Brushes.LightPink*//*Background = Brushes.LightPink  */}
+                , new Strength() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightSalmon*/ }
+                //, new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */}
                 );
 
             Content = container;

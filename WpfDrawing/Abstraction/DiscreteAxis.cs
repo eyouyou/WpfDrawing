@@ -85,7 +85,13 @@ namespace HevoDrawing.Abstractions
             //计算相对比例
             return Vector.Multiply(End - Start, ratio);
         }
-        public override IVariable GetValue(double offsetPosition)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offsetPosition"></param>
+        /// <param name="withOutOfBoundData">超出边界按照最近的来</param>
+        /// <returns></returns>
+        public override IVariable GetValue(double offsetPosition, bool withOutOfBoundData = false)
         {
             if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
             {
@@ -103,9 +109,13 @@ namespace HevoDrawing.Abstractions
             //isInterregional 决定往那里靠 默认是isInterregional = true 
             var blockIndex = ValueRatioCoordinates.BinarySearch(new RatioSection() { Current = percent });
             //var index = (int)Math.Round();
-            if (blockIndex < 0)
+            if (blockIndex < 0 && !withOutOfBoundData)
             {
                 return default;
+            }
+            else if (blockIndex < 0)
+            {
+                blockIndex = ~blockIndex;
             }
             if (blockIndex >= Data.Count)
             {

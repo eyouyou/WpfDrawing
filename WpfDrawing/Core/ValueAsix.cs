@@ -17,15 +17,15 @@ namespace HevoDrawing
     {
         public Range Range { get; set; }
 
-        public override bool IsEmpty => Range.Min.Data == 0 && double.IsNaN(Range.Max.Data);
+        public override bool IsEmpty => Range == null || Range.IsEmpty;
 
         public static ContinuousAxisContextData Empty =>
-            new ContinuousAxisContextData(new Range() { Max = new Value<double>(double.NaN), Min = new Value<double>(0) });
+            new ContinuousAxisContextData(Range.Empty);
 
 
         public ContinuousAxisContextData(Range range)
         {
-            Range = new Range() { Max = new Value<double>(range.Max.Data), Min = new Value<double>(range.Min.Data) };
+            Range = range?.Copy() ?? throw new ArgumentNullException();
         }
         public ContinuousAxisContextData(List<double> values)
         {
@@ -50,11 +50,30 @@ namespace HevoDrawing
     /// </summary>
     public class Range
     {
+        public Range(Value<double> min, Value<double> max)
+        {
+            Min = min.GenerateNewValue(min.Data);
+            Max = max.GenerateNewValue(max.Data);
+        }
+        public Range(double min, double max)
+        {
+            Min = new FormattableValue<double>(min);
+            Max = new FormattableValue<double>(max);
+        }
+        public Range()
+        {
+
+        }
         public Value<double> Min { get; set; } = Value<double>.BadT;
         public Value<double> Max { get; set; } = Value<double>.BadT;
         public double Sum => Max.Data - Min.Data;
 
         public bool IsEmpty => Min.IsBad || Max.IsBad;
+        public static Range Empty => new Range();
+        public Range Copy()
+        {
+            return new Range() { Max = Max.GenerateNewValue(Max.Data), Min = Min.GenerateNewValue(Min.Data) };
+        }
     }
     /// <summary>
     /// 连续 是否需要再进行抽象？
@@ -144,7 +163,7 @@ namespace HevoDrawing
             }
         }
 
-        public override IVariable GetValue(double offsetPosition)
+        public override IVariable GetValue(double offsetPosition, bool withOutOfBoundData = false)
         {
             if (!(VisualData is ContinuousAxisContextData context))
             {

@@ -56,7 +56,7 @@ namespace HevoDrawing.Interactions
 
             if (!data.Current.Items.ContainsKey(ContextDataItem.HitPointer))
             {
-                ParentCanvas.Plot(point, @event);
+                return;
             }
             var hitPointer = (Point)data.Current.Items[ContextDataItem.HitPointer];
             //var is_hit_data = (bool)data.Current.Items[ContextDataItem.IsHintData];
@@ -280,9 +280,10 @@ namespace HevoDrawing.Interactions
                 Canvas.SetTop(Y, plotArea.Location.Y);
                 Canvas.SetLeft(Y, plotArea.Location.X);
             }
+
             if (!data.Current.Items.ContainsKey(ContextDataItem.HitPointer))
             {
-                ParentCanvas.Plot(point, @event);
+                return;
             }
             var hitPointer = (Point)data.Current.Items[ContextDataItem.HitPointer];
             //优化

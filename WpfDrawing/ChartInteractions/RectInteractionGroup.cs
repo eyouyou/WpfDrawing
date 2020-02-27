@@ -15,6 +15,7 @@ namespace HevoDrawing.Interactions
     /// </summary>
     public class RectInteractionGroup : Grid
     {
+        public GridLength CellMargin { get; set; } = new GridLength(0);
         public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
         List<RectDrawingCanvasContainer> Containers;
@@ -54,6 +55,8 @@ namespace HevoDrawing.Interactions
         }
         public void Resize(int col, int row)
         {
+            Tools.GetActualLength(CellMargin, ActualWidth);
+
             if (Col == col && Row == row)
             {
                 return;

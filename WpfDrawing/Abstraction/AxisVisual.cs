@@ -213,7 +213,14 @@ namespace HevoDrawing.Abstractions
     {
         public abstract string GetStringValue(T value);
         public abstract Vector GetPosition(T value);
-        public abstract T GetValue(double offsetPosition);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offsetPosition"></param>
+        /// <param name="withOutOfBoundData">超出边界按照最近的来</param>
+        /// <returns></returns>
+        public abstract T GetValue(double offsetPosition, bool withOutOfBoundData = false);
         public AxisLabelData GetAxisLabelData(T value)
         {
             var position = GetPosition(value);

@@ -16,7 +16,11 @@ namespace HevoDrawing.Interactions
     public class AxisInteractionCanvas : InteractionCanvas
     {
         ComponentId IdGenerator = new ComponentId();
-        public bool FollowNearest { get; set; }
+
+        /// <summary>
+        /// 所有超出边界的数据都自动在边界内选择最近
+        /// </summary>
+        public bool TryDataInBounds { get; set; } = true;
         private Point LastHitPoint;
         public AxisInteractionCanvas()
         {
@@ -325,7 +329,8 @@ namespace HevoDrawing.Interactions
             var series = coms.SeriesCollection;
 
             var is_data_hit = false;
-            if (plotArea.Contains(currentPoint))
+
+            if (plotArea.Contains(currentPoint) && coms.IsDataComplete && coms.ConnectVisual.ParentCanvas.IsPloted)
             {
                 foreach (SeriesVisual series_item in series)
                 {
@@ -337,7 +342,7 @@ namespace HevoDrawing.Interactions
                     }
                     var series_plot = series_item.PlotArea;
                     var xAxis = coms.FindXById(series_item.XAxisId) as DiscreteAxis;
-                    var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X));
+                    var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X), true);
                     if (value.IsBad())
                     {
                         continue;

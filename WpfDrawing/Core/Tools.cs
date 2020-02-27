@@ -371,6 +371,35 @@ namespace HevoDrawing
             visual.Reset();
         }
 
+        public static Thickness GetGridCurrentMargin(double vertial, double horizental, int row, int col, int row_index, int col_index)
+        {
+            Thickness thick = new Thickness();
+
+            thick.Left = horizental / 2;
+            thick.Right = horizental / 2;
+
+            if (col_index == 0)
+            {
+                thick.Left = horizental;
+            }
+            else if (col_index == col - 1)
+            {
+                thick.Right = horizental;
+            }
+
+            thick.Top = vertial / 2;
+            thick.Bottom = vertial / 2;
+
+            if (row_index == 0)
+            {
+                thick.Top = vertial;
+            }
+            else if (row_index == row - 1)
+            {
+                thick.Bottom = vertial;
+            }
+            return thick;
+        }
     }
     public class VisualData<T>
     {

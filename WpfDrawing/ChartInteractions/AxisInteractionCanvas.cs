@@ -180,7 +180,7 @@ namespace HevoDrawing.Interactions
                                 //验证数据是否包含等
                                 if (!value.IsBad()
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
-                                    && series_item.VisualData is TwoDimensionalContextData series_data
+                                    && series_item.VisualData is ChartContextData series_data
                                     && series_data.ContainsX(value, out var yValue))
                                 {
                                     isHintData = true;
@@ -346,7 +346,7 @@ namespace HevoDrawing.Interactions
                     var line_series_item = series_item.GetInterectHoverableLineSeriesVisual();
 
                     if (coms.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
-                        && series_item.VisualData is TwoDimensionalContextData series_data
+                        && series_item.VisualData is ChartContextData series_data
                         && series_data.ContainsX(value, out var yValue))
                     {
                         var x = xAxis.GetPosition(value).X + xAxis.Start.X;

@@ -46,7 +46,7 @@ namespace HevoDrawing
                 }
             }
             //按照数据定位
-            else if (VisualData is TwoDimensionalContextData data && !data.IsEmpty)
+            else if (VisualData is ChartContextData data && !data.IsEmpty)
             {
 
             }

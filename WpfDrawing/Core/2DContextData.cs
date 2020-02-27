@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace HevoDrawing
 {
-    public abstract class TwoDimensionalContextData : ContextData
+    public abstract class ChartContextData : ContextData
     {
         public abstract bool ContainsX(IVariable x, out Value<double> y);
         public abstract List<ChartCrood> ChartCroods { get; }
@@ -19,9 +19,9 @@ namespace HevoDrawing
     /// <summary>
     /// x不允许不同数据
     /// 查询速度快
-    /// 调用请直接使用<see cref="TwoDimensionalContextData"/>
+    /// 调用请直接使用<see cref="ChartContextData"/>
     /// </summary>
-    internal class Chart2DContextData : TwoDimensionalContextData
+    internal class Chart2DContextData : ChartContextData
     {
         public Chart2DContextData(Chart2DContextData axisVisualData)
             : this(axisVisualData.Data, axisVisualData.YData, axisVisualData.XData)
@@ -32,7 +32,6 @@ namespace HevoDrawing
             : this(data, new ContinuousAxisContextData(data.Values.ToList()), new DiscreteAxisContextData(data.Keys.ToList()))
         {
         }
-
         private Chart2DContextData(Dictionary<IVariable, Value<double>> data, ContinuousAxisContextData ydata, DiscreteAxisContextData xdata)
         {
             Data = data;
@@ -42,6 +41,10 @@ namespace HevoDrawing
             YData.Items = Items;
 
             _chartCroods = Data.Select(it => new ChartCrood(it.Key, it.Value)).ToList();
+        }
+        private Chart2DContextData(Dictionary<IVariable, Value<double>> data, Range range)
+            : this(data, new ContinuousAxisContextData(range), new DiscreteAxisContextData(data.Keys.ToList()))
+        {
         }
         public Chart2DContextData(List<IVariable> xData, List<double> yData)
         {
@@ -64,8 +67,8 @@ namespace HevoDrawing
         }
         private List<ChartCrood> _chartCroods = null;
         public Dictionary<IVariable, Value<double>> Data { get; private set; }
-        public DiscreteAxisContextData XData { get; private set; }
-        public ContinuousAxisContextData YData { get; private set; }
+        private DiscreteAxisContextData XData { get; set; }
+        private ContinuousAxisContextData YData { get; set; }
 
         public override bool IsEmpty => XData.Data.Count == 0 || YData.Range.IsEmpty;
 
@@ -79,8 +82,7 @@ namespace HevoDrawing
 
         public override ContextData Copy()
         {
-            var data = new Chart2DContextData(new Dictionary<IVariable, Value<double>>(Data));
-            data.Data = Data;
+            var data = new Chart2DContextData(new Dictionary<IVariable, Value<double>>(Data), YData.Range);
             data.Items = new Dictionary<ContextDataItem, object>(Items);
             return data;
         }
@@ -103,9 +105,9 @@ namespace HevoDrawing
     /// <summary>
     /// 查询速度慢 list
     /// 但是可以重复key
-    /// 调用请直接使用<see cref="TwoDimensionalContextData"/>
+    /// 调用请直接使用<see cref="ChartContextData"/>
     /// </summary>
-    internal class Chart2DContextData2 : TwoDimensionalContextData
+    internal class Chart2DContextData2 : ChartContextData
     {
         public Chart2DContextData2(double max, double min, DiscreteAxisContextData xs)
             : this(new Value<double>(max), new Value<double>(min), xs)

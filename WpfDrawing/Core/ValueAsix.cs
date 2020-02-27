@@ -10,6 +10,9 @@ using System.Windows.Media;
 
 namespace HevoDrawing
 {
+    /// <summary>
+    /// 不包含数据
+    /// </summary>
     public class ContinuousAxisContextData : ContextData
     {
         public Range Range { get; set; }
@@ -22,7 +25,7 @@ namespace HevoDrawing
 
         public ContinuousAxisContextData(Range range)
         {
-            Range = range;
+            Range = new Range() { Max = new Value<double>(range.Max.Data), Min = new Value<double>(range.Min.Data) };
         }
         public ContinuousAxisContextData(List<double> values)
         {
@@ -30,7 +33,11 @@ namespace HevoDrawing
         }
         public ContinuousAxisContextData(List<Value<double>> values)
         {
-            Range = new Range() { Max = values.Max(), Min = values.Min() };
+            if (values == null || values.Count == 0)
+            {
+                return;
+            }
+            Range = new Range() { Max = new Value<double>(values.Max().Data), Min = new Value<double>(values.Min().Data) };
         }
         public override ContextData Copy()
         {

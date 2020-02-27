@@ -25,10 +25,10 @@ namespace WpfDrawing.Sample
             InitializeComponent();
 
             container = new RectInteractionGroup(null, 2, 2
-                , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */ }
+                //, new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */ }
                 , new ChartItem2() {/*Background = Brushes.LightPink*//*Background = Brushes.LightPink  */}
-                , new Strength() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightSalmon*/ }
-                , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */}
+                //, new Strength() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightSalmon*/ }
+               // , new ChartItem() { /*Background = Brushes.LightPink*/ /*Background = Brushes.LightGreen */}
                 );
 
             Content = container;
@@ -514,6 +514,12 @@ namespace WpfDrawing.Sample
 
             public ChartItem2()
             {
+                lineSeries2.RangeCalculator = data =>
+                {
+                    var range = data.YContextData.Range;
+                    range.Max.Data *= 1.2;
+                    return range;
+                };
                 BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
                 b.BlurContainer = DrawingCanvas;
                 b.Magnification = 0.15;

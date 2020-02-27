@@ -19,11 +19,11 @@ namespace HevoDrawing
         public List<ContextData> XData { get; } = new List<ContextData>();
         public List<ContextData> YData { get; } = new List<ContextData>();
 
-        public ChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as ChartContextData).ToList())
+        public ChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as TwoDimensionalContextData).ToList())
         {
 
         }
-        public ChartGroupContextData(List<ChartContextData> data)
+        public ChartGroupContextData(List<TwoDimensionalContextData> data)
         {
             Data = data.Select(it => (ContextData)it).ToList();
             XData = data.Select(it => (ContextData)it.XContextData).ToList();
@@ -31,7 +31,7 @@ namespace HevoDrawing
         }
 
         public override bool IsEmpty => Data.Count == 0 || Data.Any(it => it.IsEmpty);
-        public static ChartGroupContextData Empty => new ChartGroupContextData(new List<ChartContextData>());
+        public static ChartGroupContextData Empty => new ChartGroupContextData(new List<TwoDimensionalContextData>());
         public override ContextData Copy()
         {
             return new ChartGroupContextData(Data.Select(it => it.Copy()).ToList());

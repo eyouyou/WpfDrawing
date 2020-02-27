@@ -13,8 +13,8 @@ namespace HevoDrawing
         public Func<IVariable, Brush> Fill { get; set; } = data => Brushes.Black;
         public GridLength BarWidth { get; set; } = new GridLength(1, GridUnitType.Star);
         public bool ShowData { get; set; } = true;
-        public GridLength DataVericalMargin { get; set; } = new GridLength(1);
-        public double MinHeight { get; set; } = 0;
+        public GridLength DataVericalMargin { get; set; } = new GridLength(0);
+        public double MinHeight { get; set; } = 10;
         public override Func<IVariable, Brush> Color
         {
             get
@@ -82,7 +82,7 @@ namespace HevoDrawing
                         y.ChartFontSize,
                         Brushes.Black);
                     var dataMargin = Tools.GetActualLength(DataVericalMargin, plotArea.Height);
-                    var text_point = new Point(item.Point.X - formatted_text.Width / 2, item.Point.Y - formatted_text.Height - dataMargin);
+                    var text_point = new Point(item.Point.X - formatted_text.Width / 2, pointY - formatted_text.Height - dataMargin);
                     dc.DrawText(formatted_text, text_point);
                 }
                 index++;

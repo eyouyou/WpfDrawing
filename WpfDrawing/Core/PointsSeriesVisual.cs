@@ -14,7 +14,7 @@ namespace HevoDrawing
         /// <summary>
         /// 对外接口 计算range
         /// </summary>
-        public Func<ChartContextData, Range> RangeCalculator { get; set; }
+        public Func<TwoDimensionalContextData, Range> RangeCalculator { get; set; }
 
         public override Func<IVariable, Brush> Color
         {
@@ -28,7 +28,7 @@ namespace HevoDrawing
         /// <returns></returns>
         public Range GetRange()
         {
-            if (!(VisualData is ChartContextData data))
+            if (!(VisualData is TwoDimensionalContextData data))
             {
                 return default;
             }
@@ -58,7 +58,7 @@ namespace HevoDrawing
             get
             {
                 var list = new List<ChartCrood>();
-                var vData = VisualData.TransformVisualData<ChartContextData>();
+                var vData = VisualData.TransformVisualData<TwoDimensionalContextData>();
                 if (vData.IsBad)
                 {
                     return list;

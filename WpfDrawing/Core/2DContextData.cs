@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace HevoDrawing
 {
-    public abstract class ChartContextData : ContextData
+    public abstract class TwoDimensionalContextData : ContextData
     {
         public abstract bool ContainsX(IVariable x, out Value<double> y);
         public abstract List<ChartCrood> ChartCroods { get; }
@@ -19,9 +19,9 @@ namespace HevoDrawing
     /// <summary>
     /// x不允许不同数据
     /// 查询速度快
-    /// 调用请直接使用<see cref="ChartContextData"/>
+    /// 调用请直接使用<see cref="TwoDimensionalContextData"/>
     /// </summary>
-    internal class Chart2DContextData : ChartContextData
+    internal class Chart2DContextData : TwoDimensionalContextData
     {
         public Chart2DContextData(Chart2DContextData axisVisualData)
             : this(axisVisualData.Data, axisVisualData.YData, axisVisualData.XData)
@@ -105,9 +105,9 @@ namespace HevoDrawing
     /// <summary>
     /// 查询速度慢 list
     /// 但是可以重复key
-    /// 调用请直接使用<see cref="ChartContextData"/>
+    /// 调用请直接使用<see cref="TwoDimensionalContextData"/>
     /// </summary>
-    internal class Chart2DContextData2 : ChartContextData
+    internal class Chart2DContextData2 : TwoDimensionalContextData
     {
         public Chart2DContextData2(double max, double min, DiscreteAxisContextData xs)
             : this(new Value<double>(max), new Value<double>(min), xs)

@@ -188,7 +188,7 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public bool IsGridLineClose { get; set; } = false;
         public Pen GridLinePen { get; set; } = new Pen(Brushes.Gray, 1);
-        public bool IsAxisLabelShow { get; set; } = true;
+        public bool IsAxisLabelShow { get; set; } = false;
         public GridLength AxisLabelOffset { get; set; } = GridLength.Auto;
         public AxisLabel AxisLabel { get; set; } = new AxisLabel() { Padding = new Thickness(4), Background = Brushes.DarkBlue, Foreground = Brushes.White, Opacity = 1 };
         public abstract IFormatProvider FormatProvider { get; }

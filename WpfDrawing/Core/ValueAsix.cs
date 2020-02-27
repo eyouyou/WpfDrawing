@@ -74,6 +74,9 @@ namespace HevoDrawing
         public override void PlotToDc(DrawingContext dc)
         {
             var vData = VisualData.TransformVisualData<ContinuousAxisContextData>();
+
+            dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), new Point(Start.X, End.Y));
+
             if (vData.IsBad)
             {
                 return;
@@ -81,7 +84,6 @@ namespace HevoDrawing
 
             Freeze();
 
-            dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), new Point(Start.X, End.Y));
 
             var points = SortedSplitPoints;
             if (points == null)

@@ -14,7 +14,7 @@ namespace HevoDrawing
         /// <summary>
         /// 放置<see cref="InteractionCanvas"/> 的容器
         /// </summary>
-        public Grid DrawingCanvasArea { get; } = new Grid();
+        protected Grid DrawingCanvasArea { get; } = new Grid();
 
         /// <summary>
         /// 已加入 <see cref="DrawingCanvasArea"/>

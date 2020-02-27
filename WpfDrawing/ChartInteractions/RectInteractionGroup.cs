@@ -174,9 +174,9 @@ namespace HevoDrawing.Interactions
             if (IsVisible)
             {
                 var index = 0;
-                foreach (var item in Canvas)
+                foreach (var item in ContainersUsed)
                 {
-                    var canvas = item.Value;
+                    var canvas = item.DrawingCanvas;
                     canvas.InteractionCanvas.Hide();
                     var point = canvas.TranslatePoint(new Point(0, 0), this);
                     canvas.CurrentLocation = point;
@@ -190,10 +190,10 @@ namespace HevoDrawing.Interactions
             if (IsVisible)
             {
                 var index = 0;
-                foreach (var item in Containers)
+                foreach (var item in ContainersUsed)
                 {
                     var canvas = item.DrawingCanvas;
-                    canvas.InteractionCanvas.Hide();
+                    canvas.InteractionCanvas?.Hide();
                     var point = canvas.TranslatePoint(new Point(0, 0), item);
 
                     canvas.CurrentLocation = point;

@@ -114,10 +114,6 @@ namespace HevoDrawing
             if (data.IsBad)
             {
                 var dataMade = SeriesVisuals.InductiveData();
-                if (dataMade.IsEmpty)
-                {
-                    return;
-                }
                 data.Value = dataMade;
                 AxisXVisuals.InductiveData(dataMade);
                 AxisYVisuals.InductiveData(dataMade);

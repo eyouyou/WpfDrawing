@@ -476,7 +476,11 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public override void CalculateRequireData()
         {
-            var splitValue = new List<IVariable>(SplitValues);
+            var splitValue = new List<IVariable>();
+            if (SplitValues != null)
+            {
+                splitValue = new List<IVariable>(SplitValues);
+            }
             var isInterregional = IsInterregional;
 
             List<double> splitRatios = new List<double>();
@@ -510,10 +514,7 @@ namespace HevoDrawing.Abstractions
         }
         public override void PlotToDc(DrawingContext dc)
         {
-            if (!(VisualData is DiscreteAxisContextData contextData))
-            {
-                return;
-            }
+            var contextData = VisualData.TransformVisualData<DiscreteAxisContextData>();
 
             var plotArea = PlotArea;
             Freeze();
@@ -522,6 +523,10 @@ namespace HevoDrawing.Abstractions
 
             dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), endPoint);
 
+            if (contextData.IsBad)
+            {
+                return;
+            }
             //名称设置
             //if (!string.IsNullOrEmpty(Name))
             //{

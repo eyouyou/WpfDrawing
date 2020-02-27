@@ -11,6 +11,8 @@ namespace HevoDrawing
         public Pen Pen { get; set; } = new Pen();
         public Func<IVariable, Brush> Fill { get; set; } = data => Brushes.Black;
         public GridLength BarWidth { get; set; } = new GridLength(1, GridUnitType.Star);
+
+        public double MinHeight { get; set; } = 0;
         public override Func<IVariable, Brush> Color
         {
             get
@@ -55,9 +57,17 @@ namespace HevoDrawing
                 }
                 var width = BarWidth.GetActualLength(all_width);
 
+                var offset = Math.Abs(item.Point.Y - startx.Y);
+                var pointY = item.Point.Y;
+
+                if (offset < MinHeight)
+                {
+                    pointY -= MinHeight - offset;
+                    offset = MinHeight;
+                }
 
                 var leftTopX = item.Point.X - width / 2;
-                dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, item.Point.Y), new Size(width, Math.Abs(item.Point.Y - startx.Y))));
+                dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, pointY), new Size(width, offset)));
                 index++;
             }
             dc.Pop();

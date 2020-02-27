@@ -16,7 +16,7 @@ namespace HevoDrawing.Interactions
     public class AxisInteractionCanvas : InteractionCanvas
     {
         ComponentId IdGenerator = new ComponentId();
-
+        public bool FollowNearest { get; set; }
         private Point LastHitPoint;
         public AxisInteractionCanvas()
         {
@@ -25,7 +25,7 @@ namespace HevoDrawing.Interactions
             DataToolTip = new ToolTipVisual(this);
 
             MouseMove += AxisInteractionVisual_MouseMove;
-            MouseLeave += AxisInteractionCanvas_MouseLeave;
+            //MouseLeave += AxisInteractionCanvas_MouseLeave;
             IsCrossShow = true;
             IsToolTipShow = true;
         }
@@ -323,6 +323,8 @@ namespace HevoDrawing.Interactions
             var plotArea = coms.ConnectVisual.PlotArea;
 
             var series = coms.SeriesCollection;
+
+            var is_data_hit = false;
             if (plotArea.Contains(currentPoint))
             {
                 foreach (SeriesVisual series_item in series)
@@ -340,7 +342,7 @@ namespace HevoDrawing.Interactions
                     {
                         continue;
                     }
-
+                    is_data_hit = true;
                     var line_series_item = series_item.GetInterectHoverableLineSeriesVisual();
 
                     if (coms.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis

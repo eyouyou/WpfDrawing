@@ -198,6 +198,18 @@ namespace HevoDrawing
             }
             return sections;
         }
+        public static List<Section> ChangeToSections(List<IVariable> splitValues)
+        {
+            var sections = new List<Section>();
+            for (int i = 0; i < splitValues.Count; i++)
+            {
+                if (i < splitValues.Count - 1)
+                {
+                    sections.Add(new Section() { Left = splitValues[i], Right = splitValues[i + 1], SectionRatio = 0 });
+                }
+            }
+            return sections;
+        }
         public static List<double> GetAverageRatios(int segements)
         {
             var ratio = 1.00 / segements;

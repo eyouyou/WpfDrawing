@@ -29,7 +29,7 @@ namespace HevoDrawing
             {
                 return double.NaN;
             }
-            List<Section> total = ContainsSections != null && ContainsSections.Count >= 1 ? ContainsSections : GetSectionsExcept(section);
+            List<Section> total = GetSectionsExcept(section);
             var totalMilliseconds = 0.0;
             var index = 0;
             var data_index = -1;

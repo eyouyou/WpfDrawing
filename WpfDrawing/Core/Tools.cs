@@ -69,22 +69,43 @@ namespace HevoDrawing
             List<RatioSection> list = new List<RatioSection>();
 
             var valueCroodRatios = new List<double>();
-            foreach (var item in data)
+            if (data.Count == 1)
             {
                 var index2 = 0;
                 foreach (var section in sections)
                 {
-                    if (section.Contains(item))
+                    if (section.Contains(data[0]))
                     {
-                        var position = xAxis.IntervalPositioning(section, item) * section.SectionRatio;
+                        var position = xAxis.IntervalPositioning(section, data[0], 0) * section.SectionRatio;
                         var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
                         valueCroodRatios.Add(ratioCrood);
+
+                        var position2 = xAxis.IntervalPositioning(section, data[0], 1) * section.SectionRatio;
+                        var ratioCrood2 = position2 + sections.Take(index2).Select(it => it.SectionRatio).Sum();
+                        valueCroodRatios.Add(ratioCrood2);
                         break;
                     }
                     index2++;
                 }
             }
-
+            else
+            {
+                foreach (var item in data)
+                {
+                    var index2 = 0;
+                    foreach (var section in sections)
+                    {
+                        if (section.Contains(item))
+                        {
+                            var position = xAxis.IntervalPositioning(section, item, 0) * section.SectionRatio;
+                            var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
+                            valueCroodRatios.Add(ratioCrood);
+                            break;
+                        }
+                        index2++;
+                    }
+                }
+            }
             if (isInterregional)
             {
                 valueCroodRatios.Insert(0, 1);

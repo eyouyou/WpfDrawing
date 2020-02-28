@@ -232,10 +232,10 @@ namespace WpfDrawing.Sample
             ChartVisual chart = new ChartVisual();
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "t", SplitValueFormat = "t", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
 
-            StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "涨停", LinePen = new Pen(Brushes.SpringGreen, 1) };
-            StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "跌停", LinePen = new Pen(Brushes.Red, 1) };
-            StraightLineSeriesVisual lineSeries3 = new StraightLineSeriesVisual() { Name = "一字涨停", LinePen = new Pen(Brushes.Black, 1) };
-            StraightLineSeriesVisual lineSeries4 = new StraightLineSeriesVisual() { Name = "非一字涨停", LinePen = new Pen(Brushes.AliceBlue, 1) };
+            BarSeriesVisual lineSeries = new BarSeriesVisual() { Name = "涨停" };
+            //StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "跌停", LinePen = new Pen(Brushes.Red, 1) };
+            //StraightLineSeriesVisual lineSeries3 = new StraightLineSeriesVisual() { Name = "一字涨停", LinePen = new Pen(Brushes.Black, 1) };
+            //StraightLineSeriesVisual lineSeries4 = new StraightLineSeriesVisual() { Name = "非一字涨停", LinePen = new Pen(Brushes.AliceBlue, 1) };
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), SplitValueFormat = "F2" };
 
@@ -246,6 +246,8 @@ namespace WpfDrawing.Sample
 
             public Strength()
             {
+                axisX.MinUnit = 600000;
+
                 BorderThickness = new Thickness(1);
                 BorderBrush = Brushes.Black;
 
@@ -259,9 +261,9 @@ namespace WpfDrawing.Sample
                 chart.AddAsixX(axisX);
 
                 chart.AddSeries(lineSeries);
-                chart.AddSeries(lineSeries2);
-                chart.AddSeries(lineSeries3);
-                chart.AddSeries(lineSeries4);
+                //chart.AddSeries(lineSeries2);
+                //chart.AddSeries(lineSeries3);
+                //chart.AddSeries(lineSeries4);
 
                 rectDrawingCanvas.AddChild(chart);
                 DrawingCanvas.DataSource = chart.DataSource;
@@ -338,11 +340,13 @@ namespace WpfDrawing.Sample
                 axisX.SplitValues = axes.Select(it => it.ToFormatVisualData()).ToList();
                 axisX.Ratios = Tools.GetAverageRatiosWithZero(axes.Count - 1);
 
-                var filterList = list.Where(it => it.zt != -1 && it.dt != -1).ToList();
+                var filterList = list.Where(it => it.zt != -1 && it.dt != -1).Take(1).ToList();
+                var value1 = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0));
+                axisY.Range = new Range(0, value1.Select(it => it.YData).Max());
                 lineSeries.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0)).ToFormatVisualData();
-                lineSeries2.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.dt * 1.0)).ToFormatVisualData();
-                lineSeries3.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.yzzt * 1.0)).ToFormatVisualData();
-                lineSeries4.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.fyzzt * 1.0)).ToFormatVisualData();
+                //lineSeries2.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.dt * 1.0)).ToFormatVisualData();
+                //lineSeries3.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.yzzt * 1.0)).ToFormatVisualData();
+                //lineSeries4.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.fyzzt * 1.0)).ToFormatVisualData();
 
                 rectDrawingCanvas.Replot();
             }
@@ -514,12 +518,13 @@ namespace WpfDrawing.Sample
 
             public ChartItem2()
             {
-                lineSeries2.RangeCalculator = data =>
-                {
-                    var range = data.YContextData.Range;
-                    range.Max.Data *= 1.2;
-                    return range;
-                };
+                axisX.MinUnit = 60000;
+                //lineSeries2.RangeCalculator = data =>
+                //{
+                //    var range = data.YContextData.Range;
+                //    range.Max.Data *= 1.2;
+                //    return range;
+                //};
                 BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
                 b.BlurContainer = DrawingCanvas;
                 b.Magnification = 0.15;
@@ -589,7 +594,6 @@ namespace WpfDrawing.Sample
                 {
                     text2.Text = "--";
                 }
-
             }
 
             public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
@@ -652,7 +656,7 @@ namespace WpfDrawing.Sample
                         }
 
                         dic = dic.OrderBy(it => it.Key).ToDictionary(it => it.Key, it => it.Value);
-                        return dic;
+                        return dic.Take(1).ToDictionary(it => it.Key, it => it.Value);
                     }
                     return new Dictionary<DateTime, double>();
                 }

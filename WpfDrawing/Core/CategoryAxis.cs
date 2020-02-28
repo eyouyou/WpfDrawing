@@ -17,7 +17,7 @@ namespace HevoDrawing
         }
         public override IFormatProvider FormatProvider => null;
 
-        public override double IntervalPositioning(Section section, IVariable variable)
+        public override double IntervalPositioning(Section section, IVariable variable, int step)
         {
             return double.NaN;
         }

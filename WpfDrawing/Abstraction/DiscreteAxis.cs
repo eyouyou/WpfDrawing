@@ -125,12 +125,22 @@ namespace HevoDrawing.Abstractions
         }
 
         /// <summary>
+        /// 最小单元格
+        /// 按照各自轴的基本单位 
+        /// 推算一根data的区间
+        /// </summary>
+        public double MinUnit { get; set; } = 1;
+
+        /// <summary>
         /// 区间定位
+        /// 推测相对位置
+        /// 通过 <see cref="MinUnit"/>
         /// </summary>
         /// <param name="section"></param>
-        /// <param name="variable"></param>
+        /// <param name="variable">当前值</param>
+        /// <param name="step">位移</param>
         /// <returns></returns>
-        public abstract double IntervalPositioning(Section section, IVariable variable);
+        public abstract double IntervalPositioning(Section section, IVariable variable, int step);
 
         /// <summary>
         /// TODO 需要优化
@@ -255,7 +265,7 @@ namespace HevoDrawing.Abstractions
                         foreach (var item in ordered_x_data)
                         {
                             //range的相对比例
-                            var rangeValueRatio = IntervalPositioning(range_split, item);
+                            var rangeValueRatio = IntervalPositioning(range_split, item, 0);
                             valueRatioCroods2.Add(rangeValueRatio);
                         }
 
@@ -341,7 +351,7 @@ namespace HevoDrawing.Abstractions
                             var other_weight = 1 - current_sum_split_ratios;
                             foreach (var item in splitValues.Skip(other_index + 1))
                             {
-                                var offset_ratio = IntervalPositioning(section, item) * other_weight;
+                                var offset_ratio = IntervalPositioning(section, item, 0) * other_weight;
                                 current_sum_split_ratios += offset_ratio;
                                 splitRatiosNum.Add(current_sum_split_ratios);
                                 splitRatio2.Add(offset_ratio + (index == 0 ? 0 : -splitRatio2.Sum()));

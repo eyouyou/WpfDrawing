@@ -49,6 +49,13 @@ namespace HevoDrawing
                     visual.DeliverVisualData(list[0].Copy());
                 }
             }
+            else
+            {
+                foreach (var visual in visuals)
+                {
+                    visual.DeliverVisualData(visual.DefaultData);
+                }
+            }
 
         }
 
@@ -98,10 +105,13 @@ namespace HevoDrawing
 
                 if (!datas.Any())
                 {
-                    continue;
+                    item.Data = new List<IVariable>();
                 }
-                //针对DiscreteAxis轴 会聚多数据源
-                item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
+                else
+                {
+                    //针对DiscreteAxis轴 会聚多数据源
+                    item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
+                }
 
                 item.CalculateRequireData();
                 item.IsDataComplete = true;
@@ -115,7 +125,7 @@ namespace HevoDrawing
             {
                 foreach (var item in data.XData)
                 {
-                    if(item.ComponentIds.Contains(0))
+                    if (item.ComponentIds.Contains(0))
                     {
                         item.ComponentIds.RemoveAll(it => it == 0);
                         var ids = coms.AxisXCollection.Select(it => it.Id);
@@ -160,7 +170,7 @@ namespace HevoDrawing
                     {
                         var series = coms.GetMappingSeries(item.Id);
                         var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as TwoDimensionalContextData).YContextData.Range).ToList();
-                        visualData.Range = new Range() { Max = ranges.Max(it => it.Max), Min = ranges.Min(it => it.Min) };
+                        visualData.Range = new Range(ranges.Min(it => it.Min), ranges.Max(it => it.Max));
                     }
                 }
                 item.CalculateRequireData();

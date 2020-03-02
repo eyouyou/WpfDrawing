@@ -52,8 +52,14 @@ namespace HevoDrawing
     {
         public Range(Value<double> min, Value<double> max)
         {
-            Min = min.GenerateNewValue(min.Data);
-            Max = max.GenerateNewValue(max.Data);
+            if (min != null)
+            {
+                Min = min.GenerateNewValue(min.Data);
+            }
+            if (max != null)
+            {
+                Max = max.GenerateNewValue(max.Data);
+            }
         }
         public Range(double min, double max)
         {
@@ -72,7 +78,7 @@ namespace HevoDrawing
         public static Range Empty => new Range();
         public Range Copy()
         {
-            return new Range() { Max = Max.GenerateNewValue(Max.Data), Min = Min.GenerateNewValue(Min.Data) };
+            return new Range(Min.GenerateNewValue(Min.Data), Max.GenerateNewValue(Max.Data));
         }
     }
     /// <summary>

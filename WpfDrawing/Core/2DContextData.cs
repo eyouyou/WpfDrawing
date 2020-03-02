@@ -37,8 +37,8 @@ namespace HevoDrawing
             Data = data;
             YData = ydata;
             XData = xdata;
-            XData.Items = Items;
-            YData.Items = Items;
+            XData.Items = new Dictionary<ContextDataItem, object>(Items);
+            YData.Items = new Dictionary<ContextDataItem, object>(Items);
 
             _chartCroods = Data.Select(it => new ChartCrood(it.Key, it.Value)).ToList();
         }
@@ -61,8 +61,8 @@ namespace HevoDrawing
             }
             XData = new DiscreteAxisContextData(xData);
             YData = new ContinuousAxisContextData(yData);
-            XData.Items = Items;
-            YData.Items = Items;
+            XData.Items = new Dictionary<ContextDataItem, object>(Items);
+            YData.Items = new Dictionary<ContextDataItem, object>(Items);
             _chartCroods = Data.Select(it => new ChartCrood(it.Key, it.Value)).ToList();
         }
         private List<ChartCrood> _chartCroods = null;
@@ -142,8 +142,8 @@ namespace HevoDrawing
             Data = data;
             YData = ydata;
             XData = xdata;
-            XData.Items = Items;
-            YData.Items = Items;
+            XData.Items = new Dictionary<ContextDataItem, object>(Items);
+            YData.Items = new Dictionary<ContextDataItem, object>(Items);
         }
         private Chart2DContextData2(List<IVariable> xData, List<double> yData)
         {
@@ -160,8 +160,8 @@ namespace HevoDrawing
             }
             XData = new DiscreteAxisContextData(xData);
             YData = new ContinuousAxisContextData(yData);
-            XData.Items = Items;
-            YData.Items = Items;
+            XData.Items = new Dictionary<ContextDataItem, object>(Items);
+            YData.Items = new Dictionary<ContextDataItem, object>(Items);
         }
 
         public override bool ContainsX(IVariable x, out Value<double> y)

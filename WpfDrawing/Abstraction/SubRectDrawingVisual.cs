@@ -39,7 +39,7 @@ namespace HevoDrawing.Abstractions
             {
                 if (_visualData == null)
                 {
-                    return DefaultData;
+                    _visualData = DefaultData;
                 }
                 return _visualData;
             }

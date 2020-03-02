@@ -120,7 +120,7 @@ namespace HevoDrawing.Abstractions
             get
             {
                 if (visual_data == null)
-                    return DefaultData;
+                    visual_data = DefaultData;
                 return visual_data;
             }
             set

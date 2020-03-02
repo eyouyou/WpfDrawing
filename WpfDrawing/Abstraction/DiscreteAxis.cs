@@ -163,10 +163,10 @@ namespace HevoDrawing.Abstractions
             valueRatios = new List<double>();
             valueRatioCoordinate = new List<RatioSection>();
 
-            var followData = FollowData;
+            var followData = Data.Count > 0 ? FollowData : false;
             var ordered_x_data = Data.OrderBy(it => it).ToList();
 
-            if (splitValues != null)
+            if (splitValues.Count > 0)
             {
                 if (splitValues.Count < 2)
                 {
@@ -175,20 +175,6 @@ namespace HevoDrawing.Abstractions
 
                 splitValues = splitValues.OrderBy(it => it).ToList();
                 var list = new List<IVariable>();
-
-
-                var range_split = new Section() { Left = splitValues.First(), Right = splitValues.Last() };
-                var range_data = new Section() { Left = ordered_x_data.First(), Right = ordered_x_data.Last() };
-
-                if (range_split.LeftBiggerThan(range_data.Right) || range_split.RightLessThan(range_data.Left))
-                {
-                    //throw new ArgumentException($"数据在{nameof(splitValues)}以外");
-                    return false;
-                }
-                if (range_split.LeftLessThan(range_data.Left) || range_split.RightBiggerThan(range_data.Right))
-                {
-                    followData = false;
-                }
 
                 List<Section> all_avaliable = Tools.ChangeToSections(splitValues);
                 var avaliable_sections = new List<Section>();
@@ -215,6 +201,33 @@ namespace HevoDrawing.Abstractions
                 //ordered_x_data.Add(range_split.Right);
                 ordered_x_data = ordered_x_data.Distinct().ToList();
                 Data = ordered_x_data;
+
+                //重置followData
+                followData = Data.Count > 0 ? FollowData : false;
+
+                var range_split = new Section() { Left = splitValues.First(), Right = splitValues.Last() };
+                var range_data = new Section() { };
+                if (ordered_x_data.Count == 0)
+                {
+                    range_data.Left = range_split.Left;
+                    range_data.Right = range_split.Right;
+                }
+                else
+                {
+                    range_data.Left = ordered_x_data.First();
+                    range_data.Right = ordered_x_data.Last();
+                }
+                if (range_split.LeftBiggerThan(range_data.Right) || range_split.RightLessThan(range_data.Left))
+                {
+                    //throw new ArgumentException($"数据在{nameof(splitValues)}以外");
+                    return false;
+                }
+                if (range_split.LeftLessThan(range_data.Left) || range_split.RightBiggerThan(range_data.Right))
+                {
+                    followData = false;
+                }
+
+
 
                 //插入SplitValue数据到Data
                 var splitIndex = new List<double>();
@@ -395,11 +408,6 @@ namespace HevoDrawing.Abstractions
                         var dataratio_index = 0;
                         foreach (var item in data_sections)
                         {
-                            if (splitIndex.Contains(dataratio_index))
-                            {
-                                splitRatiosNum.Add(item.Current);
-                                points.Add(Tools.GetPointByRatio(diff, start, item.Current));
-                            }
                             valueRatios.Add(item.Current);
                             valueRatioCoordinate.Add(item);
                             dataratio_index++;
@@ -472,7 +480,7 @@ namespace HevoDrawing.Abstractions
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return false;
                 }
             }
             return true;
@@ -516,10 +524,6 @@ namespace HevoDrawing.Abstractions
                 splitRatios = new List<double>(Ratios);
             }
 
-            if (Data == null || Data.Count == 0)
-            {
-                return;
-            }
             Data = Data.OrderBy(it => it).ToList();
             var isNotSatisfied = CalculateDrawingParams(End - Start, Start, splitRatios, ref isInterregional, ref splitValue,
                 out var splitRatioNum, out var valueRatios, out var valueRatioCoordinate, out var points);
@@ -550,10 +554,6 @@ namespace HevoDrawing.Abstractions
 
             dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), endPoint);
 
-            if (contextData.IsBad)
-            {
-                return;
-            }
             //名称设置
             //if (!string.IsNullOrEmpty(Name))
             //{

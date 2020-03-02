@@ -323,7 +323,10 @@ namespace HevoDrawing.Interactions
 
                                 axis.AxisLabel.Text = axis.GetStringValue(value);
                                 var labelData = axis.GetAxisLabelData(value);
-
+                                if (labelData.IsBad)
+                                {
+                                    continue;
+                                }
                                 axisLabelList.Add(new ElementPosition(axis.AxisLabel, true, labelData.Left, labelData.Top, axis.AxisLabel.ZIndex));
 
                             }

@@ -347,18 +347,19 @@ namespace HevoDrawing.Interactions
                     {
                         continue;
                     }
-                    is_data_hit = true;
+                    
                     var line_series_item = series_item.GetInterectHoverableLineSeriesVisual();
 
                     if (coms.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
                         && series_item.VisualData is TwoDimensionalContextData series_data
                         && series_data.ContainsX(value, out var yValue))
                     {
+                        is_data_hit = true;
+
                         var x = xAxis.GetPosition(value).X + xAxis.Start.X;
                         var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y;
                         seriesDatas.Add(new SeriesData() { Color = series_item.Color(value), Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = yValue, AxisX = xAxis, AxisY = yAxis });
                         //获取y坐标
-
                         nearestX = x;
 
                         if (line_series_item != null)

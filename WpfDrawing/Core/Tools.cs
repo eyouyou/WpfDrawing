@@ -339,6 +339,32 @@ namespace HevoDrawing
             }
             return item;
         }
+        public static bool TryGetVisualDataItem<T>(this ContextData data, ContextDataItem tag, out T value)
+            where T : class
+        {
+            if (!data.Items.ContainsKey(tag)
+                || !(data.Items[tag] is T item))
+            {
+                value = default;
+                return false;
+            }
+            value = item;
+            return false;
+        }
+        public static bool TryGetMainVisualDataItem<T>(this ContextData data, ContextDataItem tag, out T value)
+            where T : class
+        {
+            if (!data.Current.Items.ContainsKey(tag)
+                || !(data.Current.Items[tag] is T item))
+            {
+                value = default;
+                return false;
+            }
+            value = item;
+            return true;
+        }
+
+
         public static T GetMainVisualDataItem<T>(this ContextData data, ContextDataItem tag)
             where T : class
         {

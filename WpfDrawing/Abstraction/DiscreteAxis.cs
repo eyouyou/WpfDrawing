@@ -68,7 +68,8 @@ namespace HevoDrawing.Abstractions
         }
         public override Vector GetPosition(IVariable value)
         {
-            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
+            //该处影响比较大的是数据点
+            if (!VisualData.Items.ContainsKey(ContextDataItem.IsInterregional) || !(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
             {
                 return Tools.BadVector;
             }
@@ -89,7 +90,8 @@ namespace HevoDrawing.Abstractions
         /// <returns></returns>
         public override IVariable GetValue(double offsetPosition, bool withOutOfBoundData = false)
         {
-            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
+            //该处影响比较大的是交互层
+            if (!VisualData.Items.ContainsKey(ContextDataItem.IsInterregional) || !(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
             {
                 return default;
             }
@@ -180,7 +182,8 @@ namespace HevoDrawing.Abstractions
 
                 if (range_split.LeftBiggerThan(range_data.Right) || range_split.RightLessThan(range_data.Left))
                 {
-                    throw new ArgumentException($"数据在{nameof(splitValues)}以外");
+                    //throw new ArgumentException($"数据在{nameof(splitValues)}以外");
+                    return false;
                 }
                 if (range_split.LeftLessThan(range_data.Left) || range_split.RightBiggerThan(range_data.Right))
                 {

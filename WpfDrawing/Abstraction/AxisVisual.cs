@@ -224,7 +224,12 @@ namespace HevoDrawing.Abstractions
         public AxisLabelData GetAxisLabelData(T value)
         {
             var position = GetPosition(value);
+            if (position.IsBad())
+            {
+                return AxisLabelData.Bad;
+            }
             var data = new AxisLabelData();
+
             var plotArea = PlotArea;
             var margin = AxisLabelOffset.GetActualLength(plotArea.Height);
             AxisLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
@@ -263,8 +268,11 @@ namespace HevoDrawing.Abstractions
     }
     public class AxisLabelData
     {
+        public static AxisLabelData Bad => new AxisLabelData() { IsBad = true };
+
         public double Top { get; set; }
         public double Left { get; set; }
+        public bool IsBad { get; private set; } = false;
     }
     public class AxisLabel : TextBlock
     {

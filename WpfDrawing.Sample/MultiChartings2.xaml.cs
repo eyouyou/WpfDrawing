@@ -341,6 +341,7 @@ namespace WpfDrawing.Sample
                 axisX.Ratios = Tools.GetAverageRatiosWithZero(axes.Count - 1);
 
                 var filterList = list.Where(it => it.zt != -1 && it.dt != -1).Take(1).ToList();
+                filterList.ForEach(it => it.time = DateTime.Now.Date.AddHours(8));
                 var value1 = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0));
                 axisY.Range = new Range(0, value1.Select(it => it.YData).Max());
                 lineSeries.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0)).ToFormatVisualData();

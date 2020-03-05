@@ -192,14 +192,11 @@ namespace HevoDrawing
             List<RatioSection> list = new List<RatioSection>();
             var ratios_temp = ratios;
             ratios = new List<double>(ratios);
-            //需要清理
-            if (data.Count == 1)
+
+            if (data.Count == 1 && range_section.Contains(data[0]))
             {
-                if (range_section.Contains(data[0]))
-                {
-                    var position = xAxis.IntervalPositioning(range_section, data[0], 1);
-                    ratios.Add(position);
-                }
+                var position = xAxis.IntervalPositioning(range_section, data[0], 1);
+                ratios.Add(position);
             }
             if (isInterregional)
             {

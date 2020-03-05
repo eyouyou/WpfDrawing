@@ -69,6 +69,8 @@ namespace HevoDrawing
             List<RatioSection> list = new List<RatioSection>();
 
             var valueCroodRatios = new List<double>();
+            //需要清理
+            bool isAddedForecast = false;
             if (data.Count == 1)
             {
                 var index2 = 0;
@@ -83,6 +85,8 @@ namespace HevoDrawing
                         var position2 = xAxis.IntervalPositioning(section, data[0], 1) * section.SectionRatio;
                         var ratioCrood2 = position2 + sections.Take(index2).Select(it => it.SectionRatio).Sum();
                         valueCroodRatios.Add(ratioCrood2);
+
+                        isAddedForecast = true;
                         break;
                     }
                     index2++;
@@ -134,6 +138,10 @@ namespace HevoDrawing
                     list.Add(ratio_section);
                 }
             }
+            if (isAddedForecast)
+            {
+                list.RemoveAt(1);
+            }
             return list;
         }
         /// <summary>
@@ -146,6 +154,7 @@ namespace HevoDrawing
         public static List<RatioSection> GetSectionsFromRatioCrood(bool isInterregional, List<double> ratios, List<IVariable> data)
         {
             List<RatioSection> list = new List<RatioSection>();
+
             if (isInterregional)
             {
                 ratios.Insert(0, 0);
@@ -163,6 +172,52 @@ namespace HevoDrawing
             else
             {
                 for (int i = 0; i < ratios.Count; i++)
+                {
+                    var item = ratios[i];
+
+                    RatioSection section = new RatioSection();
+                    section.Current = item;// section.Left + section.Right - section.Left / 2;
+                    section.CurrentData = i < data.Count ? data[i] : Value.Bad;
+
+                    section.Left = i - 1 > 0 ? (ratios[i - 1] + item) / 2 : item - ratios[i + 1] / 2;
+                    section.Right = i + 1 < ratios.Count ? (ratios[i + 1] + item) / 2 : item + ratios[i - 1] / 2;
+                    list.Add(section);
+                }
+            }
+            return list;
+        }
+
+        public static List<RatioSection> GetSectionsFromRatioCroodAndSection(Section range_section, DiscreteAxis xAxis, bool isInterregional, List<double> ratios, List<IVariable> data)
+        {
+            List<RatioSection> list = new List<RatioSection>();
+            var ratios_temp = ratios;
+            ratios = new List<double>(ratios);
+            //需要清理
+            if (data.Count == 1)
+            {
+                if (range_section.Contains(data[0]))
+                {
+                    var position = xAxis.IntervalPositioning(range_section, data[0], 1);
+                    ratios.Add(position);
+                }
+            }
+            if (isInterregional)
+            {
+                ratios.Insert(0, 0);
+                for (int i = 0; i < ratios.Count - 1; i++)
+                {
+                    var item = ratios[i];
+                    RatioSection section = new RatioSection();
+                    section.Left = item;
+                    section.Right = ratios[i + 1];
+                    section.Current = (section.Left + section.Right) / 2;
+                    section.CurrentData = i < data.Count ? data[i] : Value.Bad;
+                    list.Add(section);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < ratios_temp.Count; i++)
                 {
                     var item = ratios[i];
 

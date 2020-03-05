@@ -15,12 +15,12 @@ namespace HevoDrawing
     /// </summary>
     public class ContinuousAxisContextData : ContextData
     {
-        public Range Range { get; set; }
+        public Range Range { get; set; } = Range.Empty;
 
         public override bool IsEmpty => Range == null || Range.IsEmpty;
 
         public static ContinuousAxisContextData Empty =>
-            new ContinuousAxisContextData(Range.Empty);
+              new ContinuousAxisContextData(Range.Empty);
 
 
         public ContinuousAxisContextData(Range range)
@@ -54,11 +54,11 @@ namespace HevoDrawing
         {
             if (min != null)
             {
-                Min = min.GenerateNewValue(min.Data);
+                Min = min.Copy();
             }
             if (max != null)
             {
-                Max = max.GenerateNewValue(max.Data);
+                Max = max.Copy();
             }
         }
         public Range(double min, double max)
@@ -78,7 +78,7 @@ namespace HevoDrawing
         public static Range Empty => new Range();
         public Range Copy()
         {
-            return new Range(Min.GenerateNewValue(Min.Data), Max.GenerateNewValue(Max.Data));
+            return new Range(Min.Copy(), Max.Copy());
         }
     }
     /// <summary>

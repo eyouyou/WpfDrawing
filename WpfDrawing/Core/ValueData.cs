@@ -102,13 +102,31 @@ namespace HevoDrawing
             ValueData = (str) => this;
         }
         /// <summary>
-        /// 保持类型一致
+        /// 不检测是否错误
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public virtual Value<T> GenerateNewValue(T value)
+        public virtual Value<T> GenerateNewValue(T data)
         {
-            return new Value<T>(value);
+            return new Value<T>(data);
+        }
+
+        public virtual Value<T> GenerateNewValue(Value<T> value)
+        {
+            if (IsBad)
+            {
+                return new Value<T>();
+            }
+            return new Value<T>(value.Data);
+        }
+
+        public virtual Value<T> Copy()
+        {
+            if (IsBad)
+            {
+                return new Value<T>();
+            }
+            return new Value<T>(Data);
         }
         public T Data { get; set; }
         public override Func<string, object> ValueData { get; set; }

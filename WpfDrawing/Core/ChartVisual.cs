@@ -110,19 +110,25 @@ namespace HevoDrawing
             }
 
             var data = VisualData.TransformVisualData<ChartGroupContextData>();
+            ChartGroupContextData inductiveData = data.Value;
             //从seriesvisual里面取值画坐标轴
             if (data.IsBad)
             {
-                var dataMade = SeriesVisuals.InductiveData();
-                data.Value = dataMade;
-                AxisXVisuals.InductiveData(dataMade);
-                AxisYVisuals.InductiveData(dataMade);
-                VisualDataSetupTidily(dataMade);
+                inductiveData = SeriesVisuals.InductiveData();
+                AxisXVisuals.InductiveData(inductiveData);
+                AxisYVisuals.InductiveData(inductiveData);
+                //过滤数据
+                inductiveData = SeriesVisuals.FilterData();
+                VisualDataSetupTidily(inductiveData);
+            }
+            else
+            {
+                inductiveData = SeriesVisuals.FilterData();
             }
 
-            SeriesVisuals.DataPush(data.Value, data.Value.Data);
-            AxisXVisuals.DataPush(data.Value, data.Value.XData);
-            AxisYVisuals.DataPush(data.Value, data.Value.YData);
+            SeriesVisuals.DataPush(inductiveData, inductiveData.Data);
+            AxisXVisuals.DataPush(inductiveData, inductiveData.XData);
+            AxisYVisuals.DataPush(inductiveData, inductiveData.YData);
 
             //共享数据
             if (InteractionVisuals != null)

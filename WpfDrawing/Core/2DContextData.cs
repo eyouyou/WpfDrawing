@@ -11,10 +11,21 @@ namespace HevoDrawing
 {
     public abstract class TwoDimensionalContextData : ContextData
     {
-        public abstract bool ContainsX(IVariable x, out Value<double> y);
+        public abstract bool TryGetValue(IVariable x, out Value<double> y);
         public abstract List<ChartCrood> ChartCroods { get; }
         public abstract ContinuousAxisContextData YContextData { get; }
         public abstract DiscreteAxisContextData XContextData { get; }
+        public abstract TwoDimensionalContextData GeneraterNewData(List<ChartCrood> croods);
+        public void CopyComponentIds(TwoDimensionalContextData data)
+        {
+            ComponentIds.Clear();
+            XContextData.ComponentIds.Clear();
+            YContextData.ComponentIds.Clear();
+
+            ComponentIds.AddRange(data.ComponentIds);
+            XContextData.ComponentIds.AddRange(data.XContextData.ComponentIds);
+            YContextData.ComponentIds.AddRange(data.YContextData.ComponentIds);
+        }
     }
     /// <summary>
     /// x不允许不同数据
@@ -29,12 +40,31 @@ namespace HevoDrawing
         }
 
         public Chart2DContextData(Dictionary<IVariable, Value<double>> data)
-            : this(data, new ContinuousAxisContextData(data.Values.ToList()), new DiscreteAxisContextData(data.Keys.ToList()))
         {
+            Data = new Dictionary<IVariable, Value<double>>();
+            List<Value<double>> yValues = new List<Value<double>>();
+            List<IVariable> xValues = new List<IVariable>();
+            _chartCroods = new List<ChartCrood>();
+
+            foreach (var item in data)
+            {
+                if (double.IsNaN(item.Value.Data))
+                {
+                    continue;
+                }
+                Data[item.Key] = item.Value;
+                yValues.Add(item.Value);
+                xValues.Add(item.Key);
+                _chartCroods.Add(new ChartCrood(item.Key, item.Value));
+            }
+            YData = new ContinuousAxisContextData(yValues);
+            XData = new DiscreteAxisContextData(xValues);
+            XData.Items = new Dictionary<ContextDataItem, object>(Items);
+            YData.Items = new Dictionary<ContextDataItem, object>(Items);
         }
         private Chart2DContextData(Dictionary<IVariable, Value<double>> data, ContinuousAxisContextData ydata, DiscreteAxisContextData xdata)
         {
-            Data = data;
+            Data = data.Where(it => !double.IsNaN(it.Value.Data)).ToDictionary(it => it.Key, it => it.Value);
             YData = ydata;
             XData = xdata;
             XData.Items = new Dictionary<ContextDataItem, object>(Items);
@@ -56,7 +86,11 @@ namespace HevoDrawing
             var index = 0;
             foreach (var item in xData)
             {
-                Data.Add(item, new Value<double>(yData[index]));
+                if (double.IsNaN(yData[index]))
+                {
+                    continue;
+                }
+                Data.Add(item, new FormattableValue<double>(yData[index]));
                 index++;
             }
             XData = new DiscreteAxisContextData(xData);
@@ -87,7 +121,7 @@ namespace HevoDrawing
             return data;
         }
 
-        public override bool ContainsX(IVariable x, out Value<double> y)
+        public override bool TryGetValue(IVariable x, out Value<double> y)
         {
             if (Data.TryGetValue(x, out var value))
             {
@@ -100,6 +134,11 @@ namespace HevoDrawing
                 return false;
             }
         }
+
+        public override TwoDimensionalContextData GeneraterNewData(List<ChartCrood> croods)
+        {
+            return new Chart2DContextData(croods.ToDictionary(it => it.X, it => it.Y));
+        }
     }
 
     /// <summary>
@@ -110,7 +149,7 @@ namespace HevoDrawing
     internal class Chart2DContextData2 : TwoDimensionalContextData
     {
         public Chart2DContextData2(double max, double min, DiscreteAxisContextData xs)
-            : this(new Value<double>(max), new Value<double>(min), xs)
+            : this(new FormattableValue<double>(max), new FormattableValue<double>(min), xs)
         {
         }
         public Chart2DContextData2(Value<double> max, Value<double> min, List<IVariable> xs)
@@ -132,14 +171,14 @@ namespace HevoDrawing
         }
         public Chart2DContextData2(List<ChartCrood> data)
         {
-            Data = data;
+            Data = data.Where(it => !double.IsNaN(it.Y.Data)).ToList();
             XData = new DiscreteAxisContextData(Data.Select(it => it.X).ToList());
             var ydata = Data.Select(it => it.Y).ToList();
             YData = new ContinuousAxisContextData(ydata);
         }
         private Chart2DContextData2(List<ChartCrood> data, ContinuousAxisContextData ydata, DiscreteAxisContextData xdata)
         {
-            Data = data;
+            Data = data.Where(it => !double.IsNaN(it.Y.Data)).ToList();
             YData = ydata;
             XData = xdata;
             XData.Items = new Dictionary<ContextDataItem, object>(Items);
@@ -155,7 +194,11 @@ namespace HevoDrawing
             var index = 0;
             foreach (var item in xData)
             {
-                Data.Add(new ChartCrood(item, new Value<double>(yData[index])));
+                if (double.IsNaN(yData[index]))
+                {
+                    continue;
+                }
+                Data.Add(new ChartCrood(item, new FormattableValue<double>(yData[index])));
                 index++;
             }
             XData = new DiscreteAxisContextData(xData);
@@ -164,7 +207,7 @@ namespace HevoDrawing
             YData.Items = new Dictionary<ContextDataItem, object>(Items);
         }
 
-        public override bool ContainsX(IVariable x, out Value<double> y)
+        public override bool TryGetValue(IVariable x, out Value<double> y)
         {
             var first = Data.FirstOrDefault(it => it.X.Equals(x));
             if (first.IsBad)
@@ -194,6 +237,11 @@ namespace HevoDrawing
             data.Data = Data;
             data.Items = new Dictionary<ContextDataItem, object>(Items);
             return data;
+        }
+
+        public override TwoDimensionalContextData GeneraterNewData(List<ChartCrood> croods)
+        {
+            return new Chart2DContextData2(croods);
         }
     }
     public struct ChartCrood

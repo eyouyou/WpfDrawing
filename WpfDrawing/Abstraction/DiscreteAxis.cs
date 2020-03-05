@@ -64,6 +64,10 @@ namespace HevoDrawing.Abstractions
                     total.AddRange(section.Except(item));
                 }
             }
+            else
+            {
+                return new List<Section>() { section };
+            }
             return total;
         }
         public override Vector GetPosition(IVariable value)
@@ -176,32 +180,6 @@ namespace HevoDrawing.Abstractions
                 splitValues = splitValues.OrderBy(it => it).ToList();
                 var list = new List<IVariable>();
 
-                List<Section> all_avaliable = Tools.ChangeToSections(splitValues);
-                var avaliable_sections = new List<Section>();
-                foreach (var except in ExceptSections)
-                {
-                    avaliable_sections.AddRange(except.ExceptFrom(all_avaliable));
-                }
-
-                all_avaliable = avaliable_sections.Distinct().ToList();
-                //排除数据
-                if (!IsDataFull)
-                {
-                    foreach (var item in ordered_x_data)
-                    {
-                        if (!all_avaliable.Any(it => it.Contains(item)))
-                        {
-                            continue;
-                        }
-                        list.Add(item);
-                    }
-                    ordered_x_data = list;
-                }
-                //ordered_x_data.Insert(0, range_split.Left);
-                //ordered_x_data.Add(range_split.Right);
-                ordered_x_data = ordered_x_data.Distinct().ToList();
-                Data = ordered_x_data;
-
                 //重置followData
                 followData = Data.Count > 0 ? FollowData : false;
 
@@ -226,8 +204,6 @@ namespace HevoDrawing.Abstractions
                 {
                     followData = false;
                 }
-
-
 
                 //插入SplitValue数据到Data
                 var splitIndex = new List<double>();
@@ -289,7 +265,7 @@ namespace HevoDrawing.Abstractions
                             valueRatioCroods2.Add(rangeValueRatio);
                         }
 
-                        var sections = Tools.GetSectionsFromRatioCrood(isInterregional, valueRatioCroods2, ordered_x_data);
+                        var sections = Tools.GetSectionsFromRatioCroodAndSection(range_split, this, isInterregional, valueRatioCroods2, ordered_x_data);
                         var dataratio_index = 0;
                         foreach (var item in sections)
                         {

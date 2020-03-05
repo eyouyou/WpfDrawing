@@ -28,7 +28,7 @@ namespace HevoDrawing
         {
             VisualDataSetupTidily(data);
 
-            var visuals = new List<RectDrawingVisual>();
+            var noDataVisuals = new List<RectDrawingVisual>();
 
             foreach (RectDrawingVisual visual in Visuals)
             {
@@ -39,19 +39,19 @@ namespace HevoDrawing
                 }
                 else
                 {
-                    visuals.Add(visual);
+                    noDataVisuals.Add(visual);
                 }
             }
-            if (list.Count > 0 && visuals.Count > 0 && NeedData)
+            if (list.Count > 0 && noDataVisuals.Count > 0 && NeedData)
             {
-                foreach (var visual in visuals)
+                foreach (var visual in noDataVisuals)
                 {
                     visual.DeliverVisualData(list[0].Copy());
                 }
             }
             else
             {
-                foreach (var visual in visuals)
+                foreach (var visual in noDataVisuals)
                 {
                     visual.DeliverVisualData(visual.DefaultData);
                 }
@@ -169,7 +169,7 @@ namespace HevoDrawing
                     if (DataSource is ChartDataSource coms)
                     {
                         var series = coms.GetMappingSeries(item.Id);
-                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as TwoDimensionalContextData).YContextData.Range).ToList();
+                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as TwoDimensionalContextData).YContextData.Range).Where(it => !it.IsEmpty).ToList();
                         visualData.Range = new Range(ranges.Min(it => it.Min), ranges.Max(it => it.Max));
                     }
                 }
@@ -230,7 +230,6 @@ namespace HevoDrawing
                 index++;
                 if (item.VisualData is TwoDimensionalContextData rectData && !rectData.IsEmpty)
                 {
-                    rectData.YContextData.Range = item.GetRange();
                     rectData.ComponentIds.Add(item.Id);
                     rectData.XContextData.ComponentIds.Add(item.XAxisId);
                     list.Add(rectData);
@@ -244,5 +243,38 @@ namespace HevoDrawing
             return data;
         }
 
+        public ChartGroupContextData FilterData()
+        {
+            if (DataSource is ChartDataSource coms)
+            {
+                var all_data = new List<TwoDimensionalContextData>();
+                foreach (PointsSeriesVisual item in Visuals)
+                {
+                    var axisX = coms.FindXById(item.Id) as DiscreteAxis;
+                    var data = item.VisualData as TwoDimensionalContextData;
+
+                    if (axisX.SplitValues != null && axisX.SplitValues.Count > 0 && !axisX.IsDataFull)
+                    {
+                        List<Section> all_avaliable = Tools.ChangeToSections(axisX.SplitValues);
+                        var avaliable_sections = new List<Section>();
+                        if (axisX.ExceptSections != null)
+                        {
+                            foreach (var except in axisX.ExceptSections)
+                            {
+                                avaliable_sections.AddRange(except.ExceptFrom(all_avaliable));
+                            }
+                            all_avaliable = avaliable_sections.Distinct().ToList();
+                        }
+
+                        var data_temp = data;
+                        data = data.GeneraterNewData(data.ChartCroods.Where(it => all_avaliable.Any(a => a.Contains(it.X))).ToList());
+                        data.CopyComponentIds(data_temp);
+                    }
+                    all_data.Add(data);
+                }
+                return new ChartGroupContextData(all_data);
+            }
+            return ChartGroupContextData.Empty;
+        }
     }
 }

@@ -185,7 +185,7 @@ namespace HevoDrawing.Interactions
                                 if (!value.IsBad()
                                     && dataSource.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
                                     && series_item.VisualData is TwoDimensionalContextData series_data
-                                    && series_data.ContainsX(value, out var yValue))
+                                    && series_data.TryGetValue(value, out var yValue))
                                 {
                                     isHintData = true;
                                     //获取当前值对应的x、y 进行十字轴的定位
@@ -352,7 +352,7 @@ namespace HevoDrawing.Interactions
 
                     if (coms.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis
                         && series_item.VisualData is TwoDimensionalContextData series_data
-                        && series_data.ContainsX(value, out var yValue))
+                        && series_data.TryGetValue(value, out var yValue))
                     {
                         is_data_hit = true;
 

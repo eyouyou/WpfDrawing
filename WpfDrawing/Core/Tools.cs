@@ -493,7 +493,7 @@ namespace HevoDrawing
             {
                 thick.Left = horizental;
             }
-            else if (col_index == col - 1)
+            if (col_index == col - 1)
             {
                 thick.Right = horizental;
             }
@@ -505,7 +505,7 @@ namespace HevoDrawing
             {
                 thick.Top = vertial;
             }
-            else if (row_index == row - 1)
+            if (row_index == row - 1)
             {
                 thick.Bottom = vertial;
             }

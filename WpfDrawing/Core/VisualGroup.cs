@@ -243,6 +243,24 @@ namespace HevoDrawing
             return data;
         }
 
+        public ChartGroupContextData InductiveData(ChartGroupContextData data)
+        {
+            if (DataSource is ChartDataSource coms)
+            {
+                var all_data = new List<TwoDimensionalContextData>();
+                foreach (PointsSeriesVisual item in Visuals)
+                {
+                    var visualData = data.Data.FirstOrDefault(it => it.ComponentIds.Contains(item.Id));
+                    var visual_data_temp = visualData.Copy() as TwoDimensionalContextData;
+                    visual_data_temp.CopyComponentIds(visualData as TwoDimensionalContextData);
+                    item.VisualDataSetupTidily(visual_data_temp);
+                    all_data.Add(visual_data_temp);
+                }
+                return new ChartGroupContextData(all_data);
+            }
+            return ChartGroupContextData.Empty;
+        }
+
         public ChartGroupContextData FilterData()
         {
             if (DataSource is ChartDataSource coms)

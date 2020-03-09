@@ -18,7 +18,7 @@ namespace HevoDrawing.Interactions
         public GridLength CellMargin { get; set; } = new GridLength(0);
         public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
-        List<RectDrawingCanvasContainer> Containers;
+        public List<RectDrawingCanvasContainer> Containers;
         List<RectDrawingCanvasContainer> ContainersUsed;
         List<RectDrawingCanvasContainer> ContainersUnused;
         ComponentId IdGenerater = new ComponentId();

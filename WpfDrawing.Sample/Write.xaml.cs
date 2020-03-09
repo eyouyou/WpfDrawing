@@ -23,6 +23,7 @@ namespace HevoDrawing.Sample
         Canvas Canvas = new Canvas();
         public Write()
         {
+
             this.Content = Canvas;
             Canvas.Background = Brushes.Red;
             Path path = (Path)FindResource("p14");

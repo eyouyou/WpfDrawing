@@ -38,6 +38,7 @@ namespace WpfDrawing.Test
         [TestMethod]
         public void TestMethod2()
         {
+            DateTime aaa = default;
             var re = double.NaN;
             var a = re - 1;
             var b = 0.0;

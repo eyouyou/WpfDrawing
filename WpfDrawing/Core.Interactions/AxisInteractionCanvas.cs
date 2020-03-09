@@ -29,7 +29,7 @@ namespace HevoDrawing.Interactions
             DataToolTip = new ToolTipVisual(this);
 
             MouseMove += AxisInteractionVisual_MouseMove;
-            //MouseLeave += AxisInteractionCanvas_MouseLeave;
+            MouseLeave += AxisInteractionCanvas_MouseLeave;
             IsCrossShow = true;
             IsToolTipShow = true;
         }

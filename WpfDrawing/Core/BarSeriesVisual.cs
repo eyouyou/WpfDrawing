@@ -52,13 +52,33 @@ namespace HevoDrawing
 
             foreach (var item in points)
             {
-                var all_width = 0.0;
-                if (index < valuecoords.Count)
+                if (index >= valuecoords.Count)
                 {
-                    var crood = valuecoords[index];
-                    all_width = (crood.Right - crood.Left) * plotArea.Width;
+                    break;
                 }
-                var width = BarWidth.GetActualLength(all_width);
+
+                var crood = valuecoords[index];
+                var width = BarWidth.GetActualLength((crood.Right - crood.Left) * plotArea.Width);
+                var actual_right = crood.Right;
+                if (crood.Right > 1)
+                {
+                    actual_right = 1;
+                }
+                else if (crood.Right < 0)
+                {
+                    actual_right = 0;
+                }
+                var actual_left = crood.Left;
+                if (crood.Left > 1)
+                {
+                    actual_left = 1;
+                }
+                else if (crood.Left < 0)
+                {
+                    actual_left = 0;
+                }
+                var actual_width = BarWidth.GetActualLength((actual_right - actual_left) * plotArea.Width);
+                var left_offset = BarWidth.GetActualLength((crood.Current - crood.Left) * plotArea.Width);
 
                 var offset = Math.Abs(item.Point.Y - startx.Y);
                 var pointY = item.Point.Y;
@@ -69,7 +89,8 @@ namespace HevoDrawing
                     offset = MinHeight;
                 }
 
-                var leftTopX = item.Point.X - width / 2;
+                var leftTopX = item.Point.X - left_offset;
+                var centerX = leftTopX + actual_width / 2;
                 dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, pointY), new Size(width, offset)));
 
                 if (ShowData)
@@ -82,7 +103,7 @@ namespace HevoDrawing
                         y.ChartFontSize,
                         Brushes.Black);
                     var dataMargin = Tools.GetActualLength(DataVericalMargin, plotArea.Height);
-                    var text_point = new Point(item.Point.X - formatted_text.Width / 2, pointY - formatted_text.Height - dataMargin);
+                    var text_point = new Point(centerX - formatted_text.Width / 2, pointY - formatted_text.Height - dataMargin);
                     dc.DrawText(formatted_text, text_point);
                 }
                 index++;

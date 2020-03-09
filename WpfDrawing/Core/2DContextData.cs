@@ -157,7 +157,7 @@ namespace HevoDrawing
         {
         }
         public Chart2DContextData2(Value<double> max, Value<double> min, DiscreteAxisContextData xs)
-            : this(new Range() { Max = max, Min = min }, xs)
+            : this(new Range(min, max), xs)
         {
         }
 

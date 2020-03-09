@@ -123,6 +123,9 @@ namespace HevoDrawing
             }
             else
             {
+                AxisXVisuals.InductiveData(inductiveData);
+                AxisYVisuals.InductiveData(inductiveData);
+                SeriesVisuals.InductiveData(inductiveData);
                 inductiveData = SeriesVisuals.FilterData();
             }
 

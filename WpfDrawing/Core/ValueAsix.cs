@@ -29,7 +29,7 @@ namespace HevoDrawing
         }
         public ContinuousAxisContextData(List<double> values)
         {
-            Range = new Range() { Max = new Value<double>(values.Max()), Min = new Value<double>(values.Min()) };
+            Range = new Range(new Value<double>(values.Min()), new Value<double>(values.Max()));
         }
         public ContinuousAxisContextData(List<Value<double>> values)
         {
@@ -37,7 +37,7 @@ namespace HevoDrawing
             {
                 return;
             }
-            Range = new Range() { Max = new Value<double>(values.Max().Data), Min = new Value<double>(values.Min().Data) };
+            Range = new Range(new Value<double>(values.Min().Data), new Value<double>(values.Max().Data));
         }
         public override ContextData Copy()
         {
@@ -50,7 +50,7 @@ namespace HevoDrawing
     /// </summary>
     public class Range
     {
-        public Range(Value<double> min, Value<double> max)
+        public Range(Value<double> min, Value<double> max, Value<double> @base)
         {
             if (min != null)
             {
@@ -60,25 +60,38 @@ namespace HevoDrawing
             {
                 Max = max.Copy();
             }
+            if (@base != null)
+            {
+                Base = @base.Copy();
+            }
         }
-        public Range(double min, double max)
+        public Range(Value<double> min, Value<double> max) : this(min, max, min)
+        {
+        }
+        public Range(double min, double max, double @base)
         {
             Min = new FormattableValue<double>(min);
             Max = new FormattableValue<double>(max);
+            Base = new FormattableValue<double>(@base);
         }
-        public Range()
+
+        public Range(double min, double max) : this(min, max, min)
+        {
+        }
+        private Range()
         {
 
         }
         public Value<double> Min { get; set; } = Value<double>.BadT;
         public Value<double> Max { get; set; } = Value<double>.BadT;
+        public Value<double> Base { get; set; } = Value<double>.BadT;
         public double Sum => Max.Data - Min.Data;
 
         public bool IsEmpty => Min.IsBad || Max.IsBad;
         public static Range Empty => new Range();
         public Range Copy()
         {
-            return new Range(Min.Copy(), Max.Copy());
+            return new Range(Min.Copy(), Max.Copy(), Base.Copy());
         }
     }
     /// <summary>
@@ -88,7 +101,6 @@ namespace HevoDrawing
     public class ContinuousAxis : AxisVisual<IVariable>
     {
         public Range Range { get; set; }
-        public double Base { get; set; }
         public int SplitNum { get; set; }
 
         public override ContextData DefaultData => ContinuousAxisContextData.Empty;
@@ -99,7 +111,6 @@ namespace HevoDrawing
         {
             //TODO 是否没用
             Position = position;
-            Base = 0;
             SplitNum = 5;
         }
 

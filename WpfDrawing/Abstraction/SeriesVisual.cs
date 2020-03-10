@@ -29,7 +29,10 @@ namespace HevoDrawing.Abstractions
     /// </summary>
     public abstract class SeriesVisual : SubRectDrawingVisual
     {
-        public int XAxisId { get; set; } = 0;
+        /// <summary>
+        /// 对应一根x轴 可以对应多根y轴
+        /// </summary>
+        public int XAxisId { get; set; } = int.MinValue;
         /// <summary>
         /// tip 使用
         /// </summary>

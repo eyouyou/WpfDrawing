@@ -100,6 +100,11 @@ namespace HevoDrawing
     /// </summary>
     public class ContinuousAxis : AxisVisual<IVariable>
     {
+        /// <summary>
+        /// TODO 副轴接口，复制配置，与主轴的值有一一对应关系
+        /// </summary>
+        public List<ContinuousAxis> AssistantAxes { get; set; }
+
         public Range Range { get; set; }
         public int SplitNum { get; set; }
 
@@ -109,7 +114,6 @@ namespace HevoDrawing
 
         public ContinuousAxis(AxisPosition position)
         {
-            //TODO 是否没用
             Position = position;
             SplitNum = 5;
         }

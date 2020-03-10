@@ -35,7 +35,7 @@ namespace HevoDrawing
                 var item = list.FirstOrDefault(it => it.ComponentIds.Contains(visual.Id));
                 if (item != null)
                 {
-                    visual.DeliverVisualData(item.Copy());
+                    visual.DeliverVisualData(item);
                 }
                 else
                 {
@@ -46,7 +46,7 @@ namespace HevoDrawing
             {
                 foreach (var visual in noDataVisuals)
                 {
-                    visual.DeliverVisualData(list[0].Copy());
+                    visual.DeliverVisualData(list[0]);
                 }
             }
             else
@@ -118,15 +118,16 @@ namespace HevoDrawing
 
 
         }
+
         public void InductiveData(ChartGroupContextData data)
         {
             if (DataSource is ChartDataSource coms)
             {
                 foreach (var item in data.XData)
                 {
-                    if (item.ComponentIds.Contains(0))
+                    if (item.ComponentIds.Contains(int.MinValue))
                     {
-                        item.ComponentIds.RemoveAll(it => it == 0);
+                        item.ComponentIds.RemoveAll(it => it == int.MinValue);
                         var ids = coms.AxisXCollection.Select(it => it.Id);
                         item.ComponentIds.AddRange(ids);
                     }
@@ -182,9 +183,8 @@ namespace HevoDrawing
             {
                 foreach (var item in data.YData)
                 {
-                    if (item.ComponentIds.Contains(0))
+                    if (item.ComponentIds.Count == 0)
                     {
-                        item.ComponentIds.RemoveAll(it => it == 0);
                         var ids = coms.AxisYCollection.Select(it => it.Id);
                         item.ComponentIds.AddRange(ids);
                     }
@@ -250,17 +250,14 @@ namespace HevoDrawing
                 foreach (PointsSeriesVisual item in Visuals)
                 {
                     var visualData = data.Data.FirstOrDefault(it => it.ComponentIds.Contains(item.Id));
-                    var visual_data_temp = visualData.Copy() as TwoDimensionalContextData;
-                    visual_data_temp.CopyComponentIds(visualData as TwoDimensionalContextData);
-                    item.VisualDataSetupTidily(visual_data_temp);
-                    all_data.Add(visual_data_temp);
+                    all_data.Add(visualData as TwoDimensionalContextData);
                 }
                 return new ChartGroupContextData(all_data);
             }
             return ChartGroupContextData.Empty;
         }
 
-        public ChartGroupContextData FilterData()
+        public ChartGroupContextData FilterAndCopyData()
         {
             if (DataSource is ChartDataSource coms)
             {
@@ -286,6 +283,10 @@ namespace HevoDrawing
                         var data_temp = data;
                         data = data.GeneraterNewData(data.ChartCroods.Where(it => all_avaliable.Any(a => a.Contains(it.X))).ToList());
                         data.CopyComponentIds(data_temp);
+                    }
+                    else
+                    {
+                        data = data.Copy() as TwoDimensionalContextData;
                     }
                     all_data.Add(data);
                 }

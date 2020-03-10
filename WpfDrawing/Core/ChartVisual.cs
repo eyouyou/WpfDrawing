@@ -115,14 +115,16 @@ namespace HevoDrawing
              *  1.从series里面推算x轴 y轴数据 大多数是这种情况
              *  2.直接送入 这个调用针对plot，数据不清理的情况，使用之前的数据
              *  TODO 这个需要调整
+             *  必须CopyData
              */
             if (!VisualData.TryTransformVisualData<ChartGroupContextData>(out var inductiveData))
             {
                 inductiveData = SeriesVisuals.InductiveData();
                 AxisXVisuals.InductiveData(inductiveData);
                 AxisYVisuals.InductiveData(inductiveData);
-                //过滤数据
-                inductiveData = SeriesVisuals.FilterData();
+
+                //过滤数据 拷贝
+                inductiveData = SeriesVisuals.FilterAndCopyData();
                 VisualDataSetupTidily(inductiveData);
             }
             else
@@ -130,7 +132,8 @@ namespace HevoDrawing
                 AxisXVisuals.InductiveData(inductiveData);
                 AxisYVisuals.InductiveData(inductiveData);
                 SeriesVisuals.InductiveData(inductiveData);
-                inductiveData = SeriesVisuals.FilterData();
+
+                inductiveData = SeriesVisuals.FilterAndCopyData();
             }
 
             AxisXVisuals.DataPush(inductiveData, inductiveData.XData);

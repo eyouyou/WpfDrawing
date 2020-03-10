@@ -16,12 +16,12 @@ namespace HevoDrawing
         /// <summary>
         /// Y <=> Series
         /// </summary>
-        private Dictionary<int, List<SeriesVisual>> AxisMapping = new Dictionary<int, List<SeriesVisual>>();
-        private Dictionary<int, List<AxisVisual>> SeriesMapping = new Dictionary<int, List<AxisVisual>>();
+        private Dictionary<int, List<SeriesVisual>> AxisMappings = new Dictionary<int, List<SeriesVisual>>();
+        private Dictionary<int, List<AxisVisual>> SeriesMappings = new Dictionary<int, List<AxisVisual>>();
 
         List<SeriesVisual> Series = new List<SeriesVisual>();
-        List<AxisVisual> AxisYs = new List<AxisVisual>();
-        List<AxisVisual> AxisXs = new List<AxisVisual>();
+        List<AxisVisual> YAxes = new List<AxisVisual>();
+        List<AxisVisual> XAxes = new List<AxisVisual>();
 
         protected Dictionary<int, RectDrawingVisual> XMappings = new Dictionary<int, RectDrawingVisual>();
         protected Dictionary<int, RectDrawingVisual> YMappings = new Dictionary<int, RectDrawingVisual>();
@@ -34,52 +34,67 @@ namespace HevoDrawing
 
             Series.Add(series);
             All.Add(series);
-
-            var id = -1;
-            foreach (var item in AxisYs)
-            {
-                if (item.Name == series.Name)
-                {
-                    id = item.Id;
-                }
-            }
-            if (!AxisMapping.ContainsKey(id))
-            {
-                AxisMapping[id] = new List<SeriesVisual>();
-            }
-            AxisMapping[id].Add(series);
+            InitMappings();
             series.DataSource = this;
             VisualChangedHandler?.Invoke(series, Operations.Add);
         }
-
+        public void InitMappings()
+        {
+            AxisMappings.Clear();
+            SeriesMappings.Clear();
+            //Y轴和series的映射
+            //通过Name一一对应
+            foreach (var item in Series)
+            {
+                var axis_id = int.MinValue;
+                var series_id = int.MinValue;
+                AxisVisual axis = null;
+                foreach (var yAxis in YAxes)
+                {
+                    if (yAxis.Name == item.Name)
+                    {
+                        axis_id = yAxis.Id;
+                        series_id = item.Id;
+                        axis = yAxis;
+                    }
+                }
+                if (!AxisMappings.ContainsKey(axis_id))
+                {
+                    AxisMappings[axis_id] = new List<SeriesVisual>();
+                }
+                if (!SeriesMappings.ContainsKey(series_id))
+                {
+                    SeriesMappings[series_id] = new List<AxisVisual>();
+                }
+                AxisMappings[axis_id].Add(item);
+                SeriesMappings[series_id].Add(axis);
+            }
+            if (Series.Count == 0)
+            {
+                if (!SeriesMappings.ContainsKey(int.MinValue))
+                {
+                    SeriesMappings[int.MinValue] = new List<AxisVisual>();
+                }
+                SeriesMappings[int.MinValue].AddRange(YAxes);
+            }
+        }
         public void AddAxisY(AxisVisual axis)
         {
             GenerateId(axis);
 
-            AxisYs.Add(axis);
+            YAxes.Add(axis);
             All.Add(axis);
 
-            var id = -1;
-            foreach (var item in Series)
-            {
-                if (item.Name == axis.Name)
-                {
-                    id = item.Id;
-                }
-            }
-            if (!SeriesMapping.ContainsKey(id))
-            {
-                SeriesMapping[id] = new List<AxisVisual>();
-            }
+            InitMappings();
+
             YMappings.Add(axis.Id, axis);
-            SeriesMapping[id].Add(axis);
             axis.DataSource = this;
         }
         public void AddAxisX(AxisVisual axis)
         {
             GenerateId(axis);
 
-            AxisXs.Add(axis);
+            XAxes.Add(axis);
             All.Add(axis);
 
             XMappings.Add(axis.Id, axis);
@@ -91,7 +106,7 @@ namespace HevoDrawing
         }
         public List<SeriesVisual> GetMappingSeries(int id)
         {
-            if (AxisMapping.TryGetValue(id, out var y))
+            if (AxisMappings.TryGetValue(id, out var y))
             {
                 return y;
             }
@@ -108,19 +123,19 @@ namespace HevoDrawing
         /// <returns></returns>
         public AxisVisual GetMappingAxisY(int id)
         {
-            if (SeriesMapping.TryGetValue(id, out var y))
+            if (SeriesMappings.TryGetValue(id, out var y))
             {
                 return y[0];
             }
-            if (y == null && AxisYs.Count >= 1)
+            if (y == null && YAxes.Count >= 1)
             {
-                return AxisYs[0];
+                return YAxes[0];
             }
             return null;
         }
         public List<SeriesVisual> SeriesCollection => Series.Count == 0 ? new List<SeriesVisual>() : new List<SeriesVisual>(Series);
-        public List<AxisVisual> AxisYCollection => AxisYs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisYs);
-        public List<AxisVisual> AxisXCollection => AxisXs.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(AxisXs);
+        public List<AxisVisual> AxisYCollection => YAxes.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(YAxes);
+        public List<AxisVisual> AxisXCollection => XAxes.Count == 0 ? new List<AxisVisual>() : new List<AxisVisual>(XAxes);
 
         public override bool IsDataComplete => AxisYCollection.All(it => it.IsDataComplete) && AxisXCollection.All(it => it.IsDataComplete);
 
@@ -130,11 +145,11 @@ namespace HevoDrawing
             {
                 return XMappings[id];
             }
-            if (AxisXs.Count == 0)
+            if (XAxes.Count == 0)
             {
                 return null;
             }
-            return AxisXs[0] as RectDrawingVisual;
+            return XAxes[0] as RectDrawingVisual;
         }
         public RectDrawingVisual FindYById(int id)
         {
@@ -142,11 +157,11 @@ namespace HevoDrawing
             {
                 return YMappings[id];
             }
-            if (AxisYs.Count == 0)
+            if (YAxes.Count == 0)
             {
                 return null;
             }
-            return AxisYs[0] as RectDrawingVisual;
+            return YAxes[0] as RectDrawingVisual;
         }
     }
 }

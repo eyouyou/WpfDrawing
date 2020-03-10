@@ -129,8 +129,7 @@ namespace HevoDrawing.Interactions
         List<double> NearestYs = new List<double>();
         public override void Plot(Point point, EventMessage @event)
         {
-            var vdata = VisualData.TransformVisualData<ContextData>();
-            if (vdata.IsBad)
+            if (!VisualData.TryTransformVisualData<ContextData>(out var visual_data))
             {
                 return;
             }
@@ -305,8 +304,7 @@ namespace HevoDrawing.Interactions
 
         public override void PlotStandalone(Point point, EventMessage @event)
         {
-            var vdata = VisualData.TransformVisualData<ContextData>();
-            if (vdata.IsBad)
+            if (!VisualData.TryTransformVisualData<ContextData>(out var visual_data))
             {
                 return;
             }
@@ -347,7 +345,7 @@ namespace HevoDrawing.Interactions
                     {
                         continue;
                     }
-                    
+
                     var line_series_item = series_item.GetInterectHoverableLineSeriesVisual();
 
                     if (coms.GetMappingAxisY(series_item.Id) is ContinuousAxis yAxis

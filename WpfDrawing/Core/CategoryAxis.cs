@@ -23,13 +23,18 @@ namespace HevoDrawing
         }
         public override void CalculateRequireData()
         {
+            if (!VisualData.TryTransformVisualData<DiscreteAxisContextData>(out var visual_data))
+            {
+                return;
+            }
+
             List<IVariable> splitValue = null;
             var isInterregional = IsInterregional;
 
             List<double> splitRatios = null;
             FollowData = true;
 
-            if (Data == null || Data.Count == 0)
+            if (visual_data.Data == null || visual_data.Data.Count == 0)
             {
                 return;
             }
@@ -54,11 +59,12 @@ namespace HevoDrawing
         }
         public override Vector GetPosition(IVariable value)
         {
-            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
+            if (!(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional)
+                || !VisualData.TryTransformVisualData<DiscreteAxisContextData>(out var visual_data))
             {
                 return Tools.BadVector;
             }
-            var index = Data.IndexOf(value);
+            var index = visual_data.Data.IndexOf(value);
             if (index < 0)
             {
                 return Tools.BadVector;

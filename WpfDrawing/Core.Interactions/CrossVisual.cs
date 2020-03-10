@@ -40,8 +40,7 @@ namespace HevoDrawing.Interactions
         Dictionary<ComponentKey, AxisVisual> AxisVisuals = new Dictionary<ComponentKey, AxisVisual>();
         public override void PlotToParent(Point point, EventMessage @event)
         {
-            var vdata = VisualData.TransformVisualData<ContextData>();
-            if (vdata.IsBad)
+            if (!VisualData.TryTransformVisualData<ContextData>(out var visual_data))
             {
                 return;
             }
@@ -52,13 +51,12 @@ namespace HevoDrawing.Interactions
                 Y.Visibility = Visibility.Collapsed;
                 return;
             }
-            var data = vdata.Value;
 
-            if (!data.Current.Items.ContainsKey(ContextDataItem.HitPointer))
+            if (!visual_data.Current.Items.ContainsKey(ContextDataItem.HitPointer))
             {
                 return;
             }
-            var hitPointer = (Point)data.Current.Items[ContextDataItem.HitPointer];
+            var hitPointer = (Point)visual_data.Current.Items[ContextDataItem.HitPointer];
             //var is_hit_data = (bool)data.Current.Items[ContextDataItem.IsHintData];
             //if (!is_hit_data)
             //{
@@ -245,8 +243,7 @@ namespace HevoDrawing.Interactions
 
         public override void PlotToParentStandalone(Point point, EventMessage @event)
         {
-            var vdata = VisualData.TransformVisualData<ContextData>();
-            if (vdata.IsBad)
+            if (!VisualData.TryTransformVisualData<ContextData>(out var visual_data))
             {
                 return;
             }
@@ -258,8 +255,6 @@ namespace HevoDrawing.Interactions
                 return;
             }
 
-
-            var data = vdata.Value;
             var coms = DataSources.ElementAt(0).Value as ChartDataSource;
 
             var axisxs = coms.AxisXCollection;
@@ -281,11 +276,11 @@ namespace HevoDrawing.Interactions
                 Canvas.SetLeft(Y, plotArea.Location.X);
             }
 
-            if (!data.Current.Items.ContainsKey(ContextDataItem.HitPointer))
+            if (!visual_data.Current.Items.ContainsKey(ContextDataItem.HitPointer))
             {
                 return;
             }
-            var hitPointer = (Point)data.Current.Items[ContextDataItem.HitPointer];
+            var hitPointer = (Point)visual_data.Current.Items[ContextDataItem.HitPointer];
             //优化
             bool isXInvariant = false;
             bool isYInvariant = false;

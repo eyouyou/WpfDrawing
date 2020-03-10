@@ -650,8 +650,15 @@ namespace WpfDrawing.Sample
                 //dic = dic.Take(4).ToDictionary(it => it.Key, it => it.Value);
                 barSeries.VisualData = dic.ToFormatVisualData();
                 lineSeries.VisualData = dic.ToFormatVisualData();
+
+                var min = dic.Values.Min();
+                var max = dic.Values.Max();
+                var value = random.Next((int)min, (int)max);
+                axisY.Range = new Range(min, max, value);
                 DrawingCanvas.Replot();
             }
+            Random random = new Random();
+
             bool isFirst = true;
             public async Task<Dictionary<DateTime, double>> Request(string blockId, bool isMarket = false)
             {

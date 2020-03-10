@@ -15,7 +15,7 @@ namespace HevoDrawing
     /// </summary>
     public class ContinuousAxisContextData : ContextData
     {
-        public Range Range { get; set; } = Range.Empty;
+        public Range Range { get; internal set; } = Range.Empty;
 
         public override bool IsEmpty => Range == null || Range.IsEmpty;
 
@@ -116,11 +116,11 @@ namespace HevoDrawing
 
         public override void PlotToDc(DrawingContext dc)
         {
-            var vData = VisualData.TransformVisualData<ContinuousAxisContextData>();
+            var isBad = !VisualData.TryTransformVisualData<ContinuousAxisContextData>(out var visual_data);
 
             dc.DrawLine(AxisPen, new Point(Start.X, Start.Y), new Point(Start.X, End.Y));
 
-            if (vData.IsBad)
+            if (isBad)
             {
                 return;
             }

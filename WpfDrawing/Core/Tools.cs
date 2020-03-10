@@ -449,18 +449,19 @@ namespace HevoDrawing
             return item;
         }
 
-        public static VisualData<T> TransformVisualData<T>(this ContextData data)
+        public static bool TryTransformVisualData<T>(this ContextData data, out T value)
+            where T : ContextData
         {
-            VisualData<T> vData = new VisualData<T>();
             if (data is T t && !data.IsEmpty)
             {
-                vData.Value = t;
+                value = t;
             }
             else
             {
-                vData.IsBad = true;
+                value = default;
+                return false;
             }
-            return vData;
+            return true;
         }
 
         public static void AddChild(this DockPanel panel, UIElement element, Dock dock)
@@ -513,11 +514,6 @@ namespace HevoDrawing
             }
             return thick;
         }
-    }
-    public class VisualData<T>
-    {
-        public bool IsBad { get; set; } = false;
-        public T Value { get; set; }
     }
     public static class DataExtension
     {

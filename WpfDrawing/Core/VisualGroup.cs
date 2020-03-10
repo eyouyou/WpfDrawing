@@ -101,18 +101,17 @@ namespace HevoDrawing
                     continue;
                 }
                 //TODO 性能
-                var datas = list.Where(it => it is DiscreteAxisContextData && it.ComponentIds.Contains(item.Id)).Select(it => it as DiscreteAxisContextData);
+                var datas = list.Where(it => it.ComponentIds.Contains(item.Id)).Select(it => it as DiscreteAxisContextData);
 
                 if (!datas.Any())
                 {
-                    item.Data = new List<IVariable>();
+                    visualData.Data = new List<IVariable>();
                 }
                 else
                 {
                     //针对DiscreteAxis轴 会聚多数据源
-                    item.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
+                    visualData.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
                 }
-
                 item.CalculateRequireData();
                 item.IsDataComplete = true;
             }

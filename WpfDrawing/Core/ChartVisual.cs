@@ -109,10 +109,14 @@ namespace HevoDrawing
                 return;
             }
 
-            var data = VisualData.TransformVisualData<ChartGroupContextData>();
-            ChartGroupContextData inductiveData = data.Value;
-            //从seriesvisual里面取值画坐标轴
-            if (data.IsBad)
+
+            /*
+             *  目前两种形式获取数据
+             *  1.从series里面推算x轴 y轴数据 大多数是这种情况
+             *  2.直接送入 这个调用针对plot，数据不清理的情况，使用之前的数据
+             *  TODO 这个需要调整
+             */
+            if (!VisualData.TryTransformVisualData<ChartGroupContextData>(out var inductiveData))
             {
                 inductiveData = SeriesVisuals.InductiveData();
                 AxisXVisuals.InductiveData(inductiveData);
@@ -129,9 +133,9 @@ namespace HevoDrawing
                 inductiveData = SeriesVisuals.FilterData();
             }
 
-            SeriesVisuals.DataPush(inductiveData, inductiveData.Data);
             AxisXVisuals.DataPush(inductiveData, inductiveData.XData);
             AxisYVisuals.DataPush(inductiveData, inductiveData.YData);
+            SeriesVisuals.DataPush(inductiveData, inductiveData.Data);
 
             //共享数据
             if (InteractionVisuals != null)

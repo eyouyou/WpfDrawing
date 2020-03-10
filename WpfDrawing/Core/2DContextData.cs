@@ -116,7 +116,7 @@ namespace HevoDrawing
 
         public override ContextData Copy()
         {
-            var data = new Chart2DContextData(new Dictionary<IVariable, Value<double>>(Data), YData.Range);
+            var data = new Chart2DContextData(new Dictionary<IVariable, Value<double>>(Data), YData.Range.Copy());
             data.Items = new Dictionary<ContextDataItem, object>(Items);
             return data;
         }

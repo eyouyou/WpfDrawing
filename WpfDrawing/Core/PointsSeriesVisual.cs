@@ -43,7 +43,7 @@ namespace HevoDrawing
         /// <summary>
         /// TODO 所有点都需要固定
         /// </summary>
-        public bool IsPointsFixed { get; set; }
+        public bool PointsShow { get; set; }
         public List<MarkLineVisual> MarkLineCollection { get; } = new List<MarkLineVisual>();
 
         protected void PlotMarkLineToDc(DrawingContext dc)
@@ -58,8 +58,7 @@ namespace HevoDrawing
             get
             {
                 var list = new List<ChartCrood>();
-                var vData = VisualData.TransformVisualData<TwoDimensionalContextData>();
-                if (vData.IsBad)
+                if (!VisualData.TryTransformVisualData<TwoDimensionalContextData>(out var visual_data))
                 {
                     return list;
                 }
@@ -83,7 +82,7 @@ namespace HevoDrawing
                 var offsetx = x.Start.X;
                 var offsety = x.Start.Y;
                 var index = 0;
-                foreach (var item in vData.Value.ChartCroods)
+                foreach (var item in visual_data.ChartCroods)
                 {
                     var vector = x.GetPosition(item.X.ValueData(Name) as IVariable);
                     if (vector.IsBad())

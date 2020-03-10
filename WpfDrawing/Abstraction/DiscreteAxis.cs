@@ -16,7 +16,7 @@ namespace HevoDrawing.Abstractions
             data = data.Distinct().ToList();
             Data = data;
         }
-        public List<IVariable> Data { get; private set; }
+        public List<IVariable> Data { get; internal set; }
 
         public override bool IsEmpty => Data.Count == 0;
 
@@ -38,7 +38,6 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public bool IsInterregional { get; set; } = true;
 
-        public List<IVariable> Data { get; set; }
         public override string GetStringValue(IVariable value)
         {
             return value.ToString(ValueFormat, FormatProvider);
@@ -73,11 +72,12 @@ namespace HevoDrawing.Abstractions
         public override Vector GetPosition(IVariable value)
         {
             //该处影响比较大的是数据点
-            if (!VisualData.Items.ContainsKey(ContextDataItem.IsInterregional) || !(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
+            if (!VisualData.Items.ContainsKey(ContextDataItem.IsInterregional) || !(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional)
+                || !(VisualData is DiscreteAxisContextData data))
             {
                 return Tools.BadVector;
             }
-            var index = Data.BinarySearch(value);
+            var index = data.Data.BinarySearch(value);
             if (index < 0)
             {
                 return Tools.BadVector;
@@ -95,11 +95,12 @@ namespace HevoDrawing.Abstractions
         public override IVariable GetValue(double offsetPosition, bool withOutOfBoundData = false)
         {
             //该处影响比较大的是交互层
-            if (!VisualData.Items.ContainsKey(ContextDataItem.IsInterregional) || !(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional))
+            if (!VisualData.Items.ContainsKey(ContextDataItem.IsInterregional) || !(VisualData.Items[ContextDataItem.IsInterregional] is bool isInterregional)
+                || !(VisualData is DiscreteAxisContextData data))
             {
                 return default;
             }
-            if (Data.Count == 0)
+            if (data.Data.Count == 0)
             {
                 return default;
             }
@@ -119,11 +120,11 @@ namespace HevoDrawing.Abstractions
             {
                 blockIndex = ~blockIndex;
             }
-            if (blockIndex >= Data.Count)
+            if (blockIndex >= data.Data.Count)
             {
-                blockIndex = Data.Count - 1;
+                blockIndex = data.Data.Count - 1;
             }
-            return Data[blockIndex];
+            return data.Data[blockIndex];
         }
 
         /// <summary>
@@ -167,8 +168,13 @@ namespace HevoDrawing.Abstractions
             valueRatios = new List<double>();
             valueRatioCoordinate = new List<RatioSection>();
 
-            var followData = Data.Count > 0 ? FollowData : false;
-            var ordered_x_data = Data.OrderBy(it => it).ToList();
+            if (!VisualData.TryTransformVisualData<DiscreteAxisContextData>(out var visual_data))
+            {
+                return false;
+            }
+
+            var followData = visual_data.Data.Count > 0 ? FollowData : false;
+            var ordered_x_data = visual_data.Data.OrderBy(it => it).ToList();
 
             if (splitValues.Count > 0)
             {
@@ -181,7 +187,7 @@ namespace HevoDrawing.Abstractions
                 var list = new List<IVariable>();
 
                 //重置followData
-                followData = Data.Count > 0 ? FollowData : false;
+                followData = visual_data.Data.Count > 0 ? FollowData : false;
 
                 var range_split = new Section() { Left = splitValues.First(), Right = splitValues.Last() };
                 var range_data = new Section() { };
@@ -379,7 +385,7 @@ namespace HevoDrawing.Abstractions
                             return false;
                         }
 
-                        var data_sections = Tools.GetSectionsFromData(isInterregional, this, sections, Data);
+                        var data_sections = Tools.GetSectionsFromData(isInterregional, this, sections, visual_data.Data);
 
                         var dataratio_index = 0;
                         foreach (var item in data_sections)
@@ -434,7 +440,7 @@ namespace HevoDrawing.Abstractions
                         sum_ratio += item;
                         gIndex++;
                         splitRatiosCrood.Add(sum_ratio);
-                        splitValues.Add(Data[gIndex]);
+                        splitValues.Add(visual_data.Data[gIndex]);
                     }
 
 
@@ -487,6 +493,11 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public override void CalculateRequireData()
         {
+            if (!VisualData.TryTransformVisualData<DiscreteAxisContextData>(out var visual_data))
+            {
+                return;
+            }
+
             var splitValue = new List<IVariable>();
             if (SplitValues != null)
             {
@@ -500,7 +511,6 @@ namespace HevoDrawing.Abstractions
                 splitRatios = new List<double>(Ratios);
             }
 
-            Data = Data.OrderBy(it => it).ToList();
             var isNotSatisfied = CalculateDrawingParams(End - Start, Start, splitRatios, ref isInterregional, ref splitValue,
                 out var splitRatioNum, out var valueRatios, out var valueRatioCoordinate, out var points);
             if (!isNotSatisfied)
@@ -521,8 +531,6 @@ namespace HevoDrawing.Abstractions
         }
         public override void PlotToDc(DrawingContext dc)
         {
-            var contextData = VisualData.TransformVisualData<DiscreteAxisContextData>();
-
             var plotArea = PlotArea;
             Freeze();
 

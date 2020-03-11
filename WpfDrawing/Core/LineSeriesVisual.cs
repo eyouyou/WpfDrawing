@@ -49,7 +49,6 @@ namespace HevoDrawing
                 _hoverElement.ParentSeries = this;
             }
         }
-
     }
 
     public class StraightLineSeriesVisual : LineSeriesVisual
@@ -81,6 +80,13 @@ namespace HevoDrawing
             dc.PushClip(new RectangleGeometry() { Rect = plotArea });
             dc.DrawGeometry(Brushes.Transparent, LinePen, stream);
             dc.Pop();
+        }
+        public override void Freeze()
+        {
+            if (LinePen.CanFreeze)
+            {
+                LinePen.Freeze();
+            }
         }
     }
 
@@ -134,6 +140,14 @@ namespace HevoDrawing
         public Point GetCenterPoint(Point p1, Point p2)
         {
             return new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
+        }
+
+        public override void Freeze()
+        {
+            if (LinePen.CanFreeze)
+            {
+                LinePen.Freeze();
+            }
         }
     }
 

@@ -138,6 +138,10 @@ namespace HevoDrawing
         public override void Freeze()
         {
             CrossPen.Freeze();
+            foreach (DiscreteAxis item in Visuals)
+            {
+                item.Freeze();
+            }
         }
     }
 
@@ -194,6 +198,10 @@ namespace HevoDrawing
         public override void Freeze()
         {
             CrossPen.Freeze();
+            foreach (ContinuousAxis item in Visuals)
+            {
+                item.Freeze();
+            }
         }
 
     }
@@ -209,6 +217,13 @@ namespace HevoDrawing
             foreach (SeriesVisual item in Visuals)
             {
                 item.PlotToDc(dc);
+            }
+        }
+        public override void Freeze()
+        {
+            foreach (SeriesVisual item in Visuals)
+            {
+                item.Freeze();
             }
         }
         public override void DataPush(ContextData data, IList<ContextData> list)

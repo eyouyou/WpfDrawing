@@ -129,9 +129,6 @@ namespace HevoDrawing
                 return;
             }
 
-            Freeze();
-
-
             var points = SortedSplitPoints;
             if (points == null)
             {

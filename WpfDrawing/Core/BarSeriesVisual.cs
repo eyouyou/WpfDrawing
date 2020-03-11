@@ -156,5 +156,12 @@ namespace HevoDrawing
                 return list;
             }
         }
+        public override void Freeze()
+        {
+            if (Pen.CanFreeze)
+            {
+                Pen.Freeze();
+            }
+        }
     }
 }

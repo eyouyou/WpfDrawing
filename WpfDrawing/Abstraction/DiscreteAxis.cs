@@ -532,7 +532,6 @@ namespace HevoDrawing.Abstractions
         public override void PlotToDc(DrawingContext dc)
         {
             var plotArea = PlotArea;
-            Freeze();
 
             var endPoint = new Point(End.X, End.Y);
 

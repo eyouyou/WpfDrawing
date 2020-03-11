@@ -109,7 +109,6 @@ namespace HevoDrawing
                 return;
             }
 
-
             /*
              *  目前两种形式获取数据
              *  1.从series里面推算x轴 y轴数据 大多数是这种情况
@@ -160,7 +159,6 @@ namespace HevoDrawing
                 }
             }
 
-
             var xCollection = Data.AxisXCollection;
             foreach (DiscreteAxis item in xCollection)
             {
@@ -185,12 +183,11 @@ namespace HevoDrawing
                 }
             }
 
-
             AxisXVisuals.Freeze();
             AxisXVisuals.PlotToDc(dc);
             AxisYVisuals.Freeze();
             AxisYVisuals.PlotToDc(dc);
-
+            SeriesVisuals.Freeze();
             SeriesVisuals.PlotToDc(dc);
 
             dc.Close();

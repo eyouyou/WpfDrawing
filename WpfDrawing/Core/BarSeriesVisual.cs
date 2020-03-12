@@ -90,7 +90,7 @@ namespace HevoDrawing
                 var isUp = item.Y.IsBiggerThanOrEquals(@base);
 
                 var offset = Math.Abs(item.Point.Y - base_line_position);
-                var pointY = isUp ? item.Point.Y : base_line_position;
+                var pointY = item.Point.Y;
 
                 if (offset < MinHeight)
                 {
@@ -100,7 +100,7 @@ namespace HevoDrawing
 
                 var leftTopX = item.Point.X - left_offset;
                 var centerX = leftTopX + actual_width / 2;
-                dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, pointY), new Size(width, offset)));
+                dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, isUp ? pointY : base_line_position), new Size(width, offset)));
 
                 if (ShowData)
                 {
@@ -112,7 +112,7 @@ namespace HevoDrawing
                         y.ChartFontSize,
                         Brushes.Black);
                     var dataMargin = Tools.GetActualLength(DataVericalMargin, plotArea.Height);
-                    var text_point = new Point(centerX - formatted_text.Width / 2, pointY - formatted_text.Height - dataMargin);
+                    var text_point = new Point(centerX - formatted_text.Width / 2, isUp ? pointY - formatted_text.Height - dataMargin : base_line_position + offset);
                     dc.DrawText(formatted_text, text_point);
                 }
                 index++;

@@ -39,6 +39,10 @@ namespace HevoDrawing
             {
                 return;
             }
+            if (!VisualData.TryTransformVisualData<TwoDimensionalContextData>(out var visual_data))
+            {
+                return;
+            }
             var coms = DataSource as ChartDataSource;
 
             var x = coms.FindXById(Id) as DiscreteAxis;
@@ -47,6 +51,9 @@ namespace HevoDrawing
             var startx = x.Start;
             var index = 0;
             var valuecoords = x.ValueRatioCoordinates;
+
+            var @base = visual_data.YContextData.Range.Base;
+            var base_line_position = y.GetPosition(@base).Y + y.Start.Y;
 
             dc.PushClip(new RectangleGeometry() { Rect = plotArea });
 
@@ -80,8 +87,10 @@ namespace HevoDrawing
                 var actual_width = BarWidth.GetActualLength((actual_right - actual_left) * plotArea.Width);
                 var left_offset = BarWidth.GetActualLength((crood.Current - crood.Left) * plotArea.Width);
 
-                var offset = Math.Abs(item.Point.Y - startx.Y);
-                var pointY = item.Point.Y;
+                var isUp = item.Y.IsBiggerThanOrEquals(@base);
+
+                var offset = Math.Abs(item.Point.Y - base_line_position);
+                var pointY = isUp ? item.Point.Y : base_line_position;
 
                 if (offset < MinHeight)
                 {
@@ -112,50 +121,6 @@ namespace HevoDrawing
 
         }
 
-        public override List<ChartCrood> Croods
-        {
-            get
-            {
-                var list = new List<ChartCrood>();
-                if (!VisualData.TryTransformVisualData<TwoDimensionalContextData>(out var visual_data))
-                {
-                    return list;
-                }
-                var coms = DataSource as ChartDataSource;
-
-                var axisxs = coms.AxisXCollection;
-
-                Point lasted = new Point(double.MinValue, double.MinValue);
-
-                var y = coms.GetMappingAxisY(Id) as ContinuousAxis;
-                if (y == null)
-                {
-                    return list;
-                }
-                var x = coms.FindXById(Id) as DiscreteAxis;
-                if (x == null)
-                {
-                    return list;
-                }
-
-                var offsetx = x.Start.X;
-                var offsety = x.Start.Y;
-                var index = 0;
-                foreach (var item in visual_data.ChartCroods)
-                {
-                    var vector = x.GetPosition(item.X.ValueData(Name) as IVariable);
-                    if (vector.IsBad())
-                    {
-                        continue;
-                    }
-                    var current = new Point(offsetx + vector.X, offsety + y.GetPosition(item.Y).Y);
-                    var crood = new ChartCrood(item.X, item.Y, current);
-                    list.Add(crood);
-                    index++;
-                }
-                return list;
-            }
-        }
         public override void Freeze()
         {
             if (Pen.CanFreeze)

@@ -544,6 +544,7 @@ namespace WpfDrawing.Sample
 
             public ChartItem2()
             {
+                chart.Offsets = new PaddingOffset(50, 20, 20, 20);
                 //axisX.MinUnit = 60000;
                 //lineSeries2.RangeCalculator = data =>
                 //{
@@ -568,8 +569,6 @@ namespace WpfDrawing.Sample
                 BorderBrush = Brushes.Black;
 
                 chart.IntersectChanged += Chart_IntersectChanged;
-
-                chart.Offsets = new PaddingOffset(20);
 
                 axisX.IsInterregional = false;
 
@@ -647,13 +646,13 @@ namespace WpfDrawing.Sample
                 group = group.Distinct().OrderBy(it => it).ToList();
                 axisX.SplitValues = group.Select(it => it.ToFormatVisualData()).ToList();
 
-                //dic = dic.Take(4).ToDictionary(it => it.Key, it => it.Value);
+               // dic = dic.Take(4).ToDictionary(it => it.Key, it => it.Value);
                 barSeries.VisualData = dic.ToFormatVisualData();
                 lineSeries.VisualData = dic.ToFormatVisualData();
 
                 var min = dic.Values.Min();
                 var max = dic.Values.Max();
-                var value = random.Next((int)min, (int)max);
+                var value = 200.0;//random.Next((int)min, (int)max);
                 axisY.Range = new Range(min, max, value);
                 DrawingCanvas.Replot();
             }

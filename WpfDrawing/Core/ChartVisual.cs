@@ -146,6 +146,25 @@ namespace HevoDrawing
             }
 
             var dc = RenderOpen();
+
+            PlotGridLine(dc, mainArea);
+            AxisXVisuals.Freeze();
+            AxisXVisuals.PlotToDc(dc);
+            AxisYVisuals.Freeze();
+            AxisYVisuals.PlotToDc(dc);
+            SeriesVisuals.Freeze();
+            SeriesVisuals.PlotToDc(dc);
+
+            dc.Close();
+        }
+
+        /// <summary>
+        /// 基准线目前放在各个轴里面画
+        /// </summary>
+        /// <param name="dc"></param>
+        /// <param name="mainArea"></param>
+        private void PlotGridLine(DrawingContext dc, Rect mainArea)
+        {
             //画分割线
             foreach (ContinuousAxis item in Data.AxisYCollection)
             {
@@ -183,15 +202,6 @@ namespace HevoDrawing
                 }
             }
 
-            AxisXVisuals.Freeze();
-            AxisXVisuals.PlotToDc(dc);
-            AxisYVisuals.Freeze();
-            AxisYVisuals.PlotToDc(dc);
-            SeriesVisuals.Freeze();
-            SeriesVisuals.PlotToDc(dc);
-
-            dc.Close();
         }
-
     }
 }

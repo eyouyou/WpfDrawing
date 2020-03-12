@@ -103,14 +103,15 @@ namespace HevoDrawing
                 //TODO 性能
                 var datas = list.Where(it => it.ComponentIds.Contains(item.Id)).Select(it => it as DiscreteAxisContextData);
 
-                if (!datas.Any())
-                {
-                    visualData.Data = new List<IVariable>();
-                }
-                else
+                var visual_data_data = new List<IVariable>();
+                if (datas.Any())
                 {
                     //针对DiscreteAxis轴 会聚多数据源
-                    visualData.Data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
+                    visual_data_data = datas.SelectMany(da => da.Data.Select(it => it.ValueData(item.Name) as IVariable)).Distinct().ToList();
+                }
+                foreach (var visual_data in datas)
+                {
+                    visual_data.Data = visual_data_data;
                 }
                 item.CalculateRequireData();
                 item.IsDataComplete = true;
@@ -162,20 +163,35 @@ namespace HevoDrawing
                 {
                     return;
                 }
+                if (!(DataSource is ChartDataSource coms))
+                {
+                    return;
+                }
+                var series = coms.GetMappingSeries(item.Id);
+                if (series == null)
+                {
+                    return;
+                }
+                var series_data = series.Where(it => !it.VisualData.IsEmpty()).Select(it => it.VisualData as TwoDimensionalContextData).ToList();
+                var range = Range.Empty;
                 if (item.Range != null)
                 {
-                    visualData.Range = item.Range;
+                    range = item.Range;
                 }
                 else
                 {
                     //一根轴对应多series的情况 
                     // 轴的range调整
-                    if (DataSource is ChartDataSource coms)
-                    {
-                        var series = coms.GetMappingSeries(item.Id);
-                        var ranges = series.Where(it => !it.VisualData.IsEmpty()).Select(it => (it.VisualData as TwoDimensionalContextData).YContextData.Range).Where(it => !it.IsEmpty).ToList();
-                        visualData.Range = new Range(ranges.Min(it => it.Min), ranges.Max(it => it.Max));
-                    }
+                    var ranges = series_data.Select(it => it.YContextData.Range).Where(it => !it.IsEmpty).ToList();
+                    range = new Range(ranges.Min(it => it.Min), ranges.Max(it => it.Max));
+                }
+                //刷新series、visual_data以及chart数据
+                series_data.ForEach(it => it.YContextData.Range = range);
+                var y_visual_data = list.Where(it => it.ComponentIds.Contains(item.Id));
+                visualData.Range = range;
+                foreach (ContinuousAxisContextData data_item in y_visual_data)
+                {
+                    data_item.Range = range;
                 }
                 item.CalculateRequireData();
                 item.IsDataComplete = true;

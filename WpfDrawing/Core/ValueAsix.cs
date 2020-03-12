@@ -115,7 +115,7 @@ namespace HevoDrawing
         public ContinuousAxis(AxisPosition position)
         {
             Position = position;
-            SplitNum = 5;
+            SplitNum = 1;
         }
 
         public override void PlotToDc(DrawingContext dc)
@@ -135,11 +135,13 @@ namespace HevoDrawing
                 CalculateRequireData();
             }
             var point = new Point();
+            var plotArea = PlotArea;
+
+            var start = Start;
             foreach (var item in points)
             {
                 var height = item.Y;
-                var value = GetValue(Math.Abs(height - Start.Y));
-
+                var value = GetValue(Math.Abs(height - start.Y));
                 FormattedText formatted_text = new FormattedText(
                     $"{value.ToString(SplitValueFormat, FormatProvider)}",
                     CultureInfo.InvariantCulture,
@@ -148,24 +150,24 @@ namespace HevoDrawing
                     ChartFontSize,
                     Brushes.Black);
 
-                var margin = ShowValueMargin.GetActualLength(PlotArea.Width);
+                var margin = ShowValueMargin.GetActualLength(plotArea.Width);
                 var end = 0.0;
                 switch (Position)
                 {
                     case AxisPosition.Left:
                         {
-                            point.X = Start.X - formatted_text.Width - margin;
+                            point.X = start.X - formatted_text.Width - margin;
                             point.Y = height - formatted_text.Height / 2;
-                            end = Start.X - margin;
+                            end = start.X - margin;
                         }
                         break;
                     case AxisPosition.Buttom:
                         break;
                     case AxisPosition.Right:
                         {
-                            point.X = Start.X + margin;
+                            point.X = start.X + margin;
                             point.Y = height - formatted_text.Height / 2;
-                            end = Start.X + margin;
+                            end = start.X + margin;
                         }
                         break;
                     case AxisPosition.Top:
@@ -177,7 +179,7 @@ namespace HevoDrawing
                 dc.DrawText(formatted_text, point);
 
                 //画小尖尖
-                dc.DrawLine(AxisPen, new Point(Start.X, height), new Point(end, height));
+                dc.DrawLine(AxisPen, new Point(start.X, height), new Point(end, height));
             }
         }
 
@@ -203,7 +205,7 @@ namespace HevoDrawing
             {
                 return new Vector();
             }
-            if (!(value.ValueData("") is Value<double> @double && !@double.IsBad))
+            if (!(value is Value<double> @double && !@double.IsBad))
             {
                 return new Vector();
             }
@@ -279,7 +281,9 @@ namespace HevoDrawing
                 ratios.Add(sum_ratio);
                 points.Add(Tools.GetPointByRatio(diff, start, sum_ratio));
             }
-            points = points.ToList();
+            var base_line_position = GetPosition(range.Base).Y + start.Y;
+            points.Add(new Point(start.X, base_line_position));
+            points = points.Distinct().ToList();
             return true;
         }
 

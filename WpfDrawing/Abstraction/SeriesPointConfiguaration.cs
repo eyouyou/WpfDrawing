@@ -11,5 +11,4 @@ namespace HevoDrawing.Abstractions
     {
 
     }
-
 }

@@ -48,7 +48,7 @@
     <Compile Include="Abstraction\AxisConfiguaration.cs" />
     <Compile Include="Abstraction\AxisVisual.cs" />
     <Compile Include="Abstraction\DiscreteAxis.cs" />
-    <Compile Include="Abstraction\GeometryConfiguaration.cs" />
+    <Compile Include="Abstraction\SeriesPointConfiguaration.cs" />
     <Compile Include="Abstraction\InteractionCanvas.cs" />
     <Compile Include="Abstraction\InteractionConfiguaration.cs" />
     <Compile Include="Core\CategoryAxis.cs" />

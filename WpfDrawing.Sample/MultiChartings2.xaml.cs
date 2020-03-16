@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -140,8 +141,6 @@ namespace WpfDrawing.Sample
                 dock.AddChild(DrawingCanvasArea, Dock.Top);
 
                 Content = dock;
-
-
             }
 
             private void Chart_IntersectChanged(Dictionary<string, SeriesData> data)
@@ -165,7 +164,6 @@ namespace WpfDrawing.Sample
                 {
                     text2.Text = "--";
                 }
-
             }
 
             public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
@@ -271,6 +269,7 @@ namespace WpfDrawing.Sample
 
             public Strength()
             {
+                lineSeries2.PointStyle = new EllipsePointStyle() { };
                 axisX.MinUnit = 600000;
 
                 BorderThickness = new Thickness(1);

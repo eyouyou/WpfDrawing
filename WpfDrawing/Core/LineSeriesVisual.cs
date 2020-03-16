@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using HevoDrawing.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using HevoDrawing.Abstractions;
 
 namespace HevoDrawing
 {
@@ -29,6 +25,7 @@ namespace HevoDrawing
     }
     public abstract class LineSeriesVisual : PointsSeriesVisual
     {
+        public DataPointStyle PointStyle { get; set; }
         public override ContextData DefaultData => Chart2DContextData.Empty;
 
         public LineSeriesVisual()
@@ -47,6 +44,27 @@ namespace HevoDrawing
             {
                 _hoverElement = value;
                 _hoverElement.ParentSeries = this;
+            }
+        }
+
+        protected void DrawDataPoints(DrawingContext dc, List<ChartCrood> croods)
+        {
+            if (PointStyle != null)
+            {
+                switch (PointStyle)
+                {
+                    case EllipsePointStyle ellipse:
+                        foreach (var item in croods)
+                        {
+                            Brush brush = Brushes.White;
+                            if (ellipse.Brush == null)
+                            {
+                                brush = Color(item.X);
+                            }
+                            dc.DrawEllipse(brush, ellipse.Pen, item.Point, ellipse.RadiusX, ellipse.RadiusY);
+                        }
+                        break;
+                }
             }
         }
     }
@@ -79,6 +97,7 @@ namespace HevoDrawing
             var plotArea = PlotArea;
             dc.PushClip(new RectangleGeometry() { Rect = plotArea });
             dc.DrawGeometry(Brushes.Transparent, LinePen, stream);
+            DrawDataPoints(dc, points);
             dc.Pop();
         }
         public override void Freeze()

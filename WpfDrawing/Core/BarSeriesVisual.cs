@@ -118,7 +118,6 @@ namespace HevoDrawing
                 index++;
             }
             dc.Pop();
-
         }
 
         public override void Freeze()

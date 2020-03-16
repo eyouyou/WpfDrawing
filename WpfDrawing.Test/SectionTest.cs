@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using HevoDrawing;
 using HevoDrawing.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -46,6 +47,15 @@ namespace WpfDrawing.Test
             var d = c.ToString("F2");
             //var a = ~(-187);
             //var sections = Tools.GetSectionsFromData(true, 100);
+        }
+        [TestMethod]
+        public async void TestMethod3()
+        {
+            throw new Exception();
+            await Task.Run(() =>
+            {
+                throw new Exception();
+            });
         }
     }
 }

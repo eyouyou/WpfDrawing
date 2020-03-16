@@ -16,11 +16,7 @@ namespace HevoDrawing
         /// </summary>
         public Func<TwoDimensionalContextData, Range> RangeCalculator { get; set; }
 
-        public override Func<IVariable, Brush> Color
-        {
-            get;
-            set;
-        }
+        public override Func<IVariable, Brush> Color { get; set; }
 
         /// <summary>
         /// 独立获取range
@@ -53,7 +49,7 @@ namespace HevoDrawing
                 item.PlotToDc(dc);
             }
         }
-        public virtual List<ChartCrood> Croods
+        internal virtual List<ChartCrood> Croods
         {
             get
             {

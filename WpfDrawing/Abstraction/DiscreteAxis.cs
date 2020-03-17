@@ -47,15 +47,15 @@ namespace HevoDrawing.Abstractions
         /// 排除区间 排除不了边界
         /// 必须区间互相独立
         /// </summary>
-        public List<Section> ExceptSections { get; set; }
+        public List<ValueSection> ExceptSections { get; set; }
         /// <summary>
         /// 数据显示全 忽略x轴SplitValue的区间限制
         /// </summary>
         public bool IsDataFull { get; set; } = false;
 
-        public List<Section> GetSectionsExcept(Section section)
+        public List<ValueSection> GetSectionsExcept(ValueSection section)
         {
-            var total = new List<Section>();
+            var total = new List<ValueSection>();
             if (ExceptSections != null && ExceptSections.Count > 0)
             {
                 foreach (var item in ExceptSections)
@@ -65,7 +65,7 @@ namespace HevoDrawing.Abstractions
             }
             else
             {
-                return new List<Section>() { section };
+                return new List<ValueSection>() { section };
             }
             return total;
         }
@@ -143,7 +143,7 @@ namespace HevoDrawing.Abstractions
         /// <param name="variable">当前值</param>
         /// <param name="step">位移</param>
         /// <returns></returns>
-        public abstract double IntervalPositioning(Section section, IVariable variable, int step);
+        public abstract double IntervalPositioning(ValueSection section, IVariable variable, int step);
 
         /// <summary>
         /// TODO 需要优化
@@ -189,8 +189,8 @@ namespace HevoDrawing.Abstractions
                 //重置followData
                 followData = visual_data.Data.Count > 0 ? FollowData : false;
 
-                var range_split = new Section() { Left = splitValues.First(), Right = splitValues.Last() };
-                var range_data = new Section() { };
+                var range_split = new ValueSection() { Left = splitValues.First(), Right = splitValues.Last() };
+                var range_data = new ValueSection() { };
                 if (ordered_x_data.Count == 0)
                 {
                     range_data.Left = range_split.Left;
@@ -346,7 +346,7 @@ namespace HevoDrawing.Abstractions
                             var current_sum = splitRatio2.Sum();
 
                             var other_index = splitRatio2.Count - 1;
-                            var section = new Section() { Left = splitValues[other_index], Right = splitValues.LastOrDefault() };
+                            var section = new ValueSection() { Left = splitValues[other_index], Right = splitValues.LastOrDefault() };
                             var index = 0;
                             var current_sum_split_ratios = splitRatiosNum.LastOrDefault();
                             //剩余split的权重
@@ -629,7 +629,7 @@ namespace HevoDrawing.Abstractions
         }
 
     }
-    public class Section
+    public class ValueSection
     {
         public IVariable Left { get; set; }
         public IVariable Right { get; set; }
@@ -674,7 +674,7 @@ namespace HevoDrawing.Abstractions
         }
         public override bool Equals(object obj)
         {
-            if (obj is Section section)
+            if (obj is ValueSection section)
             {
                 return section.Left.Equals(Left) && section.Right.Equals(Right);
             }
@@ -685,9 +685,9 @@ namespace HevoDrawing.Abstractions
         {
             return variable.CompareTo(Left) >= 0 && variable.CompareTo(Right) <= 0;
         }
-        public List<Section> Merge(Section section)
+        public List<ValueSection> Merge(ValueSection section)
         {
-            var sections = new List<Section>();
+            var sections = new List<ValueSection>();
             //完全分离
             if ((section.Right.CompareTo(Left) < 0 && section.Left.CompareTo(Left) < 0) ||
                 (section.Right.CompareTo(Right) > 0 && section.Left.CompareTo(Right) > 0))
@@ -696,7 +696,7 @@ namespace HevoDrawing.Abstractions
                 sections.Add(this);
                 return sections;
             }
-            var new_section = new Section();
+            var new_section = new ValueSection();
             sections.Add(new_section);
 
             if (section.Contains(Left) && section.Contains(Right))
@@ -722,9 +722,9 @@ namespace HevoDrawing.Abstractions
             return sections;
         }
 
-        public List<Section> Except(Section section)
+        public List<ValueSection> Except(ValueSection section)
         {
-            var sections = new List<Section>();
+            var sections = new List<ValueSection>();
 
             //完全分离
             if ((section.Right.CompareTo(Left) < 0 && section.Left.CompareTo(Left) < 0) ||
@@ -734,15 +734,15 @@ namespace HevoDrawing.Abstractions
                 return sections;
             }
 
-            var new_section = new Section();
+            var new_section = new ValueSection();
 
             if (section.Contains(Left) && section.Contains(Right))
             {
             }
             else if (Contains(section.Left) && Contains(section.Right))
             {
-                sections.Add(new Section() { Left = Left, Right = section.Left });
-                sections.Add(new Section() { Left = section.Right, Right = Right });
+                sections.Add(new ValueSection() { Left = Left, Right = section.Left });
+                sections.Add(new ValueSection() { Left = section.Right, Right = Right });
                 return sections;
             }
             else if (section.Contains(Left) && section.RightLessThanOrEquals(Right))
@@ -765,9 +765,9 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         /// <param name="sections">各自独立section</param>
         /// <returns></returns>
-        public List<Section> MergeFrom(List<Section> sections)
+        public List<ValueSection> MergeFrom(List<ValueSection> sections)
         {
-            var list = new List<Section>();
+            var list = new List<ValueSection>();
             foreach (var item in sections)
             {
                 var merged = item.Merge(this);
@@ -782,9 +782,9 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         /// <param name="sections">各自独立section</param>
         /// <returns></returns>
-        public List<Section> ExceptFrom(List<Section> sections)
+        public List<ValueSection> ExceptFrom(List<ValueSection> sections)
         {
-            var list = new List<Section>();
+            var list = new List<ValueSection>();
             foreach (var item in sections)
             {
                 var excepted = item.Except(this);
@@ -792,9 +792,9 @@ namespace HevoDrawing.Abstractions
             }
             return list;
         }
-        public List<Section> Intersect(Section section)
+        public List<ValueSection> Intersect(ValueSection section)
         {
-            return new List<Section>();
+            return new List<ValueSection>();
         }
     }
 }

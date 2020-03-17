@@ -11,9 +11,9 @@ namespace HevoDrawing.Abstractions
 {
     /// <summary>
     /// 交互、控件展示层
-    /// 多图的情况下 <see cref="InteractionCanvas"/> 依赖于 <see cref="RectDrawingCanvas"/> 或 <see cref="RectDrawingCanvasContainer"/>
+    /// 多图的情况下 <see cref="InteractionCanvas"/> 依赖于 <see cref="RectDrawingCanvas"/> 或 <see cref="DrawingGrid"/>
     /// [<see cref="RectDrawingCanvas"/>: <see cref="InteractionCanvas"/>存在于<see cref="RectInteractionGroup"/>的顶层]
-    /// [<see cref="RectDrawingCanvasContainer"/>：<see cref="InteractionCanvas"/>存在于 <see cref="RectDrawingCanvasContainer"/>的顶层]
+    /// [<see cref="DrawingGrid"/>：<see cref="InteractionCanvas"/>存在于 <see cref="DrawingGrid"/>的顶层]
     /// </summary>
     public abstract class InteractionCanvas : Canvas
     {
@@ -39,8 +39,8 @@ namespace HevoDrawing.Abstractions
         /// 依赖的container 独立的话1个
         /// 复用的话多个
         /// </summary>
-        public Dictionary<int, RectDrawingCanvasContainer> DependencyContainers { get; } = new Dictionary<int, RectDrawingCanvasContainer>();
-        public RectDrawingCanvasContainer UniqueDependencyContainer => DependencyContainers.Count == 1 ? DependencyContainers.ElementAt(0).Value : null;
+        public Dictionary<int, DrawingGrid> DependencyContainers { get; } = new Dictionary<int, DrawingGrid>();
+        public DrawingGrid UniqueDependencyContainer => DependencyContainers.Count == 1 ? DependencyContainers.ElementAt(0).Value : null;
 
         private ContextData _visualData = null;
         public ContextData VisualData

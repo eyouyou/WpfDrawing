@@ -49,14 +49,16 @@ namespace HevoDrawing
                 var axis_id = int.MinValue;
                 var series_id = int.MinValue;
                 AxisVisual axis = null;
+                var index = 0;
                 foreach (var yAxis in YAxes)
                 {
-                    if (yAxis.Name == item.Name)
+                    if (index == 0 || (item.YAxisIds != null && item.YAxisIds.Contains(yAxis.Id)))
                     {
                         axis_id = yAxis.Id;
                         series_id = item.Id;
                         axis = yAxis;
                     }
+                    index++;
                 }
                 if (!AxisMappings.ContainsKey(axis_id))
                 {
@@ -67,7 +69,14 @@ namespace HevoDrawing
                     SeriesMappings[series_id] = new List<AxisVisual>();
                 }
                 AxisMappings[axis_id].Add(item);
-                SeriesMappings[series_id].Add(axis);
+                if (axis != null)
+                {
+                    SeriesMappings[series_id].Add(axis);
+                }
+                else
+                {
+                    SeriesMappings[series_id].AddRange(YAxes);
+                }
             }
             if (Series.Count == 0)
             {
@@ -104,15 +113,21 @@ namespace HevoDrawing
         {
             visual.Id = IdGenerater.GenerateId();
         }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List<SeriesVisual> GetMappingSeries(int id)
         {
             if (AxisMappings.TryGetValue(id, out var y))
             {
                 return y;
             }
-            if (y == null && Series.Count >= 1)
+            if (y == null && AxisMappings.TryGetValue(int.MinValue, out var y2))
             {
-                return Series;
+                return y2;
             }
             return null;
         }

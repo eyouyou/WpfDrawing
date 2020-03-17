@@ -15,7 +15,7 @@ namespace HevoDrawing
         }
         public override IFormatProvider FormatProvider => null;
 
-        public override double IntervalPositioning(Section section, IVariable variable, int step)
+        public override double IntervalPositioning(ValueSection section, IVariable variable, int step)
         {
             var variable_data = (variable as Value<DateTime>).Data;
             variable = new Value<DateTime>(variable_data.AddMilliseconds(MinUnit * step));
@@ -29,7 +29,7 @@ namespace HevoDrawing
             {
                 return double.NaN;
             }
-            List<Section> total = GetSectionsExcept(section);
+            List<ValueSection> total = GetSectionsExcept(section);
             var totalMilliseconds = 0.0;
             var index = 0;
             var data_index = -1;

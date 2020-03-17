@@ -101,6 +101,9 @@
     <Compile Include="WindowCharting3.xaml.cs">
       <DependentUpon>WindowCharting3.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowCharting4.xaml.cs">
+      <DependentUpon>WindowCharting4.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Write.xaml.cs">
       <DependentUpon>Write.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,10 @@
     <Page Include="WindowCharting3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WindowCharting4.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Write.xaml">
       <Generator>MSBuild:Compile</Generator>

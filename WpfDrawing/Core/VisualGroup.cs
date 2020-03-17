@@ -126,9 +126,8 @@ namespace HevoDrawing
             {
                 foreach (var item in data.XData)
                 {
-                    if (item.ComponentIds.Contains(int.MinValue))
+                    if (item.ComponentIds == null || item.ComponentIds.Count == 0)
                     {
-                        item.ComponentIds.RemoveAll(it => it == int.MinValue);
                         var ids = coms.AxisXCollection.Select(it => it.Id);
                         item.ComponentIds.AddRange(ids);
                     }
@@ -156,23 +155,27 @@ namespace HevoDrawing
         {
             base.DataPush(data, list);
 
+            if (!(DataSource is ChartDataSource coms))
+            {
+                return;
+            }
             foreach (ContinuousAxis item in Visuals)
             {
                 item.IsDataComplete = false;
                 if (!(item.VisualData is ContinuousAxisContextData visualData))
                 {
-                    return;
-                }
-                if (!(DataSource is ChartDataSource coms))
-                {
-                    return;
+                    goto Complete;
                 }
                 var series = coms.GetMappingSeries(item.Id);
                 if (series == null)
                 {
-                    return;
+                    goto Complete;
                 }
                 var series_data = series.Where(it => !it.VisualData.IsEmpty()).Select(it => it.VisualData as TwoDimensionalContextData).ToList();
+                if (series_data.Count == 0)
+                {
+                    goto Complete;
+                }
                 var range = Range.Empty;
                 if (item.Range != null)
                 {
@@ -194,7 +197,10 @@ namespace HevoDrawing
                     data_item.Range = range;
                 }
                 item.CalculateRequireData();
-                item.IsDataComplete = true;
+                Complete:
+                {
+                    item.IsDataComplete = true;
+                }
             }
         }
         public void InductiveData(ChartGroupContextData data)
@@ -203,10 +209,10 @@ namespace HevoDrawing
             {
                 foreach (var item in data.YData)
                 {
-                    if (item.ComponentIds.Count == 0)
+                    if (item.ComponentIds == null || item.ComponentIds.Count == 0)
                     {
-                        var ids = coms.AxisYCollection.Select(it => it.Id);
-                        item.ComponentIds.AddRange(ids);
+                        var axisY = coms.GetMappingAxisY(int.MinValue);
+                        item.ComponentIds.Add(axisY.Id);
                     }
                 }
             }
@@ -251,41 +257,48 @@ namespace HevoDrawing
         /// 临时方案 可以用分组或分治算法进行优化
         /// </summary>
         /// <returns></returns>
-        public ChartGroupContextData InductiveData()
+        public void InductiveData()
         {
             var index = -1;
             var list = new List<TwoDimensionalContextData>();
-            foreach (PointsSeriesVisual item in Visuals)
-            {
-                index++;
-                if (item.VisualData is TwoDimensionalContextData rectData && !rectData.IsEmpty)
-                {
-                    rectData.ComponentIds.Add(item.Id);
-                    rectData.XContextData.ComponentIds.Add(item.XAxisId);
-                    list.Add(rectData);
-                }
-            }
-            if (list.Count == 0)
-            {
-                return ChartGroupContextData.Empty;
-            }
-            ChartGroupContextData data = new ChartGroupContextData(list);
-            return data;
-        }
-
-        public ChartGroupContextData InductiveData(ChartGroupContextData data)
-        {
             if (DataSource is ChartDataSource coms)
             {
-                var all_data = new List<TwoDimensionalContextData>();
                 foreach (PointsSeriesVisual item in Visuals)
                 {
-                    var visualData = data.Data.FirstOrDefault(it => it.ComponentIds.Contains(item.Id));
-                    all_data.Add(visualData as TwoDimensionalContextData);
+                    index++;
+                    if (item.VisualData is TwoDimensionalContextData rectData && !rectData.IsEmpty)
+                    {
+                        rectData.ComponentIds.Add(item.Id);
+                        if (item.XAxisId == int.MinValue)
+                        {
+                            var ids = coms.AxisXCollection.Select(it => it.Id);
+                            rectData.XContextData.ComponentIds.AddRange(ids);
+                        }
+                        else
+                        {
+                            rectData.XContextData.ComponentIds.Add(item.XAxisId);
+                        }
+                        var yAxis = coms.GetMappingAxisY(item.Id);
+                        rectData.YContextData.ComponentIds.Add(yAxis.Id);
+                    }
                 }
-                return new ChartGroupContextData(all_data);
             }
-            return ChartGroupContextData.Empty;
+        }
+
+        public void InductiveData(ChartGroupContextData data)
+        {
+            var index = 0;
+            foreach (PointsSeriesVisual item in Visuals)
+            {
+                var visualData = item.VisualData;
+                if ((visualData == null || visualData.IsEmpty) && index < data.Data.Count)
+                {
+                    var visual_data = data.Data[index];
+                    visual_data.ComponentIds.Add(item.Id);
+                    item.VisualData = visual_data;
+                }
+                index++;
+            }
         }
 
         public ChartGroupContextData FilterAndCopyData()
@@ -300,8 +313,8 @@ namespace HevoDrawing
 
                     if (axisX.SplitValues != null && axisX.SplitValues.Count > 0 && !axisX.IsDataFull)
                     {
-                        List<Section> all_avaliable = Tools.ChangeToSections(axisX.SplitValues);
-                        var avaliable_sections = new List<Section>();
+                        List<ValueSection> all_avaliable = Tools.ChangeToSections(axisX.SplitValues);
+                        var avaliable_sections = new List<ValueSection>();
                         if (axisX.ExceptSections != null)
                         {
                             foreach (var except in axisX.ExceptSections)

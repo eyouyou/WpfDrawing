@@ -64,7 +64,7 @@ namespace HevoDrawing
             }
             return list;
         }
-        public static List<RatioSection> GetSectionsFromData(bool isInterregional, DiscreteAxis xAxis, List<Section> sections, List<IVariable> data)
+        public static List<RatioSection> GetSectionsFromData(bool isInterregional, DiscreteAxis xAxis, List<ValueSection> sections, List<IVariable> data)
         {
             List<RatioSection> list = new List<RatioSection>();
 
@@ -187,7 +187,7 @@ namespace HevoDrawing
             return list;
         }
 
-        public static List<RatioSection> GetSectionsFromRatioCroodAndSection(Section range_section, DiscreteAxis xAxis, bool isInterregional, List<double> ratios, List<IVariable> data)
+        public static List<RatioSection> GetSectionsFromRatioCroodAndSection(ValueSection range_section, DiscreteAxis xAxis, bool isInterregional, List<double> ratios, List<IVariable> data)
         {
             List<RatioSection> list = new List<RatioSection>();
             ratios = new List<double>(ratios);
@@ -231,9 +231,9 @@ namespace HevoDrawing
             }
             return list;
         }
-        public static List<Section> ChangeToSections(List<IVariable> splitValues, List<double> splitRatio)
+        public static List<ValueSection> ChangeToSections(List<IVariable> splitValues, List<double> splitRatio)
         {
-            var sections = new List<Section>();
+            var sections = new List<ValueSection>();
             if (splitRatio.IndexOf(0) == 0)
             {
                 splitRatio = new List<double>(splitRatio);
@@ -245,21 +245,21 @@ namespace HevoDrawing
                 {
                     if (i > splitRatio.Count)
                     {
-                        return new List<Section>();
+                        return new List<ValueSection>();
                     }
-                    sections.Add(new Section() { Left = splitValues[i], Right = splitValues[i + 1], SectionRatio = splitRatio[i] });
+                    sections.Add(new ValueSection() { Left = splitValues[i], Right = splitValues[i + 1], SectionRatio = splitRatio[i] });
                 }
             }
             return sections;
         }
-        public static List<Section> ChangeToSections(List<IVariable> splitValues)
+        public static List<ValueSection> ChangeToSections(List<IVariable> splitValues)
         {
-            var sections = new List<Section>();
+            var sections = new List<ValueSection>();
             for (int i = 0; i < splitValues.Count; i++)
             {
                 if (i < splitValues.Count - 1)
                 {
-                    sections.Add(new Section() { Left = splitValues[i], Right = splitValues[i + 1], SectionRatio = 0 });
+                    sections.Add(new ValueSection() { Left = splitValues[i], Right = splitValues[i + 1], SectionRatio = 0 });
                 }
             }
             return sections;
@@ -533,7 +533,7 @@ namespace HevoDrawing
         {
             return new Chart2DContextData2(croods.Select(it => new ChartCrood(new FormattableValue<X>(it.XData), new FormattableValue<double>(it.YData))).ToList());
         }
-        public static ContextData ToFormatVisualData<X>(this IEnumerable<CroodData<X>> croods)
+        public static TwoDimensionalContextData ToFormatVisualData<X>(this IEnumerable<CroodData<X>> croods)
             where X : IFormattable, IComparable
         {
             return new Chart2DContextData2(croods.Select(it => new ChartCrood(new FormattableValue<X>(it.XData), new FormattableValue<double>(it.YData))).ToList());

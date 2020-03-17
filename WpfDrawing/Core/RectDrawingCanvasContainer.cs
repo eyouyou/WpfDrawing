@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace HevoDrawing
 {
-    public abstract class RectDrawingCanvasContainer : UserControl
+    public abstract class DrawingGrid : UserControl
     {
         /// <summary>
         /// 放置<see cref="InteractionCanvas"/> 的容器
@@ -19,16 +19,11 @@ namespace HevoDrawing
         /// <summary>
         /// 已加入 <see cref="DrawingCanvasArea"/>
         /// </summary>
-        public abstract RectDrawingCanvas DrawingCanvas { get; }
+        public RectDrawingCanvas DrawingCanvas { get; } = new RectDrawingCanvas();
 
-        public RectDrawingCanvasContainer()
+        public DrawingGrid()
         {
             DrawingCanvasArea.Children.Add(DrawingCanvas);
-        }
-        public void Arrange()
-        {
-            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            ArrangeCore(new Rect(DesiredSize));
         }
         /// <summary>
         /// 如果该值为空，
@@ -60,7 +55,7 @@ namespace HevoDrawing
     /// <summary>
     /// 自带canvas
     /// </summary>
-    public class GenericCanvasContainer : RectDrawingCanvasContainer
+    public class GenericCanvasContainer : DrawingGrid
     {
         RectDrawingCanvas canvas;
         public GenericCanvasContainer(bool isEnableInteraction = false)
@@ -69,13 +64,12 @@ namespace HevoDrawing
             DrawingCanvasArea.Children.Add(canvas);
             Content = DrawingCanvasArea;
         }
-        public override RectDrawingCanvas DrawingCanvas => canvas;
-
         public override InteractionCanvas InteractionCanvas => null;
 
         public void Replot()
         {
             canvas.Replot();
         }
+
     }
 }

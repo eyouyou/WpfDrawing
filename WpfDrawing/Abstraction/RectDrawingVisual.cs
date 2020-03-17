@@ -18,7 +18,7 @@ namespace HevoDrawing.Abstractions
         bool IsVisualEnable { get; set; }
         void Clear();
     }
-    public abstract class RectDrawingVisual : DrawingVisual, ILocatable, IVisualControllable
+    public abstract class RectDrawingVisual : DrawingVisual, ILocatable, IVisualControllable, IEquatable<RectDrawingVisual>
     {
         public abstract ContextData DefaultData { get; }
         /// <summary>
@@ -50,7 +50,7 @@ namespace HevoDrawing.Abstractions
                 _dataSource = value;
             }
         }
-        public int Id { get; set; }
+        public int Id { get; set; } = int.MinValue;
         public string Name { get; set; }
 
         /// <summary>
@@ -203,5 +203,14 @@ namespace HevoDrawing.Abstractions
 
             }
         }
+
+        public bool Equals(RectDrawingVisual other)
+        {
+            if (other.Id == int.MinValue && Id == int.MinValue)
+            {
+                return other.Equals(this);
+            }
+            return other.Id == Id;
+        } 
     }
 }

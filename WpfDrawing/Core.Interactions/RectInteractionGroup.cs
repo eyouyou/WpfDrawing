@@ -18,19 +18,19 @@ namespace HevoDrawing.Interactions
         public GridLength CellMargin { get; set; } = new GridLength(0);
         public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
-        public List<RectDrawingCanvasContainer> Containers;
-        List<RectDrawingCanvasContainer> ContainersUsed;
-        List<RectDrawingCanvasContainer> ContainersUnused;
+        public List<DrawingGrid> Containers;
+        List<DrawingGrid> ContainersUsed;
+        List<DrawingGrid> ContainersUnused;
         ComponentId IdGenerater = new ComponentId();
         int Col = -1;
         int Row = -1;
         InteractionCanvas GlobalInteraction = null;
-        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params RectDrawingCanvasContainer[] canvas)
+        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params DrawingGrid[] canvas)
         {
             InteractionVisuals = new List<InteractionCanvas>();
             Containers = canvas.ToList();
-            ContainersUsed = new List<RectDrawingCanvasContainer>(Containers);
-            ContainersUnused = new List<RectDrawingCanvasContainer>();
+            ContainersUsed = new List<DrawingGrid>(Containers);
+            ContainersUnused = new List<DrawingGrid>();
             Containers.ForEach(it => ContainerGrid.Children.Add(it));
             GlobalInteraction = interaction;
             if (interaction != null)
@@ -139,7 +139,7 @@ namespace HevoDrawing.Interactions
             }
 
         }
-        public RectInteractionGroup(int col = 1, int row = 1, params RectDrawingCanvasContainer[] canvas)
+        public RectInteractionGroup(int col = 1, int row = 1, params DrawingGrid[] canvas)
         {
             var col_percent = 1.0 / col;
             for (int i = 0; i < col; i++)

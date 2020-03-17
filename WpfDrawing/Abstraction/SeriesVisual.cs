@@ -33,6 +33,7 @@ namespace HevoDrawing.Abstractions
         /// 对应一根x轴 可以对应多根y轴
         /// </summary>
         public int XAxisId { get; set; } = int.MinValue;
+        public List<int> YAxisIds { get; set; }
         /// <summary>
         /// tip 使用
         /// </summary>

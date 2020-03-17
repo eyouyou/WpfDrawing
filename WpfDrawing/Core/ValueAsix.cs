@@ -132,7 +132,7 @@ namespace HevoDrawing
             var points = SortedSplitPoints;
             if (points == null)
             {
-                CalculateRequireData();
+                return;
             }
             var point = new Point();
             var plotArea = PlotArea;

@@ -19,7 +19,7 @@ namespace HevoDrawing
         public List<ContextData> XData { get; } = new List<ContextData>();
         public List<ContextData> YData { get; } = new List<ContextData>();
 
-        public ChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as TwoDimensionalContextData).ToList())
+        private ChartGroupContextData(List<ContextData> data) : this(data.Select(it => it as TwoDimensionalContextData).ToList())
         {
 
         }
@@ -118,10 +118,7 @@ namespace HevoDrawing
              */
             if (!VisualData.TryTransformVisualData<ChartGroupContextData>(out var inductiveData))
             {
-                inductiveData = SeriesVisuals.InductiveData();
-                AxisXVisuals.InductiveData(inductiveData);
-                AxisYVisuals.InductiveData(inductiveData);
-
+                SeriesVisuals.InductiveData();
                 //过滤数据 拷贝
                 inductiveData = SeriesVisuals.FilterAndCopyData();
                 VisualDataSetupTidily(inductiveData);

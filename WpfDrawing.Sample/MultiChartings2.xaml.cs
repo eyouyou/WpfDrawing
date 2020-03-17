@@ -78,7 +78,7 @@ namespace WpfDrawing.Sample
         }
 
 
-        public class ChartItem : RectDrawingCanvasContainer
+        public class ChartItem : DrawingGrid
         {
             ChartVisual chart = new ChartVisual();
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
@@ -88,8 +88,6 @@ namespace WpfDrawing.Sample
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
 
-            RectDrawingCanvas rectDrawingCanvas = new RectDrawingCanvas();
-
             TextBlock text1 = new TextBlock();
             TextBlock text2 = new TextBlock();
 
@@ -97,7 +95,7 @@ namespace WpfDrawing.Sample
             public ChartItem()
             {
                 BlurryUserControl b = new BlurryUserControl() { Background = new SolidColorBrush(ColorHelper.StringToColor("#BE323337")).OfStrength(0.2d) };
-                b.BlurContainer = rectDrawingCanvas;
+                b.BlurContainer = DrawingCanvas;
                 b.Magnification = 0.15;
                 b.BlurRadius = 25;
 
@@ -124,7 +122,7 @@ namespace WpfDrawing.Sample
                 chart.AddSeries(lineSeries);
                 chart.AddSeries(lineSeries2);
 
-                rectDrawingCanvas.AddChild(chart);
+                DrawingCanvas.AddChild(chart);
 
                 DrawingCanvas.DataSource = chart.DataSource;
 
@@ -139,7 +137,6 @@ namespace WpfDrawing.Sample
                 title.AddChild(text2, Dock.Right);
                 dock.AddChild(title, Dock.Top);
                 dock.AddChild(DrawingCanvasArea, Dock.Top);
-
                 Content = dock;
             }
 
@@ -165,8 +162,6 @@ namespace WpfDrawing.Sample
                     text2.Text = "--";
                 }
             }
-
-            public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
 
             public override InteractionCanvas InteractionCanvas => interaction;
 
@@ -250,7 +245,7 @@ namespace WpfDrawing.Sample
             }
 
         }
-        public class Strength : RectDrawingCanvasContainer
+        public class Strength : DrawingGrid
         {
             ChartVisual chart = new ChartVisual();
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "t", SplitValueFormat = "t", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
@@ -261,8 +256,6 @@ namespace WpfDrawing.Sample
             StraightLineSeriesVisual lineSeries4 = new StraightLineSeriesVisual() { Name = "非一字涨停", LinePen = new Pen(Brushes.AliceBlue, 1) };
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), SplitValueFormat = "F2" };
-
-            RectDrawingCanvas rectDrawingCanvas = new RectDrawingCanvas();
 
             TextBlock text1 = new TextBlock();
             TextBlock text2 = new TextBlock();
@@ -289,7 +282,7 @@ namespace WpfDrawing.Sample
                 chart.AddSeries(lineSeries3);
                 chart.AddSeries(lineSeries4);
 
-                rectDrawingCanvas.AddChild(chart);
+                DrawingCanvas.AddChild(chart);
                 DrawingCanvas.DataSource = chart.DataSource;
                 IsVisibleChanged += ChartItem_IsVisibleChanged;
 
@@ -328,8 +321,6 @@ namespace WpfDrawing.Sample
                 }
             }
 
-            public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
-
             private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
             {
                 if ((bool)e.NewValue)
@@ -360,7 +351,7 @@ namespace WpfDrawing.Sample
                 var day5 = tradeDay.AddHours(15);
                 var axes = new List<DateTime> { day1, day2, day3, day4, day5 };
 
-                axisX.ExceptSections = new List<Section>() { new Section() { Left = except_left.ToFormatVisualData(), Right = except_right.ToFormatVisualData() } };
+                axisX.ExceptSections = new List<ValueSection>() { new ValueSection() { Left = except_left.ToFormatVisualData(), Right = except_right.ToFormatVisualData() } };
                 axisX.SplitValues = axes.Select(it => it.ToFormatVisualData()).ToList();
                 axisX.Ratios = Tools.GetAverageRatiosWithZero(axes.Count - 1);
 
@@ -368,12 +359,14 @@ namespace WpfDrawing.Sample
                 //filterList.ForEach(it => it.time = DateTime.Now.Date.AddHours(8));
                 var value1 = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0));
                 axisY.Range = new Range(0, value1.Select(it => it.YData).Max());
-                lineSeries.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0)).ToFormatVisualData();
-                lineSeries2.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.dt * 1.0)).ToFormatVisualData();
-                lineSeries3.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.yzzt * 1.0)).ToFormatVisualData();
-                lineSeries4.VisualData = filterList.Select(it => new CroodData<DateTime>(it.time, it.fyzzt * 1.0)).ToFormatVisualData();
+                var a = filterList.Select(it => new CroodData<DateTime>(it.time, it.zt * 1.0)).ToFormatVisualData();
+                var b = filterList.Select(it => new CroodData<DateTime>(it.time, it.dt * 1.0)).ToFormatVisualData();
+                var c = filterList.Select(it => new CroodData<DateTime>(it.time, it.yzzt * 1.0)).ToFormatVisualData();
+                var d = filterList.Select(it => new CroodData<DateTime>(it.time, it.fyzzt * 1.0)).ToFormatVisualData();
 
-                rectDrawingCanvas.Replot();
+                chart.VisualData = new ChartGroupContextData(new List<TwoDimensionalContextData>() { a, b, c, d });
+
+                DrawingCanvas.Replot();
             }
             //private async Task Render()
             //{
@@ -524,7 +517,7 @@ namespace WpfDrawing.Sample
             public override InteractionCanvas InteractionCanvas => interaction;
 
         }
-        public class ChartItem2 : RectDrawingCanvasContainer
+        public class ChartItem2 : DrawingGrid
         {
             ChartVisual chart = new ChartVisual();
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
@@ -533,8 +526,6 @@ namespace WpfDrawing.Sample
             BarSeriesVisual barSeries = new BarSeriesVisual() { Name = "A股平均关注度" };
 
             ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
-
-            RectDrawingCanvas rectDrawingCanvas = new RectDrawingCanvas();
 
             TextBlock text1 = new TextBlock();
             TextBlock text2 = new TextBlock();
@@ -578,7 +569,7 @@ namespace WpfDrawing.Sample
                 chart.AddSeries(barSeries);
                 barSeries.BarWidth = new GridLength(1, GridUnitType.Star);
 
-                rectDrawingCanvas.AddChild(chart);
+                DrawingCanvas.AddChild(chart);
 
                 DrawingCanvas.DataSource = chart.DataSource;
 
@@ -619,9 +610,6 @@ namespace WpfDrawing.Sample
                     text2.Text = "--";
                 }
             }
-
-            public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
-
             public override InteractionCanvas InteractionCanvas => interaction;
 
             private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -58,7 +58,7 @@ namespace HevoDrawing.Sample
             container.Replot();
         }
 
-        public class ChartItem : RectDrawingCanvasContainer
+        public class ChartItem : DrawingGrid
         {
             ChartVisual chart = new ChartVisual();
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
@@ -131,11 +131,6 @@ namespace HevoDrawing.Sample
                 }
 
             }
-
-            public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
-
-            public override InteractionCanvas InteractionCanvas => null;
-
             private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
             {
                 if ((bool)e.NewValue)
@@ -217,7 +212,7 @@ namespace HevoDrawing.Sample
 
         }
 
-        public class ChartItem2 : RectDrawingCanvasContainer
+        public class ChartItem2 : DrawingGrid
         {
             ChartVisual chart = new ChartVisual();
             DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
@@ -291,11 +286,6 @@ namespace HevoDrawing.Sample
                 }
 
             }
-
-            public override RectDrawingCanvas DrawingCanvas => rectDrawingCanvas;
-
-            public override InteractionCanvas InteractionCanvas => throw new NotImplementedException();
-
             private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
             {
                 if ((bool)e.NewValue)

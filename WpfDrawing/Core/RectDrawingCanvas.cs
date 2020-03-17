@@ -165,12 +165,12 @@ namespace HevoDrawing
         }
 
         /// <summary>
-        /// 清理数据
+        /// 清理根数据 通过sub逆推根数据
         /// </summary>
         public void Replot()
         {
             IsPloted = false;
-            Reset(); 
+            Reset();
             foreach (Visual item in Visuals)
             {
                 if (item is RectDrawingVisual rect)
@@ -184,7 +184,7 @@ namespace HevoDrawing
         }
 
         /// <summary>
-        /// 沿用之前的数据
+        /// 不清理根数据
         /// </summary>
         public void Plot()
         {
@@ -200,7 +200,7 @@ namespace HevoDrawing
             }
             IsPloted = true;
         }
-        public System.Windows.Media.VisualCollection Visuals { get; set; }
+        public VisualCollection Visuals { get; set; }
         public Rect PlotArea { get; set; }
         public void AddChild(RectDrawingVisual visual)
         {

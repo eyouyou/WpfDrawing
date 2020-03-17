@@ -310,7 +310,7 @@ namespace HevoDrawing
                 {
                     var axisX = coms.FindXById(item.Id) as DiscreteAxis;
                     var data = item.VisualData as TwoDimensionalContextData;
-
+                    var data_temp = data;
                     if (axisX.SplitValues != null && axisX.SplitValues.Count > 0 && !axisX.IsDataFull)
                     {
                         List<ValueSection> all_avaliable = Tools.ChangeToSections(axisX.SplitValues);
@@ -323,15 +323,13 @@ namespace HevoDrawing
                             }
                             all_avaliable = avaliable_sections.Distinct().ToList();
                         }
-
-                        var data_temp = data;
                         data = data.GeneraterNewData(data.ChartCroods.Where(it => all_avaliable.Any(a => a.Contains(it.X))).ToList());
-                        data.CopyComponentIds(data_temp);
                     }
                     else
                     {
                         data = data.Copy() as TwoDimensionalContextData;
                     }
+                    data.CopyComponentIds(data_temp);
                     all_data.Add(data);
                 }
                 return new ChartGroupContextData(all_data);

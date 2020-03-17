@@ -198,6 +198,14 @@ namespace HevoDrawing
         {
             return Data.ToString(format, formatProvider);
         }
+        public override Value<T> Copy()
+        {
+            if (IsBad)
+            {
+                return BadT;
+            }
+            return new FormattableValue<T>(Data);
+        }
     }
     public class ListContextData<T> : ContextData
     {

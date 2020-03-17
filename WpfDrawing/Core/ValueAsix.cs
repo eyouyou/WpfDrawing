@@ -29,7 +29,7 @@ namespace HevoDrawing
         }
         public ContinuousAxisContextData(List<double> values)
         {
-            Range = new Range(new Value<double>(values.Min()), new Value<double>(values.Max()));
+            Range = new Range(new FormattableValue<double>(values.Min()), new FormattableValue<double>(values.Max()));
         }
         public ContinuousAxisContextData(List<Value<double>> values)
         {
@@ -37,7 +37,7 @@ namespace HevoDrawing
             {
                 return;
             }
-            Range = new Range(new Value<double>(values.Min().Data), new Value<double>(values.Max().Data));
+            Range = new Range(new FormattableValue<double>(values.Min().Data), new FormattableValue<double>(values.Max().Data));
         }
         public override ContextData Copy()
         {

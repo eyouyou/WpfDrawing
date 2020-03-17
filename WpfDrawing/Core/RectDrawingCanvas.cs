@@ -165,7 +165,7 @@ namespace HevoDrawing
         }
 
         /// <summary>
-        /// 清理根数据 通过sub逆推根数据
+        /// 清理根数据 通过sub重新逆推根数据
         /// </summary>
         public void Replot()
         {

@@ -176,7 +176,7 @@ namespace HevoDrawing.Abstractions
             var followData = visual_data.Data.Count > 0 ? FollowData : false;
             var ordered_x_data = visual_data.Data.OrderBy(it => it).ToList();
 
-            if (splitValues.Count > 0)
+            if (splitValues != null && splitValues.Count > 0)
             {
                 if (splitValues.Count < 2)
                 {

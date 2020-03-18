@@ -59,7 +59,7 @@ namespace HevoDrawing
                             Brush brush = Brushes.White;
                             if (ellipse.Brush == null)
                             {
-                                brush = Color(item.X);
+                                brush = Color(item.X, item.Y);
                             }
                             dc.DrawEllipse(brush, ellipse.Pen, item.Point, ellipse.RadiusX, ellipse.RadiusY);
                         }
@@ -73,11 +73,11 @@ namespace HevoDrawing
     {
         public Pen LinePen { get; set; } = new Pen(Brushes.Blue, 1);
 
-        public override Func<IVariable, Brush> Color
+        public override Func<IVariable, Value<double>, Brush> Color
         {
             get
             {
-                return base.Color ?? (data => LinePen.Brush);
+                return base.Color ?? ((xdata, ydata) => LinePen.Brush);
             }
             set => base.Color = value;
         }
@@ -112,11 +112,11 @@ namespace HevoDrawing
     public class BezierLineSeriesVisual : LineSeriesVisual
     {
         public Pen LinePen { get; } = new Pen(Brushes.Blue, 1);
-        public override Func<IVariable, Brush> Color
+        public override Func<IVariable, Value<double>, Brush> Color
         {
             get
             {
-                return base.Color ?? (data => LinePen.Brush);
+                return base.Color ?? ((xdata, ydata) => LinePen.Brush);
             }
             set => base.Color = value;
         }

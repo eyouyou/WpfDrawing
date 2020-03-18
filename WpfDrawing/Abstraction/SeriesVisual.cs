@@ -37,7 +37,7 @@ namespace HevoDrawing.Abstractions
         /// <summary>
         /// tip 使用
         /// </summary>
-        public abstract Func<IVariable, Brush> Color { get; set; }
+        public abstract Func<IVariable, Value<double>, Brush> Color { get; set; }
     }
 
 }

@@ -30,7 +30,7 @@ namespace HevoDrawing
             YData = data.Select(it => (ContextData)it.YContextData).ToList();
         }
 
-        public override bool IsEmpty => Data.Count == 0 || Data.Any(it => it.IsEmpty);
+        public override bool IsEmpty => Data.Count == 0 || Data.All(it => it.IsEmpty);
         public static ChartGroupContextData Empty => new ChartGroupContextData(new List<TwoDimensionalContextData>());
         public override ContextData Copy()
         {
@@ -162,16 +162,28 @@ namespace HevoDrawing
         /// <param name="mainArea"></param>
         private void PlotGridLine(DrawingContext dc, Rect mainArea)
         {
+
             //画分割线
             foreach (ContinuousAxis item in Data.AxisYCollection)
             {
+                bool isYClosed = false;
+
                 if (item.ShowGridLine && item.SortedSplitPoints is List<Point> points)
                 {
                     foreach (var point in points)
                     {
+                        if (point.Y == item.End.Y)
+                        {
+                            isYClosed = true;
+                        }
                         item.Freeze();
                         dc.DrawLine(item.GridLinePen, new Point(mainArea.Location.X, point.Y), new Point(mainArea.Width + mainArea.Location.X, point.Y));
                     }
+                }
+                if (item.IsGridLineClose && !isYClosed)
+                {
+                    item.Freeze();
+                    dc.DrawLine(item.GridLinePen, new Point(mainArea.Location.X, item.End.Y), new Point(mainArea.Width + mainArea.Location.X, item.End.Y));
                 }
             }
 
@@ -179,7 +191,6 @@ namespace HevoDrawing
             foreach (DiscreteAxis item in xCollection)
             {
                 bool isXClosed = false;
-                var plotArea = item.PlotArea;
 
                 if (item.ShowGridLine && item.SortedSplitPoints is List<Point> points)
                 {
@@ -190,12 +201,13 @@ namespace HevoDrawing
                             isXClosed = true;
                         }
                         item.Freeze();
-                        dc.DrawLine(item.GridLinePen, new Point(point.X, plotArea.Location.Y), new Point(point.X, plotArea.Location.Y + plotArea.Height));
+                        dc.DrawLine(item.GridLinePen, new Point(point.X, mainArea.Location.Y), new Point(point.X, mainArea.Location.Y + mainArea.Height));
                     }
                 }
                 if (item.IsGridLineClose && !isXClosed)
                 {
-                    dc.DrawLine(item.GridLinePen, new Point(item.End.X, plotArea.Location.Y), new Point(item.End.X, plotArea.Location.Y + plotArea.Height));
+                    item.Freeze();
+                    dc.DrawLine(item.GridLinePen, new Point(item.End.X, mainArea.Location.Y), new Point(item.End.X, mainArea.Location.Y + mainArea.Height));
                 }
             }
 

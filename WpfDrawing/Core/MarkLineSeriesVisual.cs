@@ -27,7 +27,7 @@ namespace HevoDrawing
         public override ContextData DefaultData => Chart2DContextData.Empty;
 
 
-        public override Func<IVariable, Brush> Color { get; set; }
+        public override Func<IVariable, Value<double>, Brush> Color { get; set; }
 
         public override void PlotToDc(DrawingContext dc)
         {

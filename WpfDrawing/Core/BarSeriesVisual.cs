@@ -10,12 +10,12 @@ namespace HevoDrawing
     public class BarSeriesVisual : PointsSeriesVisual
     {
         public Pen Pen { get; set; } = new Pen();
-        public Func<IVariable, Brush> Fill { get; set; } = data => Brushes.Black;
+        public Func<IVariable, Value<double>, Brush> Fill { get; set; } = (xdata, ydata) => Brushes.Black;
         public GridLength BarWidth { get; set; } = new GridLength(1, GridUnitType.Star);
-        public bool ShowData { get; set; } = true;
+        public bool ShowData { get; set; } = false;
         public GridLength DataVericalMargin { get; set; } = new GridLength(0);
         public double MinHeight { get; set; } = 10;
-        public override Func<IVariable, Brush> Color
+        public override Func<IVariable, Value<double>, Brush> Color
         {
             get
             {
@@ -25,9 +25,9 @@ namespace HevoDrawing
                 }
                 if (Fill != null)
                 {
-                    return data => Fill(data);
+                    return (xdata, ydata) => Fill(xdata, ydata);
                 }
-                return data => Brushes.Black;
+                return (xdata, ydata) => Brushes.Black;
             }
             set => base.Color = value;
         }
@@ -100,7 +100,7 @@ namespace HevoDrawing
 
                 var leftTopX = item.Point.X - left_offset;
                 var centerX = leftTopX + actual_width / 2;
-                dc.DrawRectangle(Fill(item.X), Pen, new Rect(new Point(leftTopX, isUp ? pointY : base_line_position), new Size(width, offset)));
+                dc.DrawRectangle(Fill(item.X, item.Y), Pen, new Rect(new Point(leftTopX, isUp ? pointY : base_line_position), new Size(width, offset)));
 
                 if (ShowData)
                 {
@@ -122,7 +122,7 @@ namespace HevoDrawing
 
         public override void Freeze()
         {
-            if (Pen.CanFreeze)
+            if (Pen != null && Pen.CanFreeze)
             {
                 Pen.Freeze();
             }

@@ -186,7 +186,7 @@ namespace HevoDrawing.Abstractions
         /// <summary>
         /// 封闭 ？
         /// </summary>
-        public bool IsGridLineClose { get; set; } = false;
+        public bool IsGridLineClose { get; set; } = true;
         public Pen GridLinePen { get; set; } = new Pen(Brushes.Gray, 1);
         public bool IsAxisLabelShow { get; set; } = false;
         public GridLength AxisLabelOffset { get; set; } = GridLength.Auto;

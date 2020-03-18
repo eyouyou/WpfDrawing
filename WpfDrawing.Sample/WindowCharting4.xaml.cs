@@ -297,7 +297,6 @@ namespace WpfDrawing.Sample
         AxisInteractionCanvas interaction = new AxisInteractionCanvas();
         public override InteractionCanvas InteractionCanvas => interaction;
     }
-
     /// <summary>
     /// WindowCharting4.xaml 的交互逻辑
     /// </summary>

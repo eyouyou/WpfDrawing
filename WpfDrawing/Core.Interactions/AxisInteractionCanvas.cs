@@ -192,7 +192,7 @@ namespace HevoDrawing.Interactions
                                     var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y + offset.Y;
                                     hitSeriesDatas.Add(new SeriesData()
                                     {
-                                        Color = series_item.Color(value),
+                                        Color = series_item.Color(value, yValue),
                                         Id = series_item.Id,
                                         Name = series_item.Name,
                                         XValue = value,
@@ -356,7 +356,7 @@ namespace HevoDrawing.Interactions
 
                         var x = xAxis.GetPosition(value).X + xAxis.Start.X;
                         var y = yAxis.GetPosition(yValue).Y + xAxis.Start.Y;
-                        seriesDatas.Add(new SeriesData() { Color = series_item.Color(value), Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = yValue, AxisX = xAxis, AxisY = yAxis });
+                        seriesDatas.Add(new SeriesData() { Color = series_item.Color(value, yValue), Id = series_item.Id, Name = series_item.Name, XValue = value, YValue = yValue, AxisX = xAxis, AxisY = yAxis });
                         //获取y坐标
                         nearestX = x;
 

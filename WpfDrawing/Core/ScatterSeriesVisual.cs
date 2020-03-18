@@ -12,11 +12,11 @@ namespace HevoDrawing
     {
         public override ContextData DefaultData => throw new NotImplementedException();
 
-        public override Func<IVariable, Brush> Color
+        public override Func<IVariable, Value<double>, Brush> Color
         {
             get
             {
-                return base.Color ?? (data => Brushes.Red);
+                return base.Color ?? ((xdata, ydata) => Brushes.Red);
             }
             set => base.Color = value;
         }

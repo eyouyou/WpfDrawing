@@ -25,7 +25,7 @@ namespace HevoDrawing
                 }
                 else if (ParentSeries != null)
                 {
-                    _ellipse.Fill = ParentSeries.Color(Value<double>.BadT);
+                    _ellipse.Fill = ParentSeries.Color(Value<double>.BadT, Value<double>.BadT);
                 }
                 return _ellipse;
             }

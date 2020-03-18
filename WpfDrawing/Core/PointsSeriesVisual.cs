@@ -16,7 +16,7 @@ namespace HevoDrawing
         /// </summary>
         public Func<TwoDimensionalContextData, Range> RangeCalculator { get; set; }
 
-        public override Func<IVariable, Brush> Color { get; set; }
+        public override Func<IVariable, Value<double>, Brush> Color { get; set; }
 
         /// <summary>
         /// 独立获取range

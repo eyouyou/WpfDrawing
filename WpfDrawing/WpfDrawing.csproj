@@ -45,20 +45,21 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstraction\AxisConfiguaration.cs" />
-    <Compile Include="Abstraction\AxisVisual.cs" />
-    <Compile Include="Abstraction\DiscreteAxis.cs" />
-    <Compile Include="Abstraction\SeriesPointConfiguaration.cs" />
-    <Compile Include="Abstraction\InteractionCanvas.cs" />
-    <Compile Include="Abstraction\InteractionConfiguaration.cs" />
+    <Compile Include="Abstractions\AxisConfiguaration.cs" />
+    <Compile Include="Abstractions\AxisVisual.cs" />
+    <Compile Include="Abstractions\DiscreteAxis.cs" />
+    <Compile Include="Abstractions\IChartComponentizable.cs" />
+    <Compile Include="Abstractions\SeriesPointConfiguaration.cs" />
+    <Compile Include="Abstractions\InteractionCanvas.cs" />
+    <Compile Include="Abstractions\InteractionConfiguaration.cs" />
     <Compile Include="Core\CategoryAxis.cs" />
     <Compile Include="Core\DataPointStyle.cs" />
     <Compile Include="Core\PointsSeriesVisual.cs" />
-    <Compile Include="Abstraction\RectDrawingVisual.cs" />
-    <Compile Include="Abstraction\RectDrawingVisualDataSource.cs" />
-    <Compile Include="Abstraction\VisualContextData.cs" />
-    <Compile Include="Abstraction\SeriesVisual.cs" />
-    <Compile Include="Abstraction\SubRectDrawingVisual.cs" />
+    <Compile Include="Abstractions\RectDrawingVisual.cs" />
+    <Compile Include="Abstractions\RectDrawingVisualDataSource.cs" />
+    <Compile Include="Abstractions\VisualContextData.cs" />
+    <Compile Include="Abstractions\SeriesVisual.cs" />
+    <Compile Include="Abstractions\SubRectDrawingVisual.cs" />
     <Compile Include="Core\ChartVisual.cs" />
     <Compile Include="Core\VisualGroup.cs" />
     <Compile Include="Core\2DContextData.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Core\RectDrawingCanvasContainer.cs" />
     <Compile Include="Core\ScatterSeriesVisual.cs" />
     <Compile Include="Core\SeriesData.cs" />
+    <Compile Include="Helpers\LayoutExtension.cs" />
+    <Compile Include="IDataAvailable.cs" />
     <Compile Include="UserControls\Candle.cs" />
     <Compile Include="UserControls\DrawingBuilder.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />

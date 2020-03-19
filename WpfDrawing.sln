@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDrawing.Winform.Sample",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDrawing.Test", "WpfDrawing.Test\WpfDrawing.Test.csproj", "{EC89E905-78F6-4C2E-9C5A-9A0F29D3807B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDrawing.Charting", "WpfDrawing.Charting\WpfDrawing.Charting.csproj", "{F93114A5-CD85-45A5-AE48-DD347B74E08E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EC89E905-78F6-4C2E-9C5A-9A0F29D3807B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC89E905-78F6-4C2E-9C5A-9A0F29D3807B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC89E905-78F6-4C2E-9C5A-9A0F29D3807B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93114A5-CD85-45A5-AE48-DD347B74E08E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93114A5-CD85-45A5-AE48-DD347B74E08E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93114A5-CD85-45A5-AE48-DD347B74E08E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93114A5-CD85-45A5-AE48-DD347B74E08E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

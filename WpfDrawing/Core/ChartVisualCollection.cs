@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HevoDrawing
 {
-    public class ChartDataSource : RectDrawingVisualDataSource
+    public class ChartDataSource : RectDrawingVisualDataSource, IChartComponentizable
     {
         public ComponentId IdGenerater = new ComponentId();
 

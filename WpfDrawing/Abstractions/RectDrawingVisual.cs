@@ -50,7 +50,7 @@ namespace HevoDrawing.Abstractions
                 _dataSource = value;
             }
         }
-        public int Id { get; set; } = int.MinValue;
+        public int Id { get; internal set; } = int.MinValue;
         public string Name { get; set; }
 
         /// <summary>
@@ -211,6 +211,6 @@ namespace HevoDrawing.Abstractions
                 return other.Equals(this);
             }
             return other.Id == Id;
-        } 
+        }
     }
 }

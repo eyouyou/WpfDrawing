@@ -79,7 +79,7 @@ namespace HevoDrawing.Interactions
             var hitCanvasId = -1;
             foreach (var item in DataSources)
             {
-                if (item.Value is ChartDataSource dataSource)
+                if (item.Value is ChartAssembly dataSource)
                 {
                     var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasPlotArea;
                     bool canHint = !isHint && plotArea.Contains(hitPointer);
@@ -255,7 +255,7 @@ namespace HevoDrawing.Interactions
                 return;
             }
 
-            var coms = DataSources.ElementAt(0).Value as ChartDataSource;
+            var coms = DataSources.ElementAt(0).Value as ChartAssembly;
 
             var axisxs = coms.AxisXCollection;
             var axisys = coms.AxisYCollection;

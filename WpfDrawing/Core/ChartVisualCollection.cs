@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace HevoDrawing
 {
-    public class ChartDataSource : RectDrawingVisualDataSource, IChartComponentizable
+    public class ChartAssembly : VisualAssembly, IChartComponentizable
     {
         public ComponentId IdGenerater = new ComponentId();
 
         ChartVisual ConnectChart;
-        public ChartDataSource(ChartVisual chart) : base(chart)
+        public ChartAssembly(ChartVisual chart) : base(chart)
         {
             ConnectChart = chart;
         }
@@ -23,9 +23,9 @@ namespace HevoDrawing
         List<AxisVisual> YAxes = new List<AxisVisual>();
         List<AxisVisual> XAxes = new List<AxisVisual>();
 
-        protected Dictionary<int, RectDrawingVisual> XMappings = new Dictionary<int, RectDrawingVisual>();
-        protected Dictionary<int, RectDrawingVisual> YMappings = new Dictionary<int, RectDrawingVisual>();
-        List<RectDrawingVisual> All = new List<RectDrawingVisual>();
+        protected Dictionary<int, VisualModule> XMappings = new Dictionary<int, VisualModule>();
+        protected Dictionary<int, VisualModule> YMappings = new Dictionary<int, VisualModule>();
+        List<VisualModule> All = new List<VisualModule>();
 
         public override event VisualChanged VisualChangedHandler;
         public void AddSeries(SeriesVisual series)
@@ -35,7 +35,7 @@ namespace HevoDrawing
             Series.Add(series);
             All.Add(series);
             InitMappings();
-            series.DataSource = this;
+            series.Assembly = this;
             VisualChangedHandler?.Invoke(series, Operations.Add);
         }
         public void InitMappings()
@@ -97,7 +97,7 @@ namespace HevoDrawing
             InitMappings();
 
             YMappings.Add(axis.Id, axis);
-            axis.DataSource = this;
+            axis.Assembly = this;
         }
         public void AddAxisX(AxisVisual axis)
         {
@@ -107,9 +107,9 @@ namespace HevoDrawing
             All.Add(axis);
 
             XMappings.Add(axis.Id, axis);
-            axis.DataSource = this;
+            axis.Assembly = this;
         }
-        private void GenerateId(RectDrawingVisual visual)
+        private void GenerateId(VisualModule visual)
         {
             visual.Id = IdGenerater.GenerateId();
         }
@@ -154,7 +154,7 @@ namespace HevoDrawing
 
         public override bool IsDataComplete => AxisYCollection.All(it => it.IsDataComplete) && AxisXCollection.All(it => it.IsDataComplete);
 
-        public RectDrawingVisual FindXById(int id)
+        public VisualModule FindXById(int id)
         {
             if (XMappings.ContainsKey(id))
             {
@@ -164,9 +164,9 @@ namespace HevoDrawing
             {
                 return null;
             }
-            return XAxes[0] as RectDrawingVisual;
+            return XAxes[0] as VisualModule;
         }
-        public RectDrawingVisual FindYById(int id)
+        public VisualModule FindYById(int id)
         {
             if (YMappings.ContainsKey(id))
             {
@@ -176,7 +176,7 @@ namespace HevoDrawing
             {
                 return null;
             }
-            return YAxes[0] as RectDrawingVisual;
+            return YAxes[0] as VisualModule;
         }
     }
 }

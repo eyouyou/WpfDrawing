@@ -62,6 +62,7 @@
     <Compile Include="BlurryTest.xaml.cs">
       <DependentUpon>BlurryTest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="charts\Attention.cs" />
     <Compile Include="DrawingBitMap.xaml.cs">
       <DependentUpon>DrawingBitMap.xaml</DependentUpon>
     </Compile>
@@ -74,6 +75,7 @@
     <Compile Include="MultiChartings2.xaml.cs">
       <DependentUpon>MultiChartings2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="series\TopicSeries.cs" />
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
@@ -231,6 +233,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WpfDrawing.Charting\WpfDrawing.Charting.csproj">
+      <Project>{F93114A5-CD85-45A5-AE48-DD347B74E08E}</Project>
+      <Name>WpfDrawing.Charting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WpfDrawing\WpfDrawing.csproj">
       <Project>{17475b7e-c895-40c2-bfe3-2d436ae2c5c7}</Project>
       <Name>WpfDrawing</Name>
@@ -241,5 +247,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace HevoDrawing
+namespace HevoDrawing.Charting
 {
     public abstract class DrawingGrid : UserControl
     {

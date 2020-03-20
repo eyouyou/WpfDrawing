@@ -20,8 +20,8 @@ namespace HevoDrawing
         public int Col { get; set; } = -1;
         public int Row { get; set; } = -1;
 
-        private RectDrawingVisualDataSource _dataSource;
-        public RectDrawingVisualDataSource DataSource
+        private VisualAssembly _dataSource;
+        public VisualAssembly DataSource
         {
             get
             {
@@ -56,7 +56,7 @@ namespace HevoDrawing
             {
                 foreach (Visual item in Visuals)
                 {
-                    if (item is RectDrawingVisual rect)
+                    if (item is VisualModule rect)
                     {
                         rect.InteractionVisuals = value;
                     }
@@ -102,7 +102,7 @@ namespace HevoDrawing
             }
             if (ReferenceEquals(result.VisualHit, this) && EnableInteraction)
             {
-                foreach (RectDrawingVisual item in Visuals)
+                foreach (VisualModule item in Visuals)
                 {
                     item.HitTest(pointResult.PointHit, EventMessage.MouseOn);
                 }
@@ -157,7 +157,7 @@ namespace HevoDrawing
 
             foreach (Visual item in Visuals)
             {
-                if (item is RectDrawingVisual rect)
+                if (item is VisualModule rect)
                 {
                     rect.Reset();
                 }
@@ -173,7 +173,7 @@ namespace HevoDrawing
             Reset();
             foreach (Visual item in Visuals)
             {
-                if (item is RectDrawingVisual rect)
+                if (item is VisualModule rect)
                 {
                     rect.VisualDataSetupTidily(null);
                     rect.InteractionVisuals?.Hide();
@@ -192,7 +192,7 @@ namespace HevoDrawing
             Reset();
             foreach (Visual item in Visuals)
             {
-                if (item is RectDrawingVisual rect)
+                if (item is VisualModule rect)
                 {
                     rect.InteractionVisuals?.Hide();
                     rect.Plot();
@@ -202,7 +202,7 @@ namespace HevoDrawing
         }
         public VisualCollection Visuals { get; set; }
         public Rect PlotArea { get; set; }
-        public void AddChild(RectDrawingVisual visual)
+        public void AddChild(VisualModule visual)
         {
             visual.InteractionVisuals = _InteractionCanvas;
             Visuals.Add(visual);

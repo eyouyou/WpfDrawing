@@ -28,9 +28,9 @@ namespace HevoDrawing
         {
             VisualDataSetupTidily(data);
 
-            var noDataVisuals = new List<RectDrawingVisual>();
+            var noDataVisuals = new List<VisualModule>();
 
-            foreach (RectDrawingVisual visual in Visuals)
+            foreach (VisualModule visual in Visuals)
             {
                 var item = list.FirstOrDefault(it => it.ComponentIds.Contains(visual.Id));
                 if (item != null)
@@ -59,7 +59,7 @@ namespace HevoDrawing
 
         }
 
-        public void Add(RectDrawingVisual item)
+        public void Add(VisualModule item)
         {
             AddSubVisual(item);
         }
@@ -84,7 +84,7 @@ namespace HevoDrawing
         protected override bool NeedData => true;
 
         /// <summary>
-        /// <see cref="VisualData.set"/>:  从父亲<see cref="RectDrawingVisual.VisualData"/>继承<see cref="ContextData.Items"/>
+        /// <see cref="VisualData.set"/>:  从父亲<see cref="VisualModule.VisualData"/>继承<see cref="ContextData.Items"/>
         /// </summary>
         public override void DataPush(ContextData data, IList<ContextData> list)
         {
@@ -122,7 +122,7 @@ namespace HevoDrawing
 
         public void InductiveData(ChartGroupContextData data)
         {
-            if (DataSource is ChartDataSource coms)
+            if (Assembly is ChartAssembly coms)
             {
                 foreach (var item in data.XData)
                 {
@@ -155,7 +155,7 @@ namespace HevoDrawing
         {
             base.DataPush(data, list);
 
-            if (!(DataSource is ChartDataSource coms))
+            if (!(Assembly is ChartAssembly coms))
             {
                 return;
             }
@@ -205,7 +205,7 @@ namespace HevoDrawing
         }
         public void InductiveData(ChartGroupContextData data)
         {
-            if (DataSource is ChartDataSource coms)
+            if (Assembly is ChartAssembly coms)
             {
                 foreach (var item in data.YData)
                 {
@@ -261,7 +261,7 @@ namespace HevoDrawing
         {
             var index = -1;
             var list = new List<TwoDimensionalContextData>();
-            if (DataSource is ChartDataSource coms)
+            if (Assembly is ChartAssembly coms)
             {
                 foreach (PointsSeriesVisual item in Visuals)
                 {
@@ -303,7 +303,7 @@ namespace HevoDrawing
 
         public ChartGroupContextData FilterAndCopyData()
         {
-            if (DataSource is ChartDataSource coms)
+            if (Assembly is ChartAssembly coms)
             {
                 var all_data = new List<TwoDimensionalContextData>();
                 foreach (PointsSeriesVisual item in Visuals)

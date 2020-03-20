@@ -35,6 +35,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,9 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\ChartPackBase.cs" />
+    <Compile Include="Abstractions\SeriesPackBase.cs" />
+    <Compile Include="DataPool\DataPool.cs" />
+    <Compile Include="DataPool\HttpRequestor.cs" />
     <Compile Include="DataPool\IRequstable.cs" />
     <Compile Include="DataPool\ISubscribeable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectDrawingCanvasContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfDrawing\WpfDrawing.csproj">

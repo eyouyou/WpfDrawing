@@ -153,7 +153,7 @@ namespace HevoDrawing.Interactions
             foreach (var item in DataSources)
             {
                 var seriesData = new List<SeriesData>();
-                if (item.Value is ChartDataSource dataSource)
+                if (item.Value is ChartAssembly dataSource)
                 {
                     var plotArea = dataSource.ConnectVisual.ParentCanvas.InteractionCanvasPlotArea;
                     var series = dataSource.SeriesCollection;
@@ -315,7 +315,7 @@ namespace HevoDrawing.Interactions
 
             VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
 
-            var coms = DataSources.ElementAt(0).Value as ChartDataSource;
+            var coms = DataSources.ElementAt(0).Value as ChartAssembly;
 
             var currentPoint = point;
 

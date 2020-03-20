@@ -58,7 +58,7 @@ namespace HevoDrawing
                 {
                     return list;
                 }
-                var coms = DataSource as ChartDataSource;
+                var coms = Assembly as ChartAssembly;
 
                 var axisxs = coms.AxisXCollection;
 

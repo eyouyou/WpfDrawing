@@ -14,7 +14,7 @@ using System.Windows.Media;
 namespace HevoDrawing
 {
 
-    public class TestVisual : RectDrawingVisual
+    public class TestVisual : VisualModule
     {
         public TestVisual()
         {

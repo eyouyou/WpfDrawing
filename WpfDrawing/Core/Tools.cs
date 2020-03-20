@@ -469,7 +469,7 @@ namespace HevoDrawing
         /// </summary>
         /// <param name="visual"></param>
         /// <param name="data"></param>
-        public static void DeliverVisualData(this RectDrawingVisual visual, ContextData data)
+        public static void DeliverVisualData(this VisualModule visual, ContextData data)
         {
             if (!visual.IsolateData)
             {

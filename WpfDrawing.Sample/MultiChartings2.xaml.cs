@@ -124,7 +124,7 @@ namespace WpfDrawing.Sample
 
                 DrawingCanvas.AddChild(chart);
 
-                DrawingCanvas.DataSource = chart.DataSource;
+                DrawingCanvas.DataSource = chart.Assembly;
 
                 IsVisibleChanged += ChartItem_IsVisibleChanged;
 
@@ -283,7 +283,7 @@ namespace WpfDrawing.Sample
                 chart.AddSeries(lineSeries4);
 
                 DrawingCanvas.AddChild(chart);
-                DrawingCanvas.DataSource = chart.DataSource;
+                DrawingCanvas.DataSource = chart.Assembly;
                 IsVisibleChanged += ChartItem_IsVisibleChanged;
 
                 DockPanel dock = new DockPanel();
@@ -571,7 +571,7 @@ namespace WpfDrawing.Sample
 
                 DrawingCanvas.AddChild(chart);
 
-                DrawingCanvas.DataSource = chart.DataSource;
+                DrawingCanvas.DataSource = chart.Assembly;
 
                 IsVisibleChanged += ChartItem_IsVisibleChanged;
 

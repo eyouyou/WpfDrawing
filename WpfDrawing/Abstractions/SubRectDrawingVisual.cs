@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace HevoDrawing.Abstractions
 {
-    public abstract class SubRectDrawingVisual : RectDrawingVisual
+    public abstract class SubRectDrawingVisual : VisualModule
     {
 
         private PaddingOffset _paddingOffset = PaddingOffset.Default;
@@ -30,7 +30,7 @@ namespace HevoDrawing.Abstractions
             _visualData = data;
         }
         /// <summary>
-        /// 需要从上层<see cref="RectDrawingVisual"/>赋值
+        /// 需要从上层<see cref="VisualModule"/>赋值
         /// <see cref="SubRectDrawingVisual.set"/>:  从父亲<see cref="SubRectDrawingVisual.VisualData"/>继承<see cref="ContextData.Items"/>
         /// </summary>
         public override ContextData VisualData
@@ -46,7 +46,7 @@ namespace HevoDrawing.Abstractions
             set
             {
                 _visualData = value;
-                foreach (RectDrawingVisual item in Visuals)
+                foreach (VisualModule item in Visuals)
                 {
                     item.DeliverVisualData(VisualData.Copy());
                 }

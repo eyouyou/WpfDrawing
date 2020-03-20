@@ -12,23 +12,25 @@ namespace HevoDrawing.Charting
         public List<string> Fields { get; set; }
     }
 
-    public interface IRequstable<T>
+    public interface IRequstable<InputT, OutPutT>
     {
-        /// <summary>
-        /// Key=>字段
-        /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
-        Dictionary<string, double> Request(T param);
+        Task<OutPutT> Request(InputT param);
     }
 
-    public interface IHttpRequstable : IRequstable<string>
+    public interface IAnalysizer<Key, InputT, OutputT>
     {
-
+        OutputT Analysis(InputT value);
     }
-    public interface IQuoteRequstable : IRequstable<QuoteParams>
+    /// <summary>
+    /// 目前都是這個格式
+    /// </summary>
+    /// <typeparam name="Key"></typeparam>
+    /// <typeparam name="InputT"></typeparam>
+    public interface ITupleResultAnalysizer<Key, InputT> : IAnalysizer<Key, InputT, Dictionary<Key, double>>
     {
-
+    }
+    public interface ITableResultAnalysizer<Key, InputT, Result> : IAnalysizer<Key, InputT, Dictionary<Key, Result>>
+    {
     }
 
 }

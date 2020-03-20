@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\AxisConfiguaration.cs" />
     <Compile Include="Abstractions\AxisVisual.cs" />
+    <Compile Include="Abstractions\ChartPackBase.cs" />
     <Compile Include="Abstractions\DiscreteAxis.cs" />
     <Compile Include="Abstractions\IChartComponentizable.cs" />
     <Compile Include="Abstractions\SeriesPointConfiguaration.cs" />
@@ -67,7 +68,6 @@
     <Compile Include="Core\ComponentKey.cs" />
     <Compile Include="Core\MarkLineSeriesVisual.cs" />
     <Compile Include="Core\EllipseSolidHitElement.cs" />
-    <Compile Include="Core\RectDrawingCanvasContainer.cs" />
     <Compile Include="Core\ScatterSeriesVisual.cs" />
     <Compile Include="Core\SeriesData.cs" />
     <Compile Include="Helpers\LayoutExtension.cs" />

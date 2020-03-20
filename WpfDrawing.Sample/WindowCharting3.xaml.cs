@@ -43,7 +43,7 @@ namespace HevoDrawing.Sample
             chart.Offsets = new PaddingOffset(60, 20, 10, 20);
 
             canvasContainer.DrawingCanvas.AddChild(chart);
-            canvasContainer.DrawingCanvas.DataSource = chart.DataSource;
+            canvasContainer.DrawingCanvas.DataSource = chart.Assembly;
             AxisInteractionCanvas interaction = new AxisInteractionCanvas();
 
             RectInteractionGroup container = new RectInteractionGroup(interaction, 1, 1, canvasContainer);

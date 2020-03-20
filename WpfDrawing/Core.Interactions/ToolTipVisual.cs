@@ -147,7 +147,7 @@ namespace HevoDrawing.Interactions
 
             foreach (var item in DataSources)
             {
-                if (item.Value is ChartDataSource dataSource)
+                if (item.Value is ChartAssembly dataSource)
                 {
                     var area = dataSource.ConnectVisual.InteractionPlotArea;
                     if (isHint || !is_hit_data)
@@ -233,7 +233,7 @@ namespace HevoDrawing.Interactions
             }
             LastPoint = hitPointer;
 
-            var coms = DataSources.ElementAt(0).Value as ChartDataSource;
+            var coms = DataSources.ElementAt(0).Value as ChartAssembly;
             var area = coms.ConnectVisual.PlotArea;
 
             if (!area.Contains(point))

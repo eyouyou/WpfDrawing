@@ -11,11 +11,11 @@ namespace HevoDrawing.Abstractions
         Add, Remove
     }
 
-    public delegate void VisualChanged(RectDrawingVisual visual, Operations op);
-    public abstract class RectDrawingVisualDataSource
+    public delegate void VisualChanged(VisualModule visual, Operations op);
+    public abstract class VisualAssembly
     {
-        public RectDrawingVisual ConnectVisual;
-        public RectDrawingVisualDataSource(RectDrawingVisual visual)
+        public VisualModule ConnectVisual;
+        public VisualAssembly(VisualModule visual)
         {
             ConnectVisual = visual ?? throw new ArgumentNullException("please");
         }

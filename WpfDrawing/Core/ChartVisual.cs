@@ -43,7 +43,7 @@ namespace HevoDrawing
     /// </summary>
     /// <typeparam name="Tx"></typeparam>
     /// <typeparam name="Ty"></typeparam>
-    public class ChartVisual : RectDrawingVisual
+    public class ChartVisual : VisualModule
                                 , IIntersectable
     {
         public event IntersectChangedHandler IntersectChanged;
@@ -52,7 +52,7 @@ namespace HevoDrawing
         YAxisVisualGroup AxisYVisuals = new YAxisVisualGroup();
         SeriesVisualGroup SeriesVisuals = new SeriesVisualGroup();
 
-        private readonly ChartDataSource Data;
+        private readonly ChartAssembly Data;
 
         internal void TriggerIntersectChanged(Dictionary<string, SeriesData> data)
         {
@@ -61,13 +61,13 @@ namespace HevoDrawing
         public override ContextData DefaultData => ChartGroupContextData.Empty;
         public ChartVisual()
         {
-            Data = new ChartDataSource(this);
+            Data = new ChartAssembly(this);
 
             AddSubVisual(AxisXVisuals);
             AddSubVisual(AxisYVisuals);
             AddSubVisual(SeriesVisuals);
 
-            DataSource = Data;
+            Assembly = Data;
         }
         public void AddAsixX(DiscreteAxis axis)
         {
@@ -86,18 +86,18 @@ namespace HevoDrawing
         }
 
         /// <summary>
-        /// 赋值给Canvas.DataSource
+        /// 赋值给Canvas.Assembly
         /// </summary>
-        public override RectDrawingVisualDataSource DataSource
+        public override VisualAssembly Assembly
         {
-            get => base.DataSource;
+            get => base.Assembly;
             internal set
             {
-                AxisXVisuals.DataSource = value;
-                AxisYVisuals.DataSource = value;
-                SeriesVisuals.DataSource = value;
+                AxisXVisuals.Assembly = value;
+                AxisYVisuals.Assembly = value;
+                SeriesVisuals.Assembly = value;
 
-                base.DataSource = value;
+                base.Assembly = value;
             }
         }
 

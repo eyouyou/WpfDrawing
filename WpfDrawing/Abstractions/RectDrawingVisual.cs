@@ -18,7 +18,7 @@ namespace HevoDrawing.Abstractions
         bool IsVisualEnable { get; set; }
         void Clear();
     }
-    public abstract class RectDrawingVisual : DrawingVisual, ILocatable, IVisualControllable, IEquatable<RectDrawingVisual>
+    public abstract class VisualModule : DrawingVisual, ILocatable, IVisualControllable, IEquatable<VisualModule>
     {
         public abstract ContextData DefaultData { get; }
         /// <summary>
@@ -26,16 +26,16 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public bool IsolateData { get; set; } = false;
 
-        public RectDrawingVisual(RectDrawingVisualDataSource dataSource) : this()
+        public VisualModule(VisualAssembly dataSource) : this()
         {
-            DataSource = dataSource;
+            Assembly = dataSource;
         }
-        public RectDrawingVisual()
+        public VisualModule()
         {
             Visuals = new System.Windows.Media.VisualCollection(this);
         }
-        private RectDrawingVisualDataSource _dataSource;
-        public virtual RectDrawingVisualDataSource DataSource
+        private VisualAssembly _dataSource;
+        public virtual VisualAssembly Assembly
         {
             get
             {
@@ -104,7 +104,7 @@ namespace HevoDrawing.Abstractions
         private HitTestResultBehavior MyCallback(HitTestResult result)
         {
             //Console.WriteLine(result.VisualHit.GetType());
-            foreach (RectDrawingVisual item in Visuals)
+            foreach (VisualModule item in Visuals)
             {
                 if (result.VisualHit == item)
                 {
@@ -137,7 +137,7 @@ namespace HevoDrawing.Abstractions
         /// tree
         /// </summary>
         /// <param name="subRectVisual"></param>
-        protected void AddSubVisual(RectDrawingVisual subRectVisual)
+        protected void AddSubVisual(VisualModule subRectVisual)
         {
             if (subRectVisual == null)
             {
@@ -159,7 +159,7 @@ namespace HevoDrawing.Abstractions
 
                 lock (Visuals.SyncRoot)
                 {
-                    foreach (RectDrawingVisual item in Visuals)
+                    foreach (VisualModule item in Visuals)
                     {
                         item.ParentCanvas = value;
                     }
@@ -204,7 +204,7 @@ namespace HevoDrawing.Abstractions
             }
         }
 
-        public bool Equals(RectDrawingVisual other)
+        public bool Equals(VisualModule other)
         {
             if (other.Id == int.MinValue && Id == int.MinValue)
             {

@@ -92,7 +92,7 @@ namespace HevoDrawing.Sample
 
                 rectDrawingCanvas.AddChild(chart);
 
-                DrawingCanvas.DataSource = chart.DataSource;
+                DrawingCanvas.DataSource = chart.Assembly;
 
                 IsVisibleChanged += ChartItem_IsVisibleChanged;
 
@@ -247,7 +247,7 @@ namespace HevoDrawing.Sample
 
                 rectDrawingCanvas.AddChild(chart);
 
-                DrawingCanvas.DataSource = chart.DataSource;
+                DrawingCanvas.DataSource = chart.Assembly;
 
                 IsVisibleChanged += ChartItem_IsVisibleChanged;
 

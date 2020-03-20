@@ -43,7 +43,7 @@ namespace HevoDrawing
             {
                 return;
             }
-            var coms = DataSource as ChartDataSource;
+            var coms = Assembly as ChartAssembly;
 
             var x = coms.FindXById(Id) as DiscreteAxis;
             var y = coms.FindYById(Id) as ContinuousAxis;

@@ -82,7 +82,6 @@
     <Compile Include="Core\DateTimeAxis.cs" />
     <Compile Include="Core\EventMessage.cs" />
     <Compile Include="Core\RectDrawingCanvas.cs" />
-    <Compile Include="Core.Interactions\RectInteractionGroup.cs" />
     <Compile Include="Core\RectDrawingVisual.cs" />
     <Compile Include="Core\LineSeriesVisual.cs" />
     <Compile Include="Core\Tools.cs" />

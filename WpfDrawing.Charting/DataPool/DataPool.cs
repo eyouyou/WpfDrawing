@@ -8,7 +8,6 @@ namespace HevoDrawing.Charting
 {
     public class DataPool
     {
-        Queue
         public HttpRequestor HttpRequestor { get; set; }
     }
 }

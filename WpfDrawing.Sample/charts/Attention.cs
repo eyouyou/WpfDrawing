@@ -18,7 +18,6 @@ namespace WpfDrawing.Sample
     {
         public Dictionary<DateTime, double> Data = new Dictionary<DateTime, double>();
     }
-    public class Business
     public class Attention
     {
         ChartPack<TopicParam, GenericResponse> chartPack = new ChartPack<TopicParam, GenericResponse>();

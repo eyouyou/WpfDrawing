@@ -109,7 +109,7 @@ namespace HevoDrawing.Charting
         {
         }
 
-        public DrawingGrid Templete { get; set; }
+        public ChartContainer Templete { get; set; }
 
         private ChartAssembly Assembly;
 

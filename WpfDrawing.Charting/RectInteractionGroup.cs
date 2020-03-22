@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows;
 using HevoDrawing.Abstractions;
 
-namespace HevoDrawing.Interactions
+namespace HevoDrawing.Charting
 {
     /// <summary>
     /// 在此基础上可以做多个图表的操作
@@ -18,20 +18,20 @@ namespace HevoDrawing.Interactions
         public GridLength CellMargin { get; set; } = new GridLength(0);
         public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
-        public List<Chart> Charts;
+        public List<ChartContainer> Containers;
         List<Chart> ContainersUsed;
         List<Chart> ContainersUnused;
         ComponentId IdGenerater = new ComponentId();
         int Col = -1;
         int Row = -1;
         InteractionCanvas GlobalInteraction = null;
-        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params Chart[] canvas)
+        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params ChartContainer[] canvas)
         {
             InteractionVisuals = new List<InteractionCanvas>();
-            Charts = canvas.ToList();
-            ContainersUsed = new List<Chart>(Charts);
+            Containers = canvas.ToList();
+            ContainersUsed = new List<Chart>(Containers.Select(it => it.Chart));
             ContainersUnused = new List<Chart>();
-            Charts.ForEach(it => ContainerGrid.Children.Add(it));
+            Containers.ForEach(it => ContainerGrid.Children.Add(it));
             GlobalInteraction = interaction;
             if (interaction != null)
             {
@@ -47,7 +47,7 @@ namespace HevoDrawing.Interactions
             }
             Resize(col, row);
 
-            Canvas = canvas.ToDictionary(it => it.DrawingCanvas.Id, it => it.DrawingCanvas);
+            Canvas = canvas.ToDictionary(it => it.Chart.DrawingCanvas.Id, it => it.Chart.DrawingCanvas);
 
             Children.Add(ContainerGrid);
 
@@ -91,8 +91,9 @@ namespace HevoDrawing.Interactions
             var index = 0;
             ContainersUsed.Clear();
             ContainersUnused.Clear();
-            foreach (var item in Charts)
+            foreach (var container in Containers)
             {
+                var item = container.Chart;
                 if (index >= total)
                 {
                     ContainersUnused.Add(item);

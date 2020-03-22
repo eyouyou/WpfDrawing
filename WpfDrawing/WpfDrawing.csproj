@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\AxisConfiguaration.cs" />
     <Compile Include="Abstractions\AxisVisual.cs" />
-    <Compile Include="Abstractions\ChartPackBase.cs" />
+    <Compile Include="Abstractions\Chart.cs" />
     <Compile Include="Abstractions\DiscreteAxis.cs" />
     <Compile Include="Abstractions\IChartComponentizable.cs" />
     <Compile Include="Abstractions\SeriesPointConfiguaration.cs" />

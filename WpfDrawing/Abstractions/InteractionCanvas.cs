@@ -36,11 +36,11 @@ namespace HevoDrawing.Abstractions
         /// </summary>
         public Dictionary<int, VisualAssembly> DataSources { get; } = new Dictionary<int, VisualAssembly>();
         /// <summary>
-        /// 依赖的container 独立的话1个
+        /// 关联的container 独立的话1个
         /// 复用的话多个
         /// </summary>
-        public Dictionary<int, DrawingGrid> DependencyContainers { get; } = new Dictionary<int, DrawingGrid>();
-        public DrawingGrid UniqueDependencyContainer => DependencyContainers.Count == 1 ? DependencyContainers.ElementAt(0).Value : null;
+        public Dictionary<int, Chart> AssociatedCharts { get; } = new Dictionary<int, Chart>();
+        public Chart UniqueAssociatedChart => AssociatedCharts.Count == 1 ? AssociatedCharts.ElementAt(0).Value : null;
 
         private ContextData _visualData = null;
         public ContextData VisualData
@@ -58,7 +58,7 @@ namespace HevoDrawing.Abstractions
                 _visualData = value;
             }
         }
-        public bool Standalone => DependencyContainers.Count == 1 && DependencyContainers.ElementAt(0).Value.InteractionCanvas != null;
+        public bool Standalone => AssociatedCharts.Count == 1 && AssociatedCharts.ElementAt(0).Value.InteractionCanvas != null;
         public abstract void Hide();
         public UIElement ParentElement { get; set; }
         public abstract void Plot(Point point, EventMessage @event);

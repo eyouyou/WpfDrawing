@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace HevoDrawing.Charting
 {
-    public class ChartPack<Input, Output> : UserControl, IDataAvailable
+    public class ChartPack<Input, Output> : Chart
     {
         public ChartPack()
         {
@@ -17,14 +17,14 @@ namespace HevoDrawing.Charting
             DrawingCanvasArea.Children.Add(DrawingCanvas);
             Content = DrawingCanvasArea;
         }
-        public AxisInteractionCanvas InteractionCanvas { get; } = new AxisInteractionCanvas();
+        public override AxisInteractionCanvas InteractionCanvas { get; } = new AxisInteractionCanvas();
         public IIntersectable Intersection => ChartVisual;
         public IChartComponentizable Components => Assembly;
 
         #region 交互独立情况下
 
         private bool _enable_interaction = true;
-        public bool EnableInteraction
+        public override bool EnableInteraction
         {
             get => _enable_interaction;
             set
@@ -63,29 +63,25 @@ namespace HevoDrawing.Charting
         {
             ChartVisual.AddAsixY(axis);
         }
-        public async void StartDataFeed()
+        public async override void StartDataFeed()
         {
             await Process(SeriesPacks);
         }
 
-        public void AddResponsePipline(IPipline<Dictionary<IRequestable<Input, Output>, Output>> pipline)
+        public void AddResponsePipline(IPipline<Dictionary<SeriesPackBase, Output>> pipline)
         {
-            ResponsePiplines1.Add(pipline);
-            ResponsePiplines2 = ResponsePiplines1.Select(it => (Func<ChartContext<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, Task>)it.PipAsync)
-                .Select(it => (Func<PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>>)(next => c => it(c, next))).ToList();
+            _response_pipline.Add(pipline);
+            ResponsePiplines = _response_pipline.Select(it => (Func<ChartContext<Dictionary<SeriesPackBase, Output>>, PiplineDelegate<Dictionary<SeriesPackBase, Output>>, Task>)it.PipAsync)
+                .Select(it => (Func<PiplineDelegate<Dictionary<SeriesPackBase, Output>>, PiplineDelegate<Dictionary<SeriesPackBase, Output>>>)(next => c => it(c, next))).ToList();
         }
-        public void AddResponsePipline(Func<ChartContext<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, Task> func)
+        public void AddResponsePipline(Func<ChartContext<Dictionary<SeriesPackBase, Output>>, PiplineDelegate<Dictionary<SeriesPackBase, Output>>, Task> func)
         {
-            ResponsePiplines2.Add(new Func<PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>>(() =>)) = ResponsePiplines1.Select(it => (Func<ChartContext<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, Task>)it.PipAsync)
-                .Select(it => (Func<PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>>)(next => c => it(c, next))).ToList();
+            ResponsePiplines.Add(next => c => func(c, next));
         }
-        public void AddSubscribePipline(IPipline<Dictionary<IRequestable<Input, Output>, Output>> pipline)
+        public void AddSubscribePipline(IPipline<Dictionary<SeriesPackBase, Output>> pipline)
         {
 
         }
-        private List<Func<PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>>> ResponsePiplines2 =
-            new List<Func<PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>, PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>>>();
-        private List<IPipline<Dictionary<IRequestable<Input, Output>, Output>>> ResponsePiplines1 = new List<IPipline<Dictionary<IRequestable<Input, Output>, Output>>>();
         public async Task Process(List<SeriesPackBase> packs)
         {
             var tasks = new List<Task<Result<Output>>>();
@@ -99,23 +95,21 @@ namespace HevoDrawing.Charting
             }
             var array = await Task.WhenAll(tasks);
 
-            PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>> @delegate = new PiplineDelegate<Dictionary<IRequestable<Input, Output>, Output>>((data) => Task.FromResult(true));
+            PiplineDelegate<Dictionary<SeriesPackBase, Output>> @delegate = new PiplineDelegate<Dictionary<SeriesPackBase, Output>>((data) => Task.FromResult(true));
 
-            for (int i = ResponsePiplines2.Count - 1; i >= 0; i--)
+            for (int i = ResponsePiplines.Count - 1; i >= 0; i--)
             {
-                @delegate = ResponsePiplines2[i](@delegate);
+                @delegate = ResponsePiplines[i](@delegate);
             }
-            await @delegate.Invoke(new ChartContext<Dictionary<IRequestable<Input, Output>, Output>>() { Data = array.ToDictionary(it => FindById(it.Id) as IRequestable<Input, Output>, it => it.Data) });
+            await @delegate.Invoke(new ChartContext<Dictionary<SeriesPackBase, Output>>() { Data = array.ToDictionary(it => FindById(it.Id), it => it.Data) });
 
             ChartVisual.RePlot();
         }
-        public void StopDataFeed()
+        public override void StopDataFeed()
         {
         }
 
         public DrawingGrid Templete { get; set; }
-
-
 
         private ChartAssembly Assembly;
 
@@ -128,12 +122,18 @@ namespace HevoDrawing.Charting
         /// <summary>
         /// 已加入 <see cref="DrawingCanvasArea"/>
         /// </summary>
-        private RectDrawingCanvas DrawingCanvas { get; } = new RectDrawingCanvas();
+        public override RectDrawingCanvas DrawingCanvas { get; } = new RectDrawingCanvas();
 
         /// <summary>
         /// 主畫布
         /// </summary>
         private ChartVisual ChartVisual = new ChartVisual();
+
+        private List<Func<PiplineDelegate<Dictionary<SeriesPackBase, Output>>, PiplineDelegate<Dictionary<SeriesPackBase, Output>>>> ResponsePiplines =
+            new List<Func<PiplineDelegate<Dictionary<SeriesPackBase, Output>>, PiplineDelegate<Dictionary<SeriesPackBase, Output>>>>();
+
+        private List<IPipline<Dictionary<SeriesPackBase, Output>>> _response_pipline = new List<IPipline<Dictionary<SeriesPackBase, Output>>>();
+
         private SeriesPackBase FindById(int id)
         {
             return SeriesPacks.FirstOrDefault(it => it.SeriesVisual.Id == id);

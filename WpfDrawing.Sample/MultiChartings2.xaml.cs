@@ -55,7 +55,7 @@ namespace WpfDrawing.Sample
             {
                 min_wid = default_min_width;
             }
-            var total_count = (int)Math.Min((int)act_wid / min_wid * row_count, container.Containers.Count);
+            var total_count = (int)Math.Min((int)act_wid / min_wid * row_count, container.Charts.Count);
             if (total_count == 0)
             {
                 total_count = 1;

@@ -14,14 +14,14 @@ using System.Windows.Media;
 
 namespace WpfDrawing.Sample
 {
-    public class AttentionInput : IBlockSettable
+    public class GenericResponse
     {
-        public string BlockId { get; set; }
-
+        public Dictionary<DateTime, double> Data = new Dictionary<DateTime, double>();
     }
+    public class Business
     public class Attention
     {
-        ChartPack<TopicParam, Dictionary<DateTime, double>> chartPack = new ChartPack<TopicParam, Dictionary<DateTime, double>>();
+        ChartPack<TopicParam, GenericResponse> chartPack = new ChartPack<TopicParam, GenericResponse>();
 
         StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
@@ -42,7 +42,10 @@ namespace WpfDrawing.Sample
             chartPack.AddSeriesPack(TopicSeries);
             chartPack.AddSeriesPack(TopicSeries2);
 
-            chartPack.
+            chartPack.AddResponsePipline(async (context, next) =>
+            {
+
+            });
         }
         private async Task Render(string blockId, string marketId)
         {

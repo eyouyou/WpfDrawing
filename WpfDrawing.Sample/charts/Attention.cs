@@ -19,36 +19,30 @@ namespace WpfDrawing.Sample
         public string BlockId { get; set; }
 
     }
-    public class Attention : ChartPackBase<AttentionInput>
+    public class Attention
     {
-        TopicSeries TopicSeries = new TopicSeries();
-
-        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
+        ChartPack<TopicParam, Dictionary<DateTime, double>> chartPack = new ChartPack<TopicParam, Dictionary<DateTime, double>>();
 
         StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
 
+        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
         ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
 
         public Attention()
         {
+            TopicSeries TopicSeries = new TopicSeries(lineSeries);
+            TopicSeries TopicSeries2 = new TopicSeries(lineSeries2);
+
             axisX.IsInterregional = false;
 
-            ChartVisual.AddAsixY(axisY);
-            ChartVisual.AddAsixX(axisX);
+            chartPack.AddYAxis(axisY);
+            chartPack.AddXAxis(axisX);
 
-            ChartVisual.AddSeries(lineSeries);
-            ChartVisual.AddSeries(lineSeries2);
+            chartPack.AddSeriesPack(TopicSeries);
+            chartPack.AddSeriesPack(TopicSeries2);
 
-            IsVisibleChanged += ChartItem_IsVisibleChanged;
-        }
-
-        private void ChartItem_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue)
-            {
-                StartDataFeed();
-            }
+            chartPack.
         }
         private async Task Render(string blockId, string marketId)
         {
@@ -65,17 +59,6 @@ namespace WpfDrawing.Sample
             lineSeries.VisualData = dic.ToFormatVisualData();
             DrawingCanvas.Replot();
         }
-        bool isFirst = true;
-
-        public async override void StartDataFeed()
-        {
-            await Render("300843", "000001");
-        }
-
-        public override void StopDataFeed()
-        {
-        }
-
 
         public string BlockId { get; set; }
 

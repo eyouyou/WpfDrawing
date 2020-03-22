@@ -45,8 +45,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\ChartPackBase.cs" />
-    <Compile Include="Abstractions\SeriesPackBase.cs" />
+    <Compile Include="Abstractions\PackBase.cs" />
+    <Compile Include="ChartPack.cs" />
+    <Compile Include="Abstractions\RequestableSeriesPackBase.cs" />
     <Compile Include="DataPool\DataPool.cs" />
     <Compile Include="DataPool\HttpRequestor.cs" />
     <Compile Include="DataPool\IRequstable.cs" />

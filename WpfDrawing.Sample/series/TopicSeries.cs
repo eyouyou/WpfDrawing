@@ -22,8 +22,14 @@ namespace WpfDrawing.Sample
         public string BlockId { get; set; }
         public bool IsMarket { get; set; } = false;
     }
-    public class TopicSeries : SeriesPackBase<TopicParam, Dictionary<DateTime, double>>
+    public class TopicSeries : SeriesPackBase, IRequestable<TopicParam, Dictionary<DateTime, double>>
     {
+        public TopicParam Data { get; set; }
+
+        public TopicSeries(SeriesVisual seriesVisual) : base(seriesVisual)
+        {
+
+        }
         private T GetValue<T>(JToken it, string v)
         {
             if (it is JProperty value && value.Value[v] != null && !value.Value[v].HasValues && value.Value[v] is JValue trueValue && !string.IsNullOrEmpty(trueValue.Value.ToString()))
@@ -41,7 +47,7 @@ namespace WpfDrawing.Sample
             return DateTime.MinValue;
         }
 
-        public override Task<RequestResult<Dictionary<DateTime, double>>> GetData(TopicParam input, int request_id)
+        public async override Task<Result<Dictionary<DateTime, double>>> DoRequest(TopicParam input)
         {
             var str = $"http://zx.10jqka.com.cn/hotevent/api/getselfstocknum?blockid={input.BlockId}";
             using (HttpClient client = new HttpClient())
@@ -63,9 +69,13 @@ namespace WpfDrawing.Sample
                     }
 
                     dic = dic.OrderBy(it => it.Key).ToDictionary(it => it.Key, it => it.Value);
-                    return dic;
+                    result.Data = dic;
                 }
-                return new Dictionary<DateTime, double>();
+                else
+                {
+                    result.Data = new Dictionary<DateTime, double>();
+                }
+                return result;
             }
 
         }

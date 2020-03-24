@@ -47,12 +47,16 @@
   <ItemGroup>
     <Compile Include="Abstractions\ChartContainer.cs" />
     <Compile Include="Abstractions\PackBase.cs" />
+    <Compile Include="ChartField.cs" />
     <Compile Include="ChartPack.cs" />
     <Compile Include="Abstractions\SeriesPackBase.cs" />
     <Compile Include="DataPool\DataPool.cs" />
     <Compile Include="DataPool\HttpRequestor.cs" />
     <Compile Include="DataPool\IRequstable.cs" />
     <Compile Include="DataPool\ISubscribeable.cs" />
+    <Compile Include="Generic\GenericChartContainer.cs" />
+    <Compile Include="Generic\GenericSingleReplyData.cs" />
+    <Compile Include="Generic\GenericSeriesPipline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectInteractionGroup.cs" />
   </ItemGroup>

@@ -14,14 +14,8 @@ using System.Windows.Media;
 
 namespace WpfDrawing.Sample
 {
-    public class GenericResponse
+    public class Attention : ChartPack
     {
-        public Dictionary<DateTime, double> Data = new Dictionary<DateTime, double>();
-    }
-    public class Attention
-    {
-        ChartPack<TopicParam, GenericResponse> chartPack = new ChartPack<TopicParam, GenericResponse>();
-
         StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
 
@@ -35,35 +29,32 @@ namespace WpfDrawing.Sample
 
             axisX.IsInterregional = false;
 
-            chartPack.AddYAxis(axisY);
-            chartPack.AddXAxis(axisX);
+            AddYAxis(axisY);
+            AddXAxis(axisX);
 
-            chartPack.AddSeriesPack(TopicSeries);
-            chartPack.AddSeriesPack(TopicSeries2);
+            AddSeriesPack(TopicSeries);
+            AddSeriesPack(TopicSeries2);
 
-            chartPack.AddResponsePipline(async (context, next) =>
+            AddResponsePipline(new GenericSeriesWithTimeLinePipline());
+            AddResponsePipline(async (context, next) =>
             {
-
+                var all = context.Items[DefaultContextItem.TimeLine] as List<DateTime>;
+                var a = all.GroupBy(it => it.ToString("yyyyMM")).Select(it => it.ElementAt(0)).Distinct().OrderBy(it => it).ToList();
+                axisX.SplitValues = a.Select(it => it.ToFormatVisualData()).ToList();
+                await next(context);
             });
+
+            ChartTemplate = new GenericChartTemplate(this);
         }
-        private async Task Render(string blockId, string marketId)
+
+        public async override void StartDataFeed()
         {
-            var dic = await TopicSeries.Request(blockId);
-            var dic2 = await TopicSeries.Request(marketId, true);
-
-            var all_x = dic.ToList();
-            all_x.AddRange(dic2.ToList());
-            var a = all_x.GroupBy(it => it.Key.ToString("yyyyMM")).Select(it => it.ElementAt(0).Key).Distinct().OrderBy(it => it).ToList();
-            axisX.SplitValues = a.Select(it => it.ToFormatVisualData()).ToList();
-            //axisX.Ratios = new List<double>() { 0.1, 0.1, 0.1 };
-
-            lineSeries2.VisualData = dic2.ToFormatVisualData();
-            lineSeries.VisualData = dic.ToFormatVisualData();
-            DrawingCanvas.Replot();
+            await RequestProcess(SeriesPacks);
         }
 
-        public string BlockId { get; set; }
-
+        public override void StopDataFeed()
+        {
+        }
     }
 
 }

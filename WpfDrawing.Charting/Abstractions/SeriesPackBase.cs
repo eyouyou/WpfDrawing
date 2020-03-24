@@ -9,29 +9,21 @@ namespace HevoDrawing.Charting
 {
     public static class ResultExtension
     {
-        public static Result<T> MakeResult<T>(this SeriesPackBase @base)
+        public static T MakeReplyData<T>(this SeriesPackBase @base)
+            where T : ReplyData, new()
         {
-            return new Result<T>(@base.SeriesVisual.Id);
+            return new T() { Id = @base.SeriesVisual.Id };
         }
     }
-    public class Result<T>
+
+    public interface IRequestable
     {
-        public Result(int id)
-        {
-            Id = id;
-        }
-        public T Data { get; set; }
-        public int Id { get; set; }
-    }
-    public interface IRequestable<Parameters, Response>
-    {
-        Parameters Data { get; set; }
-        Task<Result<Response>> DoRequest(Parameters input);
+        Task<ReplyData> DoRequest();
     }
     public interface ISubscribeable<Parameters, Response>
     {
         Parameters Data { get; set; }
-        Task<Result<Response>> DoRequest(Parameters input);
+        Task<Response> DoRequest(Parameters input);
     }
     public abstract class SeriesPackBase
     {

@@ -18,18 +18,18 @@ namespace HevoDrawing.Charting
         public GridLength CellMargin { get; set; } = new GridLength(0);
         public Grid ContainerGrid = new Grid();
         Dictionary<int, RectDrawingCanvas> Canvas;
-        public List<ChartContainer> Containers;
+        public List<ChartPack> Containers;
         List<Chart> ContainersUsed;
         List<Chart> ContainersUnused;
         ComponentId IdGenerater = new ComponentId();
         int Col = -1;
         int Row = -1;
         InteractionCanvas GlobalInteraction = null;
-        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params ChartContainer[] canvas)
+        public RectInteractionGroup(InteractionCanvas interaction, int col = 1, int row = 1, params ChartPack[] canvas)
         {
             InteractionVisuals = new List<InteractionCanvas>();
             Containers = canvas.ToList();
-            ContainersUsed = new List<Chart>(Containers.Select(it => it.Chart));
+            ContainersUsed = new List<Chart>(Containers);
             ContainersUnused = new List<Chart>();
             Containers.ForEach(it => ContainerGrid.Children.Add(it));
             GlobalInteraction = interaction;
@@ -47,7 +47,7 @@ namespace HevoDrawing.Charting
             }
             Resize(col, row);
 
-            Canvas = canvas.ToDictionary(it => it.Chart.DrawingCanvas.Id, it => it.Chart.DrawingCanvas);
+            Canvas = canvas.ToDictionary(it => it.DrawingCanvas.Id, it => it.DrawingCanvas);
 
             Children.Add(ContainerGrid);
 
@@ -91,16 +91,16 @@ namespace HevoDrawing.Charting
             var index = 0;
             ContainersUsed.Clear();
             ContainersUnused.Clear();
-            foreach (var container in Containers)
+            foreach (var chart in Containers)
             {
-                var item = container.Chart;
+                var item = chart.ChartTemplate;
                 if (index >= total)
                 {
-                    ContainersUnused.Add(item);
+                    ContainersUnused.Add(chart);
                     continue;
                 }
-                var c = item.DrawingCanvas;
-                ContainersUsed.Add(item);
+                var c = chart.DrawingCanvas;
+                ContainersUsed.Add(chart);
                 c.Col = index % col;
                 c.Row = index / col;
                 SetColumn(item, c.Col);
@@ -116,23 +116,23 @@ namespace HevoDrawing.Charting
                     GlobalInteraction.DataSources.Clear();
                     GlobalInteraction.DataSources.Add(c.Id, c.DataSource);
                     GlobalInteraction.AssociatedCharts.Clear();
-                    GlobalInteraction.AssociatedCharts.Add(c.Id, item);
+                    GlobalInteraction.AssociatedCharts.Add(c.Id, chart);
                     c.InteractionCanvas = GlobalInteraction;
                 }
                 else
                 {
                     // 送默认AxisInteractionCanvas
-                    var interaction2 = item.InteractionCanvas;
+                    var interaction2 = chart.InteractionCanvas;
                     if (interaction2 != null)
                     {
                         interaction2.AssociatedCharts.Clear();
-                        interaction2.AssociatedCharts.Add(c.Id, item);
+                        interaction2.AssociatedCharts.Add(c.Id, chart);
                         interaction2.DataSources.Clear();
                         interaction2.DataSources.Add(c.Id, c.DataSource);
                         interaction2.ParentElement = item;
                         c.InteractionCanvas = interaction2;
-                        item.EnableInteraction = false;
-                        item.EnableInteraction = true;
+                        chart.EnableInteraction = false;
+                        chart.EnableInteraction = true;
                         InteractionVisuals.Add(interaction2);
                     }
                 }

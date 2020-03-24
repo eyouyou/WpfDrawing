@@ -8,8 +8,15 @@ using System.Windows.Controls;
 
 namespace HevoDrawing.Charting
 {
-    public abstract class ChartContainer : UserControl
+    public abstract class ChartTemplate : UserControl
     {
-        public abstract Chart Chart { get; }
+        public abstract string TemplateName { get; }
+        public ChartTemplate(Chart chart)
+        {
+            Chart = chart ?? throw new ArgumentNullException();
+        }
+
+        public Chart Chart { get; private set; }
+        public abstract void Separate();
     }
 }

@@ -17,14 +17,20 @@ namespace WpfDrawing.Sample
     {
         string BlockId { get; set; }
     }
-    public class TopicParam
+    public interface IMarketSettable
+    {
+        bool IsMarket { get; set; }
+    }
+
+    public class TopicParam : RequestParams
     {
         public string BlockId { get; set; }
         public bool IsMarket { get; set; } = false;
     }
-    public class TopicSeries : SeriesPackBase, IRequestable<TopicParam, Dictionary<DateTime, double>>
+    public class TopicSeries : SeriesPackBase, IRequestable, IBlockSettable, IMarketSettable
     {
-        public TopicParam Data { get; set; }
+        public string BlockId { get; set; }
+        public bool IsMarket { get; set; }
 
         public TopicSeries(SeriesVisual seriesVisual) : base(seriesVisual)
         {
@@ -47,9 +53,10 @@ namespace WpfDrawing.Sample
             return DateTime.MinValue;
         }
 
-        public async override Task<Result<Dictionary<DateTime, double>>> DoRequest(TopicParam input)
+        public async Task<ReplyData> DoRequest()
         {
-            var str = $"http://zx.10jqka.com.cn/hotevent/api/getselfstocknum?blockid={input.BlockId}";
+            var result = this.MakeReplyData<GenericSingleReplyData>();
+            var str = $"http://zx.10jqka.com.cn/hotevent/api/getselfstocknum?blockid={BlockId}";
             using (HttpClient client = new HttpClient())
             {
                 var response = await client.GetAsync(str);
@@ -59,13 +66,13 @@ namespace WpfDrawing.Sample
                 JObject @object = JObject.Parse(content);
                 if (@object.TryGetValue("result", out var resultToken))
                 {
-                    if (input.IsMarket)
+                    if (IsMarket)
                     {
                         dic = resultToken.AsParallel().ToDictionary(it => GetKeyTime(it), it => GetValue<double>(it, "market") / 10000);
                     }
                     else
                     {
-                        dic = resultToken.AsParallel().ToDictionary(it => GetKeyTime(it), it => GetValue<double>(it, input.BlockId) / 10000);
+                        dic = resultToken.AsParallel().ToDictionary(it => GetKeyTime(it), it => GetValue<double>(it, BlockId) / 10000);
                     }
 
                     dic = dic.OrderBy(it => it.Key).ToDictionary(it => it.Key, it => it.Value);

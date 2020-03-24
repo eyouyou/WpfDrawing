@@ -75,6 +75,11 @@
     <Compile Include="MultiChartings2.xaml.cs">
       <DependentUpon>MultiChartings2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NewWindowCharting.xaml.cs">
+      <DependentUpon>NewWindowCharting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="series\SecurityTrendSeries.cs" />
+    <Compile Include="series\StrengthSeries.cs" />
     <Compile Include="series\TopicSeries.cs" />
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
@@ -153,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MultiChartings2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewWindowCharting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -247,6 +256,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="piplines\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

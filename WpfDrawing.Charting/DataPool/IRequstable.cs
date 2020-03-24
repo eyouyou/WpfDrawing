@@ -6,25 +6,51 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing.Charting
 {
-    public class ChartContext<DataT>
+    public enum DefaultContextItem
     {
-        public DataT Data { get; set; }
+        TimeLine
+    }
+    public class ChartContext
+    {
+        public ReplyData Data { get; set; }
         public IDictionary<object, object> Items { get; } = new Dictionary<object, object>();
     }
-    public delegate Task PiplineDelegate<DataT>(ChartContext<DataT> data);
+    public delegate Task PiplineDelegate(ChartContext data);
     public class QuoteParams
     {
         public string Code { get; set; }
         public List<string> Fields { get; set; }
     }
+    public abstract class ReplyData
+    {
+        public int Id { get; set; }
+    }
 
+    public class AggrateReplyData : ReplyData
+    {
+        public AggrateReplyData(Dictionary<SeriesPackBase, ReplyData> data)
+        {
+            TotalData = data;
+        }
+        public Dictionary<SeriesPackBase, ReplyData> TotalData { get; set; }
+    }
+    public abstract class RequestParams
+    {
+
+    }
     public interface IRequstable<InputT, OutPutT>
     {
         Task<OutPutT> Request(InputT param);
     }
-    public interface IPipline<Data>
+    public interface IPipline
     {
-        Task PipAsync(ChartContext<Data> context, PiplineDelegate<Data> next);
+        Task PipAsync(ChartContext context, PiplineDelegate next);
+    }
+    public interface IAggratePipline : IPipline
+    {
+    }
+    public interface ISpecificPipline : IPipline
+    {
     }
 
     public interface IKeyAnalysizer<Key, InputT, OutputT>

@@ -212,5 +212,7 @@ namespace HevoDrawing.Abstractions
             }
             return other.Id == Id;
         }
+
+        public object Tag { get; set; }
     }
 }

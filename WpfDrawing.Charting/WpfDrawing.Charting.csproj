@@ -55,7 +55,7 @@
     <Compile Include="DataPool\IRequstable.cs" />
     <Compile Include="DataPool\ISubscribeable.cs" />
     <Compile Include="Generic\GenericChartContainer.cs" />
-    <Compile Include="Generic\GenericSingleReplyData.cs" />
+    <Compile Include="Generic\GenericReplyData.cs" />
     <Compile Include="Generic\GenericSeriesPipline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectInteractionGroup.cs" />

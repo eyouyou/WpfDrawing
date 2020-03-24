@@ -18,6 +18,7 @@ namespace WpfDrawing.Sample
     {
         StraightLineSeriesVisual lineSeries = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
+        StraightLineSeriesVisual lineSeries3 = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
 
         DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
         ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
@@ -25,7 +26,12 @@ namespace WpfDrawing.Sample
         public Attention()
         {
             TopicSeries TopicSeries = new TopicSeries(lineSeries);
+            TopicSeries.BlockId = "300843";
             TopicSeries TopicSeries2 = new TopicSeries(lineSeries2);
+            TopicSeries2.BlockId = "000001";
+            TopicSeries2.IsMarket = true;
+            StrengthSeries StrengthSeries3 = new StrengthSeries(lineSeries3);
+            StrengthSeries3.CurrentDate = DateTime.Now;
 
             axisX.IsInterregional = false;
 
@@ -34,8 +40,9 @@ namespace WpfDrawing.Sample
 
             AddSeriesPack(TopicSeries);
             AddSeriesPack(TopicSeries2);
+            AddSeriesPack(StrengthSeries3);
 
-            AddResponsePipline(new GenericSeriesWithTimeLinePipline());
+            AddResponsePipline(new SeriesWithTimeLinePipline());
             AddResponsePipline(async (context, next) =>
             {
                 var all = context.Items[DefaultContextItem.TimeLine] as List<DateTime>;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HevoDrawing.Charting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,9 @@ namespace WpfDrawing.Sample
         public NewWindowCharting()
         {
             InitializeComponent();
+            Attention attention = new Attention();
+            RectInteractionGroup rectInteractionGroup = new RectInteractionGroup(1, 1, attention);
+            Content = rectInteractionGroup;
         }
     }
 }

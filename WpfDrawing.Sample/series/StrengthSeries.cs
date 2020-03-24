@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfDrawing.Sample.series
+namespace WpfDrawing.Sample
 {
     public interface IDatetimeSettable
     {
@@ -25,7 +25,7 @@ namespace WpfDrawing.Sample.series
 
         public async Task<ReplyData> DoRequest()
         {
-            var result = this.MakeReplyData<GenericReplyData>();
+            var result = this.MakeReplyData<GenericReplyData<DateTime>>();
             var str = $"http://hqstats.10jqka.com.cn/fyzzt.php?date={CurrentDate:yyyyMMdd}";
             using (HttpClient client = new HttpClient())
             {

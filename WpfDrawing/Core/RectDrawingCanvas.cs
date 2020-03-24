@@ -21,7 +21,7 @@ namespace HevoDrawing
         public int Row { get; set; } = -1;
 
         private VisualAssembly _dataSource;
-        public VisualAssembly DataSource
+        public VisualAssembly Assembly
         {
             get
             {

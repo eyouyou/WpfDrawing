@@ -11,10 +11,13 @@ namespace HevoDrawing.Charting
 {
     public abstract class ChartPack : Chart
     {
+        private ComponentId PackIdGernerator = new ComponentId();
         public ChartPack()
         {
             Assembly = ChartVisual.Assembly as ChartAssembly;
             DrawingCanvasArea.Children.Add(DrawingCanvas);
+            DrawingCanvas.AddChild(ChartVisual);
+            DrawingCanvas.Assembly = ChartVisual.Assembly;
             Content = DrawingCanvasArea;
         }
         public override AxisInteractionCanvas InteractionCanvas { get; } = new AxisInteractionCanvas();
@@ -52,7 +55,11 @@ namespace HevoDrawing.Charting
 
         public void AddSeriesPack(SeriesPackBase pack)
         {
-            ChartVisual.AddSeries(pack.SeriesVisual);
+            foreach (var item in pack.SeriesVisuals)
+            {
+                ChartVisual.AddSeries(item);
+            }
+            pack.Id = PackIdGernerator.GenerateId();
             SeriesPacks.Add(pack);
         }
         public void AddXAxis(DiscreteAxis axis)
@@ -139,9 +146,9 @@ namespace HevoDrawing.Charting
 
         private List<IPipline> _response_pipline = new List<IPipline>();
 
-        private SeriesPackBase FindById(int id)
+        private SeriesPackBase FindById(int pack_id)
         {
-            return SeriesPacks.FirstOrDefault(it => it.SeriesVisual.Id == id);
+            return SeriesPacks.FirstOrDefault(it => it.Id == pack_id);
         }
     }
 }

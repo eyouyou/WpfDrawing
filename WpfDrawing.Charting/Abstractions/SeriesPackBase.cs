@@ -12,7 +12,7 @@ namespace HevoDrawing.Charting
         public static T MakeReplyData<T>(this SeriesPackBase @base)
             where T : ReplyData, new()
         {
-            return new T() { Id = @base.SeriesVisual.Id };
+            return new T() { Id = @base.Id };
         }
     }
 
@@ -27,20 +27,21 @@ namespace HevoDrawing.Charting
     }
     public abstract class SeriesPackBase
     {
-        public SeriesVisual SeriesVisual { get; private set; }
-        public SeriesPackBase(SeriesVisual seriesVisual)
+        public int Id { get; set; }
+        public List<SeriesVisual> SeriesVisuals { get; private set; }
+        public SeriesPackBase(params SeriesVisual[] seriesVisual)
         {
-            SeriesVisual = seriesVisual;
+            SeriesVisuals = seriesVisual.Length == 0 ? throw new ArgumentNullException() : seriesVisual.ToList();
         }
         public override int GetHashCode()
         {
-            return SeriesVisual.Id;
+            return Id;
         }
         public override bool Equals(object obj)
         {
             if (obj is SeriesPackBase pack)
             {
-                return SeriesVisual.Id == pack.SeriesVisual.Id && SeriesVisual.Name == pack.SeriesVisual.Name;
+                return Id == pack.Id;
             }
             return false;
         }

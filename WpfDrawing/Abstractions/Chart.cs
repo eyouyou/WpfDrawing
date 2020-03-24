@@ -10,10 +10,25 @@ namespace HevoDrawing.Abstractions
 {
     public abstract class Chart : UserControl, IDataAvailable
     {
+        public Chart()
+        {
+            IsVisibleChanged += Chart_IsVisibleChanged;
+        }
+
+        private void Chart_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                StartDataFeed();
+            }
+            else { StopDataFeed(); }
+        }
+
         public abstract RectDrawingCanvas DrawingCanvas { get; }
         public abstract AxisInteractionCanvas InteractionCanvas { get; }
         public abstract bool EnableInteraction { get; set; }
         public abstract void StartDataFeed();
         public abstract void StopDataFeed();
+
     }
 }

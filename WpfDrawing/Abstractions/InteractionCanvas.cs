@@ -34,7 +34,7 @@ namespace HevoDrawing.Abstractions
         /// <summary>
         /// 多个数据源
         /// </summary>
-        public Dictionary<int, VisualAssembly> DataSources { get; } = new Dictionary<int, VisualAssembly>();
+        public Dictionary<int, VisualAssembly> Assemblies { get; } = new Dictionary<int, VisualAssembly>();
         /// <summary>
         /// 关联的container 独立的话1个
         /// 复用的话多个
@@ -71,7 +71,7 @@ namespace HevoDrawing.Abstractions
         public InteractionLayer(InteractionCanvas canvas)
         {
             ParentCanvas = canvas;
-            DataSources = canvas.DataSources;
+            DataSources = canvas.Assemblies;
         }
         public InteractionCanvas ParentCanvas { get; set; }
 

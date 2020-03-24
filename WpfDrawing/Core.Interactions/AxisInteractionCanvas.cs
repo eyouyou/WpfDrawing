@@ -150,7 +150,7 @@ namespace HevoDrawing.Interactions
             //一个hit到了其他的都不要了
             var isHint = false;
             var isHintData = false;
-            foreach (var item in DataSources)
+            foreach (var item in Assemblies)
             {
                 var seriesData = new List<SeriesData>();
                 if (item.Value is ChartAssembly dataSource)
@@ -315,7 +315,7 @@ namespace HevoDrawing.Interactions
 
             VisualData.Items[ContextDataItem.SeriesData] = seriesDatas;
 
-            var coms = DataSources.ElementAt(0).Value as ChartAssembly;
+            var coms = Assemblies.ElementAt(0).Value as ChartAssembly;
 
             var currentPoint = point;
 

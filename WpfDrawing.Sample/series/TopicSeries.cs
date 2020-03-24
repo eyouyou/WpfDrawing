@@ -30,7 +30,7 @@ namespace WpfDrawing.Sample
     public class TopicSeries : SeriesPackBase, IRequestable, IBlockSettable, IMarketSettable
     {
         public string BlockId { get; set; }
-        public bool IsMarket { get; set; }
+        public bool IsMarket { get; set; } = false;
 
         public TopicSeries(SeriesVisual seriesVisual) : base(seriesVisual)
         {
@@ -55,7 +55,7 @@ namespace WpfDrawing.Sample
 
         public async Task<ReplyData> DoRequest()
         {
-            var result = this.MakeReplyData<GenericSingleReplyData>();
+            var result = this.MakeReplyData<SingleReplyData<DateTime>>();
             var str = $"http://zx.10jqka.com.cn/hotevent/api/getselfstocknum?blockid={BlockId}";
             using (HttpClient client = new HttpClient())
             {

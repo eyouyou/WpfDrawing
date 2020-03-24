@@ -31,7 +31,7 @@ namespace HevoDrawing.Charting
             Containers = canvas.ToList();
             ContainersUsed = new List<Chart>(Containers);
             ContainersUnused = new List<Chart>();
-            Containers.ForEach(it => ContainerGrid.Children.Add(it));
+            Containers.ForEach(it => ContainerGrid.Children.Add(it.ChartTemplate));
             GlobalInteraction = interaction;
             if (interaction != null)
             {
@@ -113,8 +113,8 @@ namespace HevoDrawing.Charting
                 }
                 if (GlobalInteraction != null)
                 {
-                    GlobalInteraction.DataSources.Clear();
-                    GlobalInteraction.DataSources.Add(c.Id, c.DataSource);
+                    GlobalInteraction.Assemblies.Clear();
+                    GlobalInteraction.Assemblies.Add(c.Id, c.Assembly);
                     GlobalInteraction.AssociatedCharts.Clear();
                     GlobalInteraction.AssociatedCharts.Add(c.Id, chart);
                     c.InteractionCanvas = GlobalInteraction;
@@ -127,8 +127,8 @@ namespace HevoDrawing.Charting
                     {
                         interaction2.AssociatedCharts.Clear();
                         interaction2.AssociatedCharts.Add(c.Id, chart);
-                        interaction2.DataSources.Clear();
-                        interaction2.DataSources.Add(c.Id, c.DataSource);
+                        interaction2.Assemblies.Clear();
+                        interaction2.Assemblies.Add(c.Id, c.Assembly);
                         interaction2.ParentElement = item;
                         c.InteractionCanvas = interaction2;
                         chart.EnableInteraction = false;
@@ -140,38 +140,9 @@ namespace HevoDrawing.Charting
             }
 
         }
-        public RectInteractionGroup(int col = 1, int row = 1, params Chart[] canvas)
+        public RectInteractionGroup(int col = 1, int row = 1, params ChartPack[] canvas) : this(null, col, row, canvas)
         {
-            var col_percent = 1.0 / col;
-            for (int i = 0; i < col; i++)
-            {
-                ContainerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(col_percent, GridUnitType.Star) });
-            }
 
-            var row_percent = 1.0 / row;
-            for (int i = 0; i < row; i++)
-            {
-                ContainerGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(row_percent, GridUnitType.Star) });
-            }
-            var index = 0;
-            foreach (var item in canvas)
-            {
-                var c = item.DrawingCanvas;
-                c.Col = index % col;
-                c.Row = index / col;
-                SetColumn(item, c.Col);
-                SetRow(item, c.Row);
-                if (c.Id == -1)
-                {
-                    c.Id = IdGenerater.GenerateId();
-                }
-                index++;
-            }
-            Canvas = canvas.ToDictionary(it => it.DrawingCanvas.Id, it => it.DrawingCanvas);
-
-            Children.Add(ContainerGrid);
-
-            SizeChanged += RectInteractionGroup_SizeChanged;
         }
         private void RectInteractionGroup_SizeChanged(object sender, SizeChangedEventArgs e)
         {

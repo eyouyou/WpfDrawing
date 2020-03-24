@@ -13,20 +13,20 @@ namespace HevoDrawing.Charting
             await next(context);
         }
     }
-    public class GenericSeriesWithTimeLinePipline : IAggratePipline
+    public class SeriesWithTimeLinePipline : IAggratePipline
     {
         public async Task PipAsync(ChartContext context, PiplineDelegate next)
         {
-            var all = new List<DateTime>();
-            var reply = context.Data as AggrateReplyData;
-            foreach (var item in reply.TotalData)
-            {
-                var data = item.Value as GenericSingleReplyData;
-                all.AddRange(data.Data.Keys);
-                item.Key.SeriesVisual.VisualData = data.Data.ToFormatVisualData();
-            }
-            context.Items[DefaultContextItem.TimeLine] = all.Distinct().OrderBy(it => it).ToList();
-            await next(context);
+            //var all = new List<DateTime>();
+            //var reply = context.Data as AggrateReplyData;
+            //foreach (var item in reply.TotalData)
+            //{
+            //    var data = item.Value as DatetimeReplyData;
+            //    all.AddRange(data.Data.Keys);
+            //    item.Key.SeriesVisual.VisualData = data.Data.ToFormatVisualData();
+            //}
+            //context.Items[DefaultContextItem.TimeLine] = all.Distinct().OrderBy(it => it).ToList();
+            //await next(context);
         }
     }
 }

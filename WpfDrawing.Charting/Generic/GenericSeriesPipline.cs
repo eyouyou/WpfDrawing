@@ -10,7 +10,7 @@ namespace HevoDrawing.Charting
     /// 分类 pipline
     /// 单轴共用，且为时间轴
     /// </summary>
-    public class SeperatePipline : IAggratePipline
+    public class SeperatePipline : IPipline
     {
         public async Task PipAsync(ChartContext context, PiplineDelegate next)
         {
@@ -44,4 +44,6 @@ namespace HevoDrawing.Charting
             await next(datetime);
         }
     }
+
+
 }

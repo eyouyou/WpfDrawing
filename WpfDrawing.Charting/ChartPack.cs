@@ -76,15 +76,29 @@ namespace HevoDrawing.Charting
             ChartVisual.AddAsixY(axis);
         }
 
-        public void AddResponsePipline(IPipline pipline)
+        public void AddResponsePipline(IPipline pipline, int index = int.MinValue)
         {
-            _response_pipline.Add(pipline);
+            if (index == int.MinValue)
+            {
+                _response_pipline.Add(pipline);
+            }
+            else
+            {
+                _response_pipline.Insert(index, pipline);
+            }
             ResponsePiplines = _response_pipline.Select(it => (Func<ChartContext, PiplineDelegate, Task>)((c, next) => c.IsCanceled ? Task.FromResult(false) : it.PipAsync(c, next)))
                 .Select(it => (Func<PiplineDelegate, PiplineDelegate>)(next => c => it(c, next))).ToList();
         }
-        public void AddResponsePipline(Func<ChartContext, PiplineDelegate, Task> func)
+        public void AddResponsePipline(Func<ChartContext, PiplineDelegate, Task> func, int index = int.MinValue)
         {
-            ResponsePiplines.Add(next => c => c.IsCanceled ? Task.FromResult(false) : func(c, next));
+            if (index == int.MinValue)
+            {
+                ResponsePiplines.Add(next => c => c.IsCanceled ? Task.FromResult(false) : func(c, next));
+            }
+            else
+            {
+                ResponsePiplines.Insert(index, next => c => c.IsCanceled ? Task.FromResult(false) : func(c, next));
+            }
         }
         public void AddSubscribePipline(IPipline pipline)
         {
@@ -104,7 +118,7 @@ namespace HevoDrawing.Charting
             var array = await Task.WhenAll(tasks);
             var list = array.ToList();
 
-            PiplineDelegate @delegate = new PiplineDelegate((data) => Task.FromResult(true));
+            PiplineDelegate @delegate = new PiplineDelegate((data) => Task.WhenAll(packs.Select(it => it.OnReply((data.Data as AggrateReplyData).TotalData[it]))));
 
             for (int i = ResponsePiplines.Count - 1; i >= 0; i--)
             {
@@ -113,6 +127,8 @@ namespace HevoDrawing.Charting
             await @delegate.Invoke(new ChartContext() { Data = new AggrateReplyData(list.ToDictionary(it => FindById(it.Id), it => it)) });
 
             ChartVisual.RePlot();
+
+
         }
 
         private ChartTemplate _chart_template = null;
@@ -145,7 +161,7 @@ namespace HevoDrawing.Charting
         /// <summary>
         /// 主畫布
         /// </summary>
-        private ChartVisual ChartVisual = new ChartVisual();
+        protected ChartVisual ChartVisual = new ChartVisual();
 
         private List<Func<PiplineDelegate, PiplineDelegate>> ResponsePiplines =
             new List<Func<PiplineDelegate, PiplineDelegate>>();

@@ -20,11 +20,13 @@ namespace WpfDrawing.Sample
         StraightLineSeriesVisual lineSeries2 = new StraightLineSeriesVisual() { Name = "A股平均关注度", LinePen = new Pen(Brushes.Red, 1) };
         StraightLineSeriesVisual lineSeries3 = new StraightLineSeriesVisual() { Name = "概念关注度", LinePen = new Pen(Brushes.SpringGreen, 1) };
 
-        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = true, ShowGridLine = false, IsGridLineClose = true };
+        DiscreteAxis axisX = new DateTimeAxis(AxisPosition.Buttom) { Name = "时间", ValueFormat = "yyyyMMdd", SplitValueFormat = "yyyy/MM", IsInterregional = false, ShowGridLine = false, IsGridLineClose = true };
         ContinuousAxis axisY = new ContinuousAxis(AxisPosition.Left) { ValueFormat = "G4", SplitValueFormat = "G4", ShowGridLine = true, AxisPen = new Pen(Brushes.Green, 1), Unit = "万" };
 
         public Attention()
         {
+            ChartVisual.Offsets = new PaddingOffset(50);
+
             TopicSeries TopicSeries = new TopicSeries(lineSeries);
             TopicSeries.BlockId = "300843";
             TopicSeries TopicSeries2 = new TopicSeries(lineSeries2);

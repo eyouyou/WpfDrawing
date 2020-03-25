@@ -45,6 +45,8 @@ namespace HevoDrawing.Charting
             }
             return false;
         }
+
+        public abstract Task OnReply(ReplyData result);
     }
 
 

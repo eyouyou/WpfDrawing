@@ -86,5 +86,19 @@ namespace WpfDrawing.Sample
             }
 
         }
+
+        public override async Task OnReply(ReplyData result)
+        {
+            await Task.Yield();
+
+            if (result is SingleReplyData<DateTime> data)
+            {
+                var visual_data = data.Data.ToFormatVisualData();
+                foreach (var item in SeriesVisuals)
+                {
+                    item.VisualData = visual_data;
+                }
+            }
+        }
     }
 }

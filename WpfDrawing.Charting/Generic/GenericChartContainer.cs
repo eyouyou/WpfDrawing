@@ -14,11 +14,10 @@ namespace HevoDrawing.Charting
             Content = chart;
         }
 
-        public override string TemplateName => throw new NotImplementedException();
+        public override string TemplateName => "基础模板";
 
         public override void Separate()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HevoDrawing.Abstractions;
+﻿using HevoDrawing;
+using HevoDrawing.Abstractions;
 using HevoDrawing.Charting;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,6 +18,13 @@ namespace WpfDrawing.Sample
     }
     public class StrengthSeries : SeriesPackBase, IRequestable, IDatetimeSettable
     {
+        public enum StrengthType
+        {
+            ZT,
+            DT,
+            YZZT,
+            FYZZT
+        }
         public StrengthSeries(SeriesVisual seriesVisual) : base(seriesVisual)
         {
         }
@@ -93,6 +101,21 @@ namespace WpfDrawing.Sample
 
                 }
                 return result;
+            }
+        }
+
+        public override async Task OnReply(ReplyData result)
+        {
+            await Task.Yield();
+            if (result is GenericReplyData<DateTime> data)
+            {
+                foreach (var item in SeriesVisuals)
+                {
+                    if(item.Tag is ChartField field)
+                    {
+                        item.VisualData = data.Data.Select(it => new CroodData<DateTime>(it.Key, it.Value[field])).ToFormatVisualData();
+                    }
+                }
             }
         }
     }

@@ -16,20 +16,15 @@ namespace WpfDrawing.Sample
     {
         DateTime CurrentDate { get; set; }
     }
-    public class StrengthSeries : SeriesPackBase, IRequestable, IDatetimeSettable
+    public class StrengthSeries : SeriesPackBase, IRequestable, ISubscribeable, IDatetimeSettable
     {
-        public enum StrengthType
-        {
-            ZT,
-            DT,
-            YZZT,
-            FYZZT
-        }
         public StrengthSeries(SeriesVisual seriesVisual) : base(seriesVisual)
         {
         }
 
         public DateTime CurrentDate { get; set; }
+
+        public event SubscribeHandler OnPushed;
 
         public async Task<ReplyData> DoRequest()
         {
@@ -111,7 +106,7 @@ namespace WpfDrawing.Sample
             {
                 foreach (var item in SeriesVisuals)
                 {
-                    if(item.Tag is ChartField field)
+                    if (item.Tag is ChartField field)
                     {
                         item.VisualData = data.Data.Select(it => new CroodData<DateTime>(it.Key, it.Value[field])).ToFormatVisualData();
                     }

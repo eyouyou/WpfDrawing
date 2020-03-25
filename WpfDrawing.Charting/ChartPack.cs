@@ -106,6 +106,10 @@ namespace HevoDrawing.Charting
         }
         public async Task RequestProcess(List<SeriesPackBase> packs)
         {
+            if (!packs.All(it => SeriesPacks.Contains(it)))
+            {
+                return;
+            }
             var tasks = new List<Task<ReplyData>>();
             foreach (var item in packs)
             {
@@ -117,6 +121,8 @@ namespace HevoDrawing.Charting
             }
             var array = await Task.WhenAll(tasks);
             var list = array.ToList();
+            var excepts = SeriesPacks.Except(packs);
+            list.AddRange(excepts.Select(it => it.CacheData));
 
             PiplineDelegate @delegate = new PiplineDelegate((data) => Task.WhenAll(packs.Select(it => it.OnReply((data.Data as AggrateReplyData).TotalData[it]))));
 
@@ -124,11 +130,19 @@ namespace HevoDrawing.Charting
             {
                 @delegate = ResponsePiplines[i](@delegate);
             }
-            await @delegate.Invoke(new ChartContext() { Data = new AggrateReplyData(list.ToDictionary(it => FindById(it.Id), it => it)) });
+            var dic_data = list.ToDictionary(it => FindById(it.Id), it => it);
+            await @delegate.Invoke(new ChartContext() { Data = new AggrateReplyData(dic_data) });
+
+            foreach (var item in packs)
+            {
+                if (dic_data[item].IsBad)
+                {
+                    continue;
+                }
+                item.CacheData = dic_data[item];
+            }
 
             ChartVisual.RePlot();
-
-
         }
 
         private ChartTemplate _chart_template = null;

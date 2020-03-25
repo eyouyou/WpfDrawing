@@ -44,7 +44,8 @@ namespace WpfDrawing.Sample
             AddSeriesPack(TopicSeries2);
             AddSeriesPack(StrengthSeries3);
 
-            AddResponsePipline(new SeperatePipline());
+            AddResponsePipline(new SeperatePipline()); 
+            axisX.IsDataFull = true;
             //TODO 有问题 如果请求一条线 但是xy都需要所有数据做计算
             AddResponsePipline(async (context, next) =>
             {
@@ -52,7 +53,6 @@ namespace WpfDrawing.Sample
 
                 var timelineContext = context as TimeLineGenericChartContext;
                 var a = timelineContext.TimeLine.GroupBy(it => it.ToString("yyyyMM")).Select(it => it.ElementAt(0)).Distinct().OrderBy(it => it).ToList();
-
                 axisX.SplitValues = a.Select(it => it.ToFormatVisualData()).ToList();
             });
 

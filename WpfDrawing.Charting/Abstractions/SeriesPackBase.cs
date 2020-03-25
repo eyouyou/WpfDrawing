@@ -41,11 +41,16 @@ namespace HevoDrawing.Charting
         {
             if (obj is SeriesPackBase pack)
             {
-                return Id == pack.Id;
+                return ReferenceEquals(pack, this);
             }
             return false;
         }
 
+        public ReplyData CacheData { get; set; }
+        public void ClearCache()
+        {
+            CacheData = null;
+        }
         public abstract Task OnReply(ReplyData result);
     }
 

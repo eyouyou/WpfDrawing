@@ -15,6 +15,7 @@ namespace HevoDrawing.Charting
     public abstract class ReplyData
     {
         public int Id { get; set; }
+        public bool IsBad { get; set; } = false;
     }
 
     public class AggrateReplyData : ReplyData

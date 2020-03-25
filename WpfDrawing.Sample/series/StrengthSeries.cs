@@ -16,15 +16,13 @@ namespace WpfDrawing.Sample
     {
         DateTime CurrentDate { get; set; }
     }
-    public class StrengthSeries : SeriesPackBase, IRequestable, ISubscribeable, IDatetimeSettable
+    public class StrengthSeries : SeriesPackBase, IRequestable, IDatetimeSettable
     {
         public StrengthSeries(SeriesVisual seriesVisual) : base(seriesVisual)
         {
         }
 
         public DateTime CurrentDate { get; set; }
-
-        public event SubscribeHandler OnPushed;
 
         public async Task<ReplyData> DoRequest()
         {
@@ -98,7 +96,6 @@ namespace WpfDrawing.Sample
                 return result;
             }
         }
-
         public override async Task OnReply(ReplyData result)
         {
             await Task.Yield();

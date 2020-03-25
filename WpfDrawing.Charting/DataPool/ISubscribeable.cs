@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing.Charting
 {
-    /// <summary>
-    /// Key=>字段
-    /// </summary>
-    /// <param name="data"></param>
-    public delegate void SubscribeHandler(Dictionary<string, Dictionary<string, double>> data);
-    public interface ISubscribeable
-    {
-        event SubscribeHandler OnPushed;
-    }
+    ///// <summary>
+    ///// Key=>字段
+    ///// </summary>
+    ///// <param name="data"></param>
+    //public delegate void SubscribeHandler(Dictionary<string, Dictionary<string, double>> data);
+    //public interface ISubscribeable
+    //{
+    //    event SubscribeHandler OnPushed;
+    //}
 }

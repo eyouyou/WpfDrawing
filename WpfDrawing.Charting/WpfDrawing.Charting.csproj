@@ -46,8 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\ChartContainer.cs" />
+    <Compile Include="Abstractions\ChartContext.cs" />
     <Compile Include="Abstractions\PackBase.cs" />
     <Compile Include="Abstractions\Pipline.cs" />
+    <Compile Include="Abstractions\ReplyData.cs" />
     <Compile Include="ChartField.cs" />
     <Compile Include="ChartPack.cs" />
     <Compile Include="Abstractions\SeriesPackBase.cs" />

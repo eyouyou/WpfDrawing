@@ -6,16 +6,10 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing.Charting
 {
-
     public class QuoteParams
     {
         public string Code { get; set; }
         public List<string> Fields { get; set; }
-    }
-    public abstract class ReplyData
-    {
-        public int Id { get; set; }
-        public bool IsBad { get; set; } = false;
     }
 
     public class AggrateReplyData : ReplyData

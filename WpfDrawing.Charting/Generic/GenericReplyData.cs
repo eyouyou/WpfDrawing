@@ -6,18 +6,6 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing.Charting
 {
-    public class ReplyData<X, Y> : ReplyData
-    {
-        public ReplyData(Dictionary<X, Y> data)
-        {
-            Data = data;
-        }
-        public ReplyData()
-        {
-
-        }
-        public Dictionary<X, Y> Data { get; set; } = new Dictionary<X, Y>();
-    }
     public class SingleReplyData<X> : ReplyData<X, double>
     {
         public SingleReplyData(Dictionary<X, double> data) : base(data)

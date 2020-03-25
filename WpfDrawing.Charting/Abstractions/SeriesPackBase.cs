@@ -20,10 +20,9 @@ namespace HevoDrawing.Charting
     {
         Task<ReplyData> DoRequest();
     }
-    public interface ISubscribeable<Parameters, Response>
+    public interface ISubscribeable
     {
-        Parameters Data { get; set; }
-        Task<Response> DoRequest(Parameters input);
+        Task DoSubscribe();
     }
     public abstract class SeriesPackBase
     {

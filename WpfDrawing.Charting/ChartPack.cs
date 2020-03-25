@@ -9,6 +9,10 @@ using System.Windows.Controls;
 
 namespace HevoDrawing.Charting
 {
+    /// <summary>
+    /// 限制X轴坐标类型
+    /// </summary>
+    /// <typeparam name="X"></typeparam>
     public abstract class ChartPack : Chart
     {
         private ComponentId PackIdGernerator = new ComponentId();
@@ -60,6 +64,7 @@ namespace HevoDrawing.Charting
                 ChartVisual.AddSeries(item);
             }
             pack.Id = PackIdGernerator.GenerateId();
+
             SeriesPacks.Add(pack);
         }
         public void AddXAxis(DiscreteAxis axis)
@@ -74,12 +79,12 @@ namespace HevoDrawing.Charting
         public void AddResponsePipline(IPipline pipline)
         {
             _response_pipline.Add(pipline);
-            ResponsePiplines = _response_pipline.Select(it => (Func<ChartContext, PiplineDelegate, Task>)it.PipAsync)
+            ResponsePiplines = _response_pipline.Select(it => (Func<ChartContext, PiplineDelegate, Task>)((c, next) => c.IsCanceled ? Task.FromResult(false) : it.PipAsync(c, next)))
                 .Select(it => (Func<PiplineDelegate, PiplineDelegate>)(next => c => it(c, next))).ToList();
         }
         public void AddResponsePipline(Func<ChartContext, PiplineDelegate, Task> func)
         {
-            ResponsePiplines.Add(next => c => func(c, next));
+            ResponsePiplines.Add(next => c => c.IsCanceled ? Task.FromResult(false) : func(c, next));
         }
         public void AddSubscribePipline(IPipline pipline)
         {
@@ -97,6 +102,7 @@ namespace HevoDrawing.Charting
                 }
             }
             var array = await Task.WhenAll(tasks);
+            var list = array.ToList();
 
             PiplineDelegate @delegate = new PiplineDelegate((data) => Task.FromResult(true));
 
@@ -104,7 +110,7 @@ namespace HevoDrawing.Charting
             {
                 @delegate = ResponsePiplines[i](@delegate);
             }
-            await @delegate.Invoke(new ChartContext() { Data = new AggrateReplyData(array.ToDictionary(it => FindById(it.Id), it => it)) });
+            await @delegate.Invoke(new ChartContext() { Data = new AggrateReplyData(list.ToDictionary(it => FindById(it.Id), it => it)) });
 
             ChartVisual.RePlot();
         }

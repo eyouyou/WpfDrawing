@@ -6,16 +6,7 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing.Charting
 {
-    public enum DefaultContextItem
-    {
-        TimeLine
-    }
-    public class ChartContext
-    {
-        public ReplyData Data { get; set; }
-        public IDictionary<object, object> Items { get; } = new Dictionary<object, object>();
-    }
-    public delegate Task PiplineDelegate(ChartContext data);
+
     public class QuoteParams
     {
         public string Code { get; set; }
@@ -41,16 +32,6 @@ namespace HevoDrawing.Charting
     public interface IRequstable<InputT, OutPutT>
     {
         Task<OutPutT> Request(InputT param);
-    }
-    public interface IPipline
-    {
-        Task PipAsync(ChartContext context, PiplineDelegate next);
-    }
-    public interface IAggratePipline : IPipline
-    {
-    }
-    public interface ISpecificPipline : IPipline
-    {
     }
 
     public interface IKeyAnalysizer<Key, InputT, OutputT>

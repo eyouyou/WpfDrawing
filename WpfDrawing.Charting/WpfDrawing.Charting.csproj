@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\ChartContainer.cs" />
     <Compile Include="Abstractions\PackBase.cs" />
+    <Compile Include="Abstractions\Pipline.cs" />
     <Compile Include="ChartField.cs" />
     <Compile Include="ChartPack.cs" />
     <Compile Include="Abstractions\SeriesPackBase.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="DataPool\IRequstable.cs" />
     <Compile Include="DataPool\ISubscribeable.cs" />
     <Compile Include="Generic\GenericChartContainer.cs" />
+    <Compile Include="Generic\GenericContext.cs" />
     <Compile Include="Generic\GenericReplyData.cs" />
     <Compile Include="Generic\GenericSeriesPipline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

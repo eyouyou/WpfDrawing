@@ -15,7 +15,7 @@ namespace HevoDrawing
         public abstract List<ChartCrood> ChartCroods { get; }
         public abstract ContinuousAxisContextData YContextData { get; }
         public abstract DiscreteAxisContextData XContextData { get; }
-        public abstract TwoDimensionalContextData GeneraterNewData(List<ChartCrood> croods);
+        public abstract TwoDimensionalContextData GenerateNewData(List<ChartCrood> croods);
         public void CopyComponentIds(TwoDimensionalContextData data)
         {
             ComponentIds.Clear();
@@ -135,7 +135,7 @@ namespace HevoDrawing
             }
         }
 
-        public override TwoDimensionalContextData GeneraterNewData(List<ChartCrood> croods)
+        public override TwoDimensionalContextData GenerateNewData(List<ChartCrood> croods)
         {
             return new Chart2DContextData(croods.ToDictionary(it => it.X, it => it.Y));
         }
@@ -239,7 +239,7 @@ namespace HevoDrawing
             return data;
         }
 
-        public override TwoDimensionalContextData GeneraterNewData(List<ChartCrood> croods)
+        public override TwoDimensionalContextData GenerateNewData(List<ChartCrood> croods)
         {
             return new Chart2DContextData2(croods);
         }

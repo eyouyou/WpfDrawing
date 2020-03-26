@@ -340,7 +340,7 @@ namespace HevoDrawing.Interactions
                     }
                     var series_plot = series_item.PlotArea;
                     var xAxis = coms.FindXById(series_item.XAxisId) as DiscreteAxis;
-                    var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X), true);
+                    var value = xAxis.GetValue(xAxis.OffsetPostion(currentPoint.X), TryDataInBounds);
                     if (value.IsBad())
                     {
                         continue;

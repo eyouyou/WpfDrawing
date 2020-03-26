@@ -323,7 +323,7 @@ namespace HevoDrawing
                             }
                             all_avaliable = avaliable_sections.Distinct().ToList();
                         }
-                        data = data.GeneraterNewData(data.ChartCroods.Where(it => all_avaliable.Any(a => a.Contains(it.X))).ToList());
+                        data = data.GenerateNewData(data.ChartCroods.Where(it => all_avaliable.Any(a => a.Contains(it.X))).ToList());
                     }
                     else
                     {

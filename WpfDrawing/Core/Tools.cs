@@ -74,15 +74,17 @@ namespace HevoDrawing
             if (data.Count == 1)
             {
                 var index2 = 0;
+                var item = data[0];
                 foreach (var section in sections)
                 {
-                    if (section.Contains(data[0]))
+                    if (section.Contains(item))
                     {
-                        var position = xAxis.IntervalPositioning(section, data[0], 0) * section.SectionRatio;
+                        var position = xAxis.IntervalPositioning(section, item, 0) * section.SectionRatio;
                         var ratioCrood = position + sections.Take(index2).Select(it => it.SectionRatio).Sum();
                         valueCroodRatios.Add(ratioCrood);
 
-                        var position2 = xAxis.IntervalPositioning(section, data[0], 1) * section.SectionRatio;
+                        //按照最小单元格测算第二个点的位置
+                        var position2 = xAxis.IntervalPositioning(section, item, 1) * section.SectionRatio;
                         var ratioCrood2 = position2 + sections.Take(index2).Select(it => it.SectionRatio).Sum();
                         valueCroodRatios.Add(ratioCrood2);
 

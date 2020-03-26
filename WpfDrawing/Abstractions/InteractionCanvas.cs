@@ -13,7 +13,7 @@ namespace HevoDrawing.Abstractions
     /// 交互、控件展示层
     /// 多图的情况下 <see cref="InteractionCanvas"/> 依赖于 <see cref="RectDrawingCanvas"/> 或 <see cref="DrawingGrid"/>
     /// [<see cref="RectDrawingCanvas"/>: <see cref="InteractionCanvas"/>存在于<see cref="RectInteractionGroup"/>的顶层]
-    /// [<see cref="DrawingGrid"/>：<see cref="InteractionCanvas"/>存在于 <see cref="DrawingGrid"/>的顶层]
+    /// [<see cref="Chart"/>：<see cref="InteractionCanvas"/>存在于 <see cref="Chart"/>的顶层]
     /// </summary>
     public abstract class InteractionCanvas : Canvas
     {

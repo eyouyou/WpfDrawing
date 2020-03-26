@@ -16,13 +16,18 @@ namespace WpfDrawing.Sample
     {
         DateTime CurrentDate { get; set; }
     }
-    public class StrengthSeries : SeriesPackBase, IRequestable, IDatetimeSettable
+    public class StrengthSeries : SeriesPackBase, IRequestable, ISubscribeable, IDatetimeSettable
     {
         public StrengthSeries(SeriesVisual seriesVisual) : base(seriesVisual)
         {
         }
 
         public DateTime CurrentDate { get; set; }
+
+        public event PushHandler OnPushed;
+        public void DisposeSubscribe()
+        {
+        }
 
         public async Task<ReplyData> DoRequest()
         {
@@ -96,9 +101,14 @@ namespace WpfDrawing.Sample
                 return result;
             }
         }
-        public override async Task OnReply(ReplyData result)
+
+        public void DoSubscribe()
         {
-            await Task.Yield();
+        }
+
+
+        public override Task OnReply(ReplyData result)
+        {
             if (result is GenericReplyData<DateTime> data)
             {
                 foreach (var item in SeriesVisuals)
@@ -109,6 +119,12 @@ namespace WpfDrawing.Sample
                     }
                 }
             }
+            return Task.FromResult(true);
+        }
+
+        public ReplyData TranformSubscribeData(SubscribeResponse response)
+        {
+            return new GenericReplyData<DateTime>(new Dictionary<DateTime, Dictionary<ChartField, double>>());
         }
     }
 }

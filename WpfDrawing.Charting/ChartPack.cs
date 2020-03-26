@@ -104,6 +104,7 @@ namespace HevoDrawing.Charting
         {
 
         }
+
         public async Task RequestProcess(List<SeriesPackBase> packs)
         {
             if (!packs.All(it => SeriesPacks.Contains(it)))
@@ -121,6 +122,25 @@ namespace HevoDrawing.Charting
             }
             var array = await Task.WhenAll(tasks);
             var list = array.ToList();
+
+            await Process(packs, list);
+        }
+        public void DoSubscribe(List<SeriesPackBase> packs)
+        {
+            foreach (var item in packs)
+            {
+                if (item is ISubscribeable subscribeable)
+                {
+                    subscribeable.DisposeSubscribe();
+                    subscribeable.DoSubscribe();
+                    subscribeable.OnPushed -= OnPushed;
+                    subscribeable.OnPushed += OnPushed;
+                }
+            }
+        }
+
+        private async Task Process(List<SeriesPackBase> packs, List<ReplyData> list)
+        {
             var excepts = SeriesPacks.Except(packs);
             list.AddRange(excepts.Select(it => it.CacheData));
 
@@ -143,6 +163,11 @@ namespace HevoDrawing.Charting
             }
 
             ChartVisual.RePlot();
+        }
+        private async void OnPushed(SeriesPackBase seriesPack, SubscribeResponse response)
+        {
+            var data = await (seriesPack as ISubscribeable).TranformData(response);
+            await Process(new List<SeriesPackBase> { seriesPack }, new List<ReplyData> { data });
         }
 
         private ChartTemplate _chart_template = null;

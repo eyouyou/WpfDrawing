@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace HevoDrawing.Charting
 {
+    public abstract class SubscribeResponse
+    {
+
+    }
     ///// <summary>
     ///// Key=>字段
     ///// </summary>

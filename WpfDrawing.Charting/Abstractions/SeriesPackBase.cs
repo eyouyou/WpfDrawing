@@ -20,9 +20,13 @@ namespace HevoDrawing.Charting
     {
         Task<ReplyData> DoRequest();
     }
+    public delegate void PushHandler(SeriesPackBase seriesPack, SubscribeResponse response);
     public interface ISubscribeable
     {
-        Task DoSubscribe();
+        void DoSubscribe();
+        void DisposeSubscribe();
+        ReplyData TranformSubscribeData(SubscribeResponse response);
+        event PushHandler OnPushed;
     }
     public abstract class SeriesPackBase
     {
@@ -50,7 +54,14 @@ namespace HevoDrawing.Charting
         {
             CacheData = null;
         }
+
+        /// <summary>
+        /// 处理所有回包 包括推送和请求
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public abstract Task OnReply(ReplyData result);
+
     }
 
 
